@@ -70,6 +70,18 @@ class RunsRowTests(unittest.TestCase):
         self.assertEqual(r["cost_usd"], "")
         self.assertEqual(r["token_proxy"], "6.0")
 
+    def test_wall_min_sums_resumed_segments(self):
+        r = self.row("sonnet55-go-2")
+        self.assertEqual((r["pass"], r["wall_min"]), ("1", "12.5"))
+
+    def test_partial_load_blanks_latency(self):
+        base = self.base()
+        (base / "runtime-opus55-go-1" / "load-3.json").unlink()
+        r = self.row("opus55-go-1", base)
+        for key in ("rps", "p50_ms", "p95_ms", "p99_ms", "error_rate"):
+            self.assertEqual(r[key], "", key)
+        self.assertEqual(r["idle_rss_mb"], "12.5")
+
     def test_missing_scanner_report_blanks_vulns(self):
         base = self.base()
         (base / "runtime-opus55-go-1" / "go.json").unlink()

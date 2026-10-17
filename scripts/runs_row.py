@@ -67,25 +67,31 @@ def last_gate(met_path):
     return int(last[0]), datetime.strptime(last[1], TIME_FORMAT), last[8]
 
 
-def start_time(driver_log, run):
-    """driver.log에서 run의 가장 마지막 `=== RUN <run> (…) start:` 시각. driver는 재개할 때마다 시작 줄을 다시 쓰며
-    wall-clock 상한도 그 시점부터 센다. 줄이 없으면 None."""
+def run_minutes(driver_log, run, ended):
+    """driver.log의 run 구간(`=== RUN <run> (…) start:` ~ `=== RUN <run> finished:`)을 모두 합친 분.
+    driver는 DONE_ITER+1부터 재개하므로 iterations가 모든 구간에 걸치듯 시간도 모든 구간을 합친다(R16).
+    마지막 구간은 finished 줄 대신 pass 행의 종료 시각까지 센다. 시작 줄이 없거나 앞 구간의 finished 줄이 없으면 None."""
     text = read_text(driver_log)
     if text is None:
         return None
-    found = None
-    pattern = re.compile(r"^=== RUN " + re.escape(run) + r" \(.*\) start: (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) ===")
+    name = re.escape(run)
+    start_re = re.compile(r"^=== RUN " + name + r" \(.*\) start: (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) ===")
+    end_re = re.compile(r"^=== RUN " + name + r" finished: (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) ")
+    segments = []  # [시작, 종료 또는 None]
     for line in text.splitlines():
-        mt = pattern.match(line)
+        mt = start_re.match(line)
         if mt:
-            found = datetime.strptime(mt.group(1), TIME_FORMAT)
-    return found
-
-
-def minutes(start, end):
-    if start is None or end is None:
+            segments.append([datetime.strptime(mt.group(1), TIME_FORMAT), None])
+            continue
+        mt = end_re.match(line)
+        if mt and segments and segments[-1][1] is None:
+            segments[-1][1] = datetime.strptime(mt.group(1), TIME_FORMAT)
+    if not segments:
         return None
-    return round((end - start).total_seconds() / 60, 1)
+    segments[-1][1] = ended
+    if any(end is None for _, end in segments):
+        return None
+    return round(sum((end - start).total_seconds() for start, end in segments) / 60, 1)
 
 
 def tokens(base, run):
@@ -138,10 +144,11 @@ def interventions(base, run):
 
 
 def load_metrics(rt):
-    """load-1..3.json 각각 k6_summary 후 지표별 중앙값. 하나도 없으면 빈 dict."""
-    runs = [runtime_parse.k6_summary(p) for p in (rt / ("load-%d.json" % i) for i in (1, 2, 3)) if p.is_file()]
-    if not runs:
+    """load-1..3.json 각각 k6_summary 후 지표별 중앙값. 3회 중앙값이 지표 정의이므로 하나라도 없으면 빈 dict(R16)."""
+    paths = [rt / ("load-%d.json" % i) for i in (1, 2, 3)]
+    if not all(p.is_file() for p in paths):
         return {}
+    runs = [runtime_parse.k6_summary(p) for p in paths]
     return {k: statistics.median(r[k] for r in runs) for k in runs[0]}
 
 
@@ -191,7 +198,7 @@ def build_row(base, exp, run):
     row.update(exp=exp, run=run, language=language, model=cond, rep=rep)
     row["pass"] = 1 if passed else 0
     if passed:
-        row["wall_min"] = minutes(start_time(base / "driver.log", run), ended)
+        row["wall_min"] = run_minutes(base / "driver.log", run, ended)
         row["iterations"] = iteration
     row["interventions"] = interventions(base, run)
     row["token_proxy"] = token_proxy_k(totals)
@@ -205,7 +212,7 @@ def build_row(base, exp, run):
         fu_ok = fu_gate[2] == "pass"
         row["followup_pass"] = 1 if fu_ok else 0
         if fu_ok:
-            row["followup_min"] = minutes(start_time(base / "driver.log", fu), fu_gate[1])
+            row["followup_min"] = run_minutes(base / "driver.log", fu, fu_gate[1])
         row["followup_token_proxy"] = token_proxy_k(tokens(base, fu))
     return row
 
