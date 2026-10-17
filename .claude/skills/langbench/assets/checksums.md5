@@ -11,3 +11,8 @@ c426648efe3910fa676a997b6fd01b55 harness-hurl/favorites.hurl
 282b15a53311bd3795ac95a29df45d80 harness-hurl/pagination.hurl
 751d6612734fee8f1862c6e3d478d888 harness-hurl/profiles.hurl
 a70f6e88314478252f7a87ff6846b953 harness-hurl/tags.hurl
+17cd45bd6f862e6677e387be47d65083 PROMPT-cpp.md
+fe628330578ee96ed43baa481b757273 PROMPT-go.md
+918fd2e4c767c4d85ea93855290d35f8 PROMPT-python.md
+f93952b0c7b49fb93840e651c900363a PROMPT-rust.md
+bdefb14d563ba1e8b50e984e76b10af4 PROMPT-typescript.md

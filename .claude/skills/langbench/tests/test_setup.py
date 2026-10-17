@@ -13,10 +13,19 @@ class SetupTest(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
         self.home = os.path.join(self.tmp, "home")
         os.makedirs(self.home)
-        # 스킬 사본에 테스트용 PROMPT와 그 해시 줄을 넣는다(실제 PROMPT는 후속 과제가 추가).
+        # 스킬 사본에 테스트용 PROMPT와 그 해시 줄을 넣는다.
         self.skill = os.path.join(self.tmp, "skill")
         shutil.copytree(SKILL, self.skill, ignore=shutil.ignore_patterns("tests", "__pycache__"))
         assets = os.path.join(self.skill, "assets")
+        # 실제 PROMPT 5종과 해시 줄은 사본에서 제거하고 테스트용 하나만 둔다.
+        for name in os.listdir(assets):
+            if name.startswith("PROMPT-"):
+                os.remove(os.path.join(assets, name))
+        sums = os.path.join(assets, "checksums.md5")
+        with open(sums) as f:
+            kept = [l for l in f if " PROMPT-" not in l]
+        with open(sums, "w") as f:
+            f.writelines(kept)
         with open(os.path.join(assets, "PROMPT-typescript.md"), "w") as f:
             f.write("test prompt\n")
         md5 = subprocess.run(["md5", "-r", "PROMPT-typescript.md"], cwd=assets,

@@ -1,0 +1,22 @@
+{
+  "typescript": {
+    "STACK": "TypeScript (Node.js) + Fastify + Prisma + SQLite",
+    "WORKERS": "Node cluster with one worker process per core"
+  },
+  "python": {
+    "STACK": "Python + FastAPI + SQLAlchemy + SQLite, served by uvicorn",
+    "WORKERS": "uvicorn --workers set to the core count"
+  },
+  "go": {
+    "STACK": "Go + Gin + GORM + SQLite (pure-Go modernc.org/sqlite driver)",
+    "WORKERS": "GOMAXPROCS equal to the core count"
+  },
+  "rust": {
+    "STACK": "Rust + Axum + SQLx + SQLite on tokio",
+    "WORKERS": "tokio multi-thread runtime with one worker thread per core"
+  },
+  "cpp": {
+    "STACK": "C++20 + Drogon + Drogon ORM + SQLite, built with CMake",
+    "WORKERS": "Drogon app().setThreadNum() set to the core count"
+  }
+}
