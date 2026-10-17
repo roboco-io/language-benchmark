@@ -1,0 +1,13 @@
+#!/bin/sh
+# 실험 report.md가 커밋에 포함되면 README의 실험 결과 섹션을 자동 재생성한다.
+if git diff --cached --name-only | grep -q '^experiments/.*/report\.md$'; then
+  python3 scripts/update_readme_results.py || exit 1
+  git add README.md README.*.md
+fi
+# 측정값이나 지표 정의가 바뀌면 대시보드 데이터(dashboard/data.js)를 재생성한다.
+if git diff --cached --name-only | grep -qE '^(analysis/metrics/runs\.csv|scripts/metrics\.py|scripts/build_dashboard_data\.py)$'; then
+  python3 scripts/build_dashboard_data.py || exit 1
+  git add dashboard/data.js
+fi
+# API 키·토큰이 커밋에 들어가지 않도록 스테이징 내용 전체를 마지막에 검사한다.
+python3 scripts/check_staged_keys.py || exit 1
