@@ -123,17 +123,29 @@ def load_report(path):
     return out[0] if len(out) == 1 else out
 
 
+_GHSA = re.compile(r"GHSA(?:-[23456789cfghjmpqrvwx]{4}){3}", re.IGNORECASE)
+
+
+def _ghsa(text):
+    """문자열 속 GHSA ID를 'GHSA-' 대문자 + 소문자 본문으로 정규화해 모두 돌려준다."""
+    return ["GHSA" + m[4:].lower() for m in _GHSA.findall(text or "")]
+
+
 def _ids_trivy(r):
     for res in r.get("Results") or []:
         for v in res.get("Vulnerabilities") or []:
-            yield [v["VulnerabilityID"]]
+            # npm audit은 GHSA로 보고하므로, 참조 URL의 GHSA를 alias로 달아 같은 묶음으로 만든다.
+            urls = list(v.get("References") or []) + [v.get("PrimaryURL")]
+            aliases = [g for u in urls for g in _ghsa(u)]
+            yield [v["VulnerabilityID"]] + aliases
 
 
 def _ids_npm(r):
     for ent in (r.get("vulnerabilities") or {}).values():
         for via in ent.get("via") or []:
             if isinstance(via, dict) and via.get("url"):
-                yield [via["url"].rstrip("/").rsplit("/", 1)[-1]]
+                tail = via["url"].rstrip("/").rsplit("/", 1)[-1]
+                yield _ghsa(tail) or [tail]
 
 
 def _ids_pip(r):

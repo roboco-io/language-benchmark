@@ -212,7 +212,7 @@ run_scan() {
     scan_fail "$name" "${SCAN_SEC}s 초과"; return 1
   fi
   wait "$pid"; local rc=$?
-  if [ "$rc" = 127 ]; then scan_fail "$name" "실행 불가: $(head -c 200 "$CTR_ERR" | tr '\n' ' ')"; return 1; fi
+  if [ "$rc" = 126 ] || [ "$rc" = 127 ]; then scan_fail "$name" "실행 불가: $(head -c 200 "$CTR_ERR" | tr '\n' ' ')"; return 1; fi
   if json_ok "$tmpout" "$key"; then
     mv "$tmpout" "$OUT/$file"
   else
