@@ -29,6 +29,7 @@ cp "$CFG" "$BASE/bench.env"
 cp "$MODEL_SPECS" "$BASE/model-specs.json"
 cp "$SKILL/assets/reference-profile.json" "$BASE/"
 rm -f "$BASE/preflight-approved"   # 설정을 다시 만들면 승인도 다시 받는다
+rm -f "$BASE/run-order.txt"        # 실행 순서는 새 설정(CONDITIONS·LANGS·N·RUN_ORDER_SEED)으로 run-all.sh가 다시 만든다(R26)
 # 정본 복사: PROMPT-*.md, harness-hurl/, followup-hurl/(있으면), k6/(있으면)
 rm -rf "$BASE/harness-hurl" "$BASE/followup-hurl" "$BASE/k6"
 cp "$SKILL"/assets/PROMPT-*.md "$BASE/" 2>/dev/null || true

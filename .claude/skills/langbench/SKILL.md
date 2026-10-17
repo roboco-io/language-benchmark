@@ -58,7 +58,7 @@ description: Use when running or re-running the language-benchmark experiment (�
     - `wall_min`과 `followup_min`은 `driver.log`에서 그 run의 모든 재개 구간을 합산한다(R16).
     - `rps`·지연·`error_rate`는 `load-1/2/3.json` 3개가 모두 있어야 계산한다. 하나라도 없으면 빈 칸이다(R16).
     - 취약점 수는 trivy와 해당 언어 스캐너 보고서가 모두 있어야 한다. 하나라도 없으면 빈 칸이다. C++은 trivy만 필요하다.
-12. **보관(마스킹 선행)**: 리포에 넣기 전에 `python3 scripts/redact_keys.py <복사본 디렉터리>`로 비밀값을 마스킹한다. `bench.env`, 스크립트, `metrics-*.csv`, `runtime-*/`, `toolchain.txt`, `orchestrator.log`, `driver.log`, `phase0.md`, `recheck.csv`, `preflight-report.md`·`preflight-approved`, 로그(`gzip`)를 `experiments/NNN-*/runs/`로 복사한다. run별 앱 소스는 `experiments/NNN-*/runs/apps/<run>/`에 커밋한다(빌드 산출물·의존성·DB 제외).
+12. **보관(마스킹 선행)**: 리포에 넣기 전에 `python3 scripts/redact_keys.py <복사본 디렉터리>`로 비밀값을 마스킹한다. `bench.env`, 스크립트, `checksums.md5`, `run-order.txt`, `metrics-*.csv`, `runtime-*/`, `held/`(구독 한도 보류 시도가 있으면), `toolchain.txt`, `orchestrator.log`, `driver.log`, `phase0.md`, `recheck.csv`, `preflight-report.md`·`preflight-approved`, 로그(`gzip`)를 `experiments/NNN-*/runs/`로 복사한다. run별 앱 소스는 `experiments/NNN-*/runs/apps/<run>/`에 커밋한다(빌드 산출물·의존성·DB 제외).
 13. **보고·동기화**: `templates/report.md`로 `report.md`를 쓰고 repo `CLAUDE.md`의 "실험 종료 시 필수 절차" 1-5(헤더 세 줄, i18n·README 재생성, `runs.csv`·대시보드 재생성, catalog·ROADMAP 갱신, push 후 Pages 확인)를 그대로 수행한다.
 14. **로컬 정리**: 보관·재검증·보고가 끝나면 `bash $BASE/cleanup.sh $BASE`. lockfile이 있는 `node_modules`, 각 앱의 `target/`·`.venv/`·`build/`, Docker 이미지 `lb/*`를 지운다. 코드·`.git`·세션·로그·metrics는 보존하고 삭제 목록은 `cleanup.log`에 남는다.
 
