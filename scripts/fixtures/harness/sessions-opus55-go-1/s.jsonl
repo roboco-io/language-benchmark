@@ -1,0 +1,2 @@
+{"type":"assistant","message":{"id":"a","usage":{"input_tokens":400,"output_tokens":800,"cache_creation_input_tokens":1000,"cache_read_input_tokens":1000}}}
+{"type":"assistant","message":{"id":"b","usage":{"input_tokens":600,"output_tokens":1200,"cache_creation_input_tokens":2000,"cache_read_input_tokens":3000}}}

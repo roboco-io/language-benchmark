@@ -1,0 +1,4 @@
+{
+  "claude-sonnet-5-5": {"pricing": {"input": 3, "output": 15, "cache_read": 0.3, "cache_write": 3.75, "tiers": []}},
+  "claude-opus-5-5": {"pricing": {"input": 15, "output": 75, "cache_read": 1.5, "cache_write": 18.75, "tiers": []}}
+}

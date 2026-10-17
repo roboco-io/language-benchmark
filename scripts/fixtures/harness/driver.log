@@ -1,0 +1,5 @@
+=== RUN opus55-go-1 (claude-native claude-opus-5-5, PROMPT-go.md, PORT=41000) start: 2026-10-17 10:00:00 ===
+=== RUN opus55-go-1 finished: 2026-10-17 10:12:30 | 2,x ===
+=== RUN sonnet55-python-1 (claude-native claude-sonnet-5-5, PROMPT-python.md, PORT=42000) start: 2026-10-17 11:00:00 ===
+=== RUN opus55-rust-1 (claude-native claude-opus-5-5, PROMPT-rust.md, PORT=43000) start: 2026-10-17 12:00:00 ===
+=== RUN opus55-rust-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=43001) start: 2026-10-17 13:00:00 ===
