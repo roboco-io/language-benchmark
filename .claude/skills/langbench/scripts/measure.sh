@@ -1,10 +1,16 @@
 #!/bin/bash
-# 계측 v4: 리포 서버 기동 → 리포 소속 리스닝 포트 자동 탐지 → 공식 Hurl 13파일 채점
-# stdout: "succ_files,exec_reqs"
+# 계측 v5: 리포의 start.sh 기동 → 리포 소속 리스닝 포트 자동 탐지 → 공식 Hurl 채점
+# 사용: measure.sh <repo> <hurl-dir>...   (채점 대상은 각 디렉터리의 *.hurl)
+# stdout: "succ_files,exec_reqs"   start.sh가 없으면 "0,0"
+# 환경변수: START_SEC(기동 대기 한도, 기본 600)
 # EXP-016/021 measure v4 공통형. hurl 절대 경로 고정
 #   (EXP-020 게이트 오검 — @hurl/cli npm shim이 PATH에서 실 Hurl을 가린 사례 재발 방지)
 BASE="$(cd "$(dirname "$0")" && pwd)"
-REPO="$1"
+REPO="$1"; shift
+[ -d "$REPO" ] && REPO="$(cd "$REPO" && pwd -P)"   # lsof가 보고하는 실경로와 맞춘다(macOS /var → /private/var)
+START_SEC="${START_SEC:-600}"
+HURL_FILES=()
+for d in "$@"; do for f in "$d"/*.hurl; do [ -f "$f" ] && HURL_FILES+=("$f"); done; done
 HURL_BIN="/opt/homebrew/bin/hurl"
 
 # 프로세스가 리포 소속인지: command에 리포 경로 포함 OR CWD가 리포 안
@@ -28,9 +34,9 @@ cleanup() {
   for pid in $(lsof -nP -iTCP -sTCP:LISTEN -t 2>/dev/null); do
     belongs_to_repo "$pid" && kill -9 "$pid" 2>/dev/null
   done
-  pkill -9 -f "$REPO/node_modules" 2>/dev/null
+  pkill -9 -f "$REPO/" 2>/dev/null
   sleep 1
-  pkill -9 -f "$REPO/node_modules" 2>/dev/null
+  pkill -9 -f "$REPO/" 2>/dev/null
 }
 
 # 빈 포트 선택: 3000번대 고정 포트가 외부 프로세스(VS Code Live Preview 등)와 충돌하지 않도록 (EXP-029 D-1, EXP-031)
@@ -52,13 +58,13 @@ find_port() {
 }
 
 cleanup
-[ -d "$REPO" ] && [ -f "$REPO/package.json" ] || { echo "0,0"; exit 0; }
+[ -d "$REPO" ] && [ -f "$REPO/start.sh" ] || { echo "0,0"; exit 0; }
 # 서브셸 stdout을 분리해야 호출 측 $(measure.sh)가 서버 수명 동안 파이프에 묶이지 않는다
 SPORT="$(free_port)"
-( cd "$REPO" && PORT="$SPORT" exec npm run dev > "$BASE/server-iter.log" 2>&1 < /dev/null ) > /dev/null 2>&1 &
+( cd "$REPO" && PORT="$SPORT" exec bash start.sh > "$BASE/server-iter.log" 2>&1 < /dev/null ) > /dev/null 2>&1 &
 SRV=$!
 PORT=""
-for _ in $(seq 1 30); do
+for _ in $(seq 1 "$START_SEC"); do
   PORT=$(find_port | head -1)
   [ -n "$PORT" ] && break
   sleep 1
@@ -69,7 +75,7 @@ HURL_OUT="$BASE/hurl-last.log"
 UID_VAL="$(date +%s)$$"
 ( "$HURL_BIN" --test --jobs 1 --max-time 10 \
     --variable "host=http://localhost:$PORT" --variable "uid=$UID_VAL" \
-    "$BASE"/harness-hurl/*.hurl > "$HURL_OUT" 2>&1 ) &
+    "${HURL_FILES[@]}" > "$HURL_OUT" 2>&1 ) &
 HP=$!
 for _ in $(seq 1 300); do
   kill -0 "$HP" 2>/dev/null || break

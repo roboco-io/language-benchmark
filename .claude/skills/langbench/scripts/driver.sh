@@ -1,6 +1,6 @@
 #!/bin/bash
 # 사용: bash driver.sh <run>   (run = <조건>-<언어>-<n>, 예: sol-en-1)
-# 랄프 루프 1 run: iteration마다 에이전트 1회 호출 → measure.sh 채점 → .ralph-done 게이트.
+# 랄프 루프 1 run: iteration마다 에이전트 1회 호출 → measure.sh(호스트)·measure_docker.sh(Docker) 채점 → .ralph-done 게이트.
 # claude-native 전용 driver (자매 리포 EXP-026 driver에서 이식).
 RUN="$1"
 BASE="$(cd "$(dirname "$0")" && pwd)"
@@ -10,7 +10,7 @@ MODEL=""
 for c in $CONDITIONS; do [ "${c%%:*}" = "$COND" ] && MODEL="${c#*:}"; done
 [ -n "$MODEL" ] || { echo "unknown condition $COND ($RUN)" >> "$BASE/driver.log"; exit 1; }
 PROMPT="$BASE/PROMPT-$LANG_.md"
-[ -f "$PROMPT" ] || { echo "unknown lang $LANG_ ($RUN)" >> "$BASE/driver.log"; exit 1; }
+[ -f "$PROMPT" ] || { echo "unknown language $LANG_ ($RUN)" >> "$BASE/driver.log"; exit 1; }
 
 REPO="$BASE/app-$RUN"; MET="$BASE/metrics-$RUN.csv"; LOG="$BASE/ralph-run-$RUN.log"
 [ -f "$BASE/done-$RUN" ] && exit 0
@@ -23,6 +23,13 @@ free_port() {
     lsof -nP -iTCP:"$p" -sTCP:LISTEN >/dev/null 2>&1 || { echo "$p"; return; }
   done
 }
+
+# 채점 Hurl 디렉터리(공백 구분). 본 과제는 정본 13파일, 후속 과제는 14파일 디렉터리를 추가로 넘긴다.
+HURL_DIRS="${HURL_DIRS:-$BASE/harness-hurl}"
+EXPECT_FILES=0
+for d in $HURL_DIRS; do EXPECT_FILES=$(( EXPECT_FILES + $(ls "$d"/*.hurl 2>/dev/null | wc -l) )); done
+# 기대 파일이 0이면 "0 = 0"으로 게이트가 통과해 버리므로 채점 디렉터리가 비어 있으면 시작하지 않는다.
+[ "$EXPECT_FILES" -gt 0 ] || { echo "no hurl files in HURL_DIRS ($RUN)" >> "$BASE/driver.log"; exit 1; }
 
 source "$BASE/watchdog.sh"
 STALL_SEC="${STALL_SEC:-300}"   # iteration 정체 한도(초). 세션·로그·앱 파일이 이 시간 동안 갱신되지 않으면 iteration 종료 (EXP-039)
@@ -87,20 +94,23 @@ for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
   EXIT=$?
   [ -n "$WATCHDOG_REASON" ] && echo "=== [$RUN] watchdog: iteration $i 종료 — $WATCHDOG_REASON (exit $EXIT, 124=정체·125=run 상한·126=비용 상한) ===" >> "$LOG"
   echo "=== [$RUN] iteration $i end (exit $EXIT): $(date '+%F %T') ===" >> "$LOG"
-  RESULT=$(bash "$BASE/measure.sh" "$REPO")
+  RESULT=$(bash "$BASE/measure.sh" "$REPO" $HURL_DIRS)
+  # Docker 채점은 호스트가 기대 파일 수를 모두 통과한 iteration에서만 실행한다(빌드 비용 절약).
+  DRES=","
+  [ "${RESULT%%,*}" = "$EXPECT_FILES" ] && DRES=$(bash "$BASE/measure_docker.sh" "$REPO" "$RUN-i$i" $HURL_DIRS)
   CLAIM=0; [ -f "$REPO/.ralph-done" ] && CLAIM=1
   GATE=na
   if [ "$CLAIM" = 1 ]; then
-    if [ "${RESULT%%,*}" = "13" ]; then
+    if [ "${RESULT%%,*}" = "$EXPECT_FILES" ] && [ "${DRES%%,*}" = "$EXPECT_FILES" ]; then
       GATE=pass
     else
       GATE=rejected
       rm -f "$REPO/.ralph-done"
-      echo "=== [$RUN] GATE 기각 (hurl $RESULT) iter $i ===" >> "$LOG"
+      echo "=== [$RUN] GATE 기각 (host $RESULT, docker $DRES) iter $i ===" >> "$LOG"
     fi
   fi
-  # metrics 열: iter,종료시각,exit,성공 hurl 파일 수,실행 요청 수,완료 선언,게이트
-  echo "$i,$(date '+%F %T'),$EXIT,$RESULT,$CLAIM,$GATE" >> "$MET"
+  # metrics 열: iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트
+  echo "$i,$(date '+%F %T'),$EXIT,$RESULT,$DRES,$CLAIM,$GATE" >> "$MET"
   [ -f "$REPO/.ralph-done" ] && break
   if [ "$EXIT" = 126 ]; then
     echo "budget,$(date '+%F %T')" >> "$MET"; touch "$BASE/budget-stop"

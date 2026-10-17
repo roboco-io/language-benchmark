@@ -1,3 +1,12 @@
 #!/bin/bash
-# 테스트용 가짜 claude CLI: 실제 호출 없이 SMOKE-OK만 돌려준다.
+# 테스트용 가짜 claude CLI.
+# - 인자를 FAKE_CLAUDE_LOG(없으면 무시)에 남긴다.
+# - FAKE_CLAUDE_COPY가 가리키는 앱 디렉터리를 cwd로 복사하고 .ralph-done을 만든다.
+# - 둘 다 없으면 smoke용 SMOKE-OK만 돌려준다.
+[ -n "$FAKE_CLAUDE_LOG" ] && printf '%s\n' "$*" >> "$FAKE_CLAUDE_LOG"
+if [ -n "$FAKE_CLAUDE_COPY" ]; then
+  cp -R "$FAKE_CLAUDE_COPY"/. . && touch .ralph-done
+  echo "fake claude: copied $FAKE_CLAUDE_COPY"
+  exit 0
+fi
 echo '{"apiKeySource":"none","result":"SMOKE-OK","is_error":false}'
