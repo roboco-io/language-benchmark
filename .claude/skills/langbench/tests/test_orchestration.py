@@ -151,11 +151,16 @@ class RunOrderTest(unittest.TestCase):
         self.assertEqual(len(set(a)), 30)
         self.assertNotEqual(a, self.order(1))
 
-    def test_default_seed_puts_both_models_in_both_halves(self):
+    def test_rep_blocks_in_order(self):
+        # R27: 반복 1, 2, 3 블록이 차례로 오고 각 블록은 그 반복의 조건×언어 10개다.
         a = self.order(20261018)
-        for half in (a[:15], a[15:]):
-            self.assertEqual({r.split("-")[0] for r in half}, {"sonnet55", "opus55"})
+        for rep in (1, 2, 3):
+            block = a[(rep - 1) * 10:rep * 10]
+            self.assertEqual({r.rsplit("-", 1)[1] for r in block}, {str(rep)})
+            self.assertEqual(len(set(block)), 10)
 
+    def test_default_seed_puts_both_models_early_in_block_1(self):
+        self.assertEqual({r.split("-")[0] for r in self.order(20261018)[:5]}, {"sonnet55", "opus55"})
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,6 @@
 #!/bin/bash
 # 사용: nohup caffeinate -is bash $BASE/run-all.sh >/dev/null 2>&1 &
-# 순차 실행(동시 실행 금지). 순서는 조건×언어×반복 목록을 RUN_ORDER_SEED(기본 20261018)로 결정적으로 섞은 것이다(R26).
+# 순차 실행(동시 실행 금지). 반복 번호 블록 순서로 돌고, 블록 안의 조건×언어 run은 RUN_ORDER_SEED(기본 20261018)와 반복 번호로 결정적으로 섞는다(R26·R27).
 # 목록은 첫 run 전에 run-order.txt로 남기고, 다시 실행하면(재개·보류 재시작) 그 파일을 그대로 쓴다.
 # run 종료마다 세션 로그를 run별 디렉터리로 옮겨 usage 계측 범위를 분리한다.
 BASE="$(cd "$(dirname "$0")" && pwd)"
