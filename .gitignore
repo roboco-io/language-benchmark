@@ -16,3 +16,4 @@ dist/
 *.db-shm
 *.sqlite
 *.sqlite3
+.handoff.md
