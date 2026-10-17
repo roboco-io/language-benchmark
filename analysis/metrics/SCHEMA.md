@@ -36,3 +36,43 @@
 - 나머지 지표는 **합격 run 중 값이 있는 것의 중앙값**이다. 표본 수는 `<지표>_n`에 기록하고 대시보드에 "측정 run 수/전체 run 수"(예: `0/3`, 두 모델 합산이면 `/6`)로 표시한다. 합격 run이 없으면 `0/3`처럼 표시해 "run 없음"과 구분한다. 실패 run의 결과물 수치는 쓰지 않는다.
 - `followup_pass`는 합격 run 중 후속 과제를 실행한 run의 성공 비율이다.
 - 좋은 방향: `pass_rate`, `rps`, `followup_pass`는 클수록 좋고 나머지는 작을수록 좋다.
+
+## 기본 가중치
+
+대시보드의 종합 점수 기본 가중치는 `METRICS`의 24개 지표 모두 1(균등)이다. 실험 전에 특정 지표를 더 중시할 근거가 없고, 대시보드가 이미 균등 가중을 기본으로 구현하고 있어 문서와 화면이 일치하기 때문이다. 이 값은 설계자 판단으로 정했다. 대시보드의 초기화와 리셋 버튼은 둘 다 `dashboard/score.js`의 `defaultWeights(metrics)`를 호출하므로 기본값은 한 곳에서만 정의된다.
+
+EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결과를 본 뒤 가중치를 바꾸면 원하는 순위를 만드는 방향으로 조정할 위험이 있기 때문이다. 다른 가중치를 쓰려면 새 실험 번호를 정하고, 그 실험을 실행하기 전에 가중치와 근거를 실험 README에 사전 등록한다. 화면에서 사용자가 슬라이더로 바꾼 가중치는 해석 보조이며 기본값을 바꾸지 않는다.
+
+## 측정 정의
+
+모든 정의는 언어 간에 같은 조건으로 적용한다. 아래 값 중 하네스 구현 과제(Task 5-8)에서 확정되는 항목은 해당 과제의 정의를 옮긴 것이며, 구현 값이 바뀌면 그 과제의 커밋에서 이 절도 함께 고친다.
+
+**컨테이너 제한.** 런타임 측정(`rps`, 지연, 메모리, soak, `cold_start_ms`)용 컨테이너는 모든 언어에서 `--cpus=2 --memory=1g`로 실행한다. Docker Desktop 할당이 6 CPU·7.7 GiB이므로 k6가 쓸 CPU 4개를 남기기 위한 값이다.
+
+**메모리 지표의 한계.** `idle_rss_mb`와 `peak_rss_mb`는 `docker stats`가 보고하는 컨테이너 cgroup 메모리 사용량(`MemUsage`)이다. 프로세스 하나의 엄밀한 RSS가 아니다. 컨테이너 안의 모든 프로세스와 커널 페이지 캐시 일부가 포함될 수 있으므로, 언어 간 상대 비교에만 쓰고 절대값으로 해석하지 않는다. `soak_mem_growth_mb`는 같은 방식으로 잰 soak 종료 시점 값에서 시작 시점 값을 뺀 값(end − start)이다.
+
+**k6 시나리오.** 시드는 사용자 50명, 글 500개, 태그 풀 20개(글당 태그 3개), 앞의 글 100개에 각 댓글 5개, 팔로우 250건, 즐겨찾기 250건이다. 부하 스크립트 `assets/k6/load.js`는 VU 32개로 다음 비율의 요청을 섞는다: 글 목록 35%, 글 단건 20%, 태그 10%, 피드 10%, 댓글 15%, 쓰기 10%(글 작성·즐겨찾기·댓글 작성이 4:3:3). 측정 순서는 워밍업 15초 후 30초 부하 3회이며, `rps`는 3회의 중앙값이다. 최대 메모리(`peak_rss_mb`)는 이 부하 중에 잰다. 이어서 600초 soak를 실행해 `soak_error_rate`와 `soak_mem_growth_mb`를 얻는다.
+
+**빌드와 기동.** `build_sec`와 `image_mb`는 앱 HEAD를 깨끗한 git clone으로 받아 캐시 없이(no-cache) Docker 빌드한 시간과 최종 이미지 크기다. `cold_start_ms`는 컨테이너 기동부터 첫 정상 응답까지이고, `idle_rss_mb`는 기동 후 시드 전에 잰다.
+
+**`loc`.** scc `--format json` 결과에서 주 언어의 코드 줄(Code)만 합산한다. 주 언어는 typescript는 `TypeScript`·`JavaScript`, python은 `Python`, go는 `Go`, rust는 `Rust`, cpp는 `C++`·`C++ Header`·`C Header`다. scc 호출 시 `--exclude-dir test,tests,__tests__,hurl,node_modules,target,build,.venv,vendor`와 `--not-match '(_test\.go|test_.*\.py|.*_test\.py|\.(test|spec)\.[jt]s|_test\.(cc|cpp))$'`로 테스트와 의존성·빌드 디렉터리를 뺀다. 구현은 `runtime_parse.loc`이다.
+
+**`deps`.** 매니페스트의 직접 런타임 의존성 수이다(`runtime_parse.deps`). 매니페스트가 없으면 빈 칸이다.
+
+| 언어 | 계산 방식 |
+|---|---|
+| typescript | `package.json`의 `dependencies` 키 수(`devDependencies` 제외) |
+| python | `pyproject.toml`의 `[project] dependencies` 항목 수. 없으면 `requirements.txt`에서 주석·빈 줄·`-r` 줄을 뺀 줄 수 |
+| go | `go.mod` `require` 중 `// indirect`가 아닌 모듈 수 |
+| rust | `Cargo.toml`의 `[dependencies]` 키 수 |
+| cpp | `CMakeLists.txt`의 `find_package(X`, `FetchContent_Declare(X`, `pkg_check_modules(… X`에서 고유 이름 수. `Threads`는 뺀다 |
+
+**`vulns`.** 필요한 보고서가 모두 있을 때만 값을 낸다. 하나라도 없으면 빈 칸이다. 필요한 보고서는 Trivy 이미지 스캔과 언어별 스캐너이며, typescript는 `npm audit`, python은 `pip-audit`, go는 `govulncheck`, rust는 `cargo audit`이다. cpp는 Trivy만 쓴다. 각 보고서에서 ID와 alias를 뽑고, alias로 서로 연결되는 ID를 한 묶음으로 보아 묶음 수를 센다(`runtime_parse.vulns`). 추출 위치는 다음과 같다.
+
+- Trivy: `Results[].Vulnerabilities[].VulnerabilityID`
+- npm: `vulnerabilities.*.via[]` 중 dict인 항목의 `url` 끝에 있는 GHSA ID
+- pip-audit: `dependencies[].vulns[].id`와 `aliases`
+- govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다
+- cargo audit: `vulnerabilities.list[].advisory.id`와 `aliases`
+
+**`wall_min`.** `driver.log`의 run 시작 시각부터 `pass` 행 종료 시각까지의 시간이다(분, 소수 첫째 자리). 불합격 run은 빈 칸이다.

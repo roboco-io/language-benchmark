@@ -38,7 +38,12 @@
     return `${cell[metric.key + "_n"] || 0}/${cell.n}`;
   }
 
-  const api = { normalize, composite, sampleLabel };
+  // 기본 가중치: 모든 지표 1(균등). 초기화와 리셋 버튼이 같은 함수를 쓴다.
+  function defaultWeights(metrics) {
+    return Object.fromEntries(metrics.map((m) => [m.key, 1]));
+  }
+
+  const api = { normalize, composite, sampleLabel, defaultWeights };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.Score = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -202,7 +202,7 @@ const state = {
   ui: store.get("lb.ui", (navigator.language || "en").slice(0, 2)),
   model: store.get("lb.model", "all"),
   metric: "rps",
-  weights: Object.fromEntries(metrics.map((m) => [m.key, 1])),
+  weights: Score.defaultWeights(metrics),
 };
 if (!T[state.ui]) state.ui = "en";
 const t = () => T[state.ui];
@@ -369,7 +369,7 @@ function renderStack() {
 }
 
 document.getElementById("resetW").onclick = () => {
-  state.weights = Object.fromEntries(metrics.map((m) => [m.key, 1]));
+  state.weights = Score.defaultWeights(metrics);
   renderWeights(); renderMatrix();
 };
 function render() { renderText(); renderMatrix(); renderWeights(); renderDetail(); renderStack(); }

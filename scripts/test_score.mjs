@@ -1,7 +1,7 @@
 // node scripts/test_score.mjs — dashboard/score.js의 정규화·종합 점수 검증
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
-const { normalize, composite, sampleLabel } = createRequire(import.meta.url)("../dashboard/score.js");
+const { normalize, composite, sampleLabel, defaultWeights } = createRequire(import.meta.url)("../dashboard/score.js");
 
 assert.deepEqual(normalize([1, 2, 3], "lower"), [1, 0.5, 0]);
 assert.deepEqual(normalize([1, 2, 3], "higher"), [0, 0.5, 1]);
@@ -26,4 +26,8 @@ assert.equal(sampleLabel({ n: 3, passed: 0, rps_n: 0 }, { key: "rps", group: "pr
 assert.equal(sampleLabel({ n: 3, passed: 2, rps_n: 2 }, { key: "rps", group: "product" }), "2/3");
 assert.equal(sampleLabel({ n: 0, passed: 0, rps_n: 0 }, { key: "rps", group: "product" }), "");
 assert.equal(sampleLabel({ n: 3, passed: 3, wall_min_n: 3 }, { key: "wall_min", group: "process" }), "");
+// 기본 가중치: METRICS 전 키가 1
+const dm = [{ key: "rps" }, { key: "wall_min" }, { key: "loc" }];
+assert.deepEqual(defaultWeights(dm), { rps: 1, wall_min: 1, loc: 1 });
+assert.ok(Object.values(defaultWeights(dm)).every((w) => w === 1));
 console.log("test_score: all passed");
