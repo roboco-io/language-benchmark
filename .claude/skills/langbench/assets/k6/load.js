@@ -1,5 +1,6 @@
 // RealWorld 혼합 부하. 환경변수: SEED(seed.json 경로), BASE(http://host:port), VUS, DURATION(예: 30s)
-// 비율: 목록 35, 단건 20, 태그 10, 피드 10, 코멘트 목록 15, 아티클 작성 4, 코멘트 작성 3, 즐겨찾기 3 (%)
+// 비율: 목록 35, 단건 20, 태그 10, 피드 10, 코멘트 목록 15, 아티클 작성+삭제 4, 코멘트 작성+삭제 3, 즐겨찾기+해제 3 (%)
+// 쓰기는 모두 되돌리는 쌍이다(R23). 처리량이 높은 서버일수록 데이터가 커지지 않게 해 부하 3회·soak의 데이터 크기를 언어 간에 같게 둔다.
 import http from "k6/http";
 import { Counter } from "k6/metrics";
 
@@ -38,6 +39,17 @@ function send(method, url, body, user) {
   return res;
 }
 
+// 2xx 응답 본문의 obj[key]. 응답이 실패했거나 JSON이 아니면 null.
+function field(res, obj, key) {
+  if (res.status < 200 || res.status >= 300) return null;
+  try {
+    const v = res.json(obj);
+    return v ? v[key] : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -58,11 +70,17 @@ export default function () {
   } else if (r < 90) {
     send("GET", `${BASE}/api/articles/${slug}/comments`, null);
   } else if (r < 94) {
+    // 아티클 쌍: 이 VU의 사용자로 작성 후 그 아티클을 삭제한다. 작성이 실패하면 삭제하지 않는다.
     const n = Math.floor(Math.random() * 1e9);
-    send("POST", `${BASE}/api/articles`, { article: {
+    const res = send("POST", `${BASE}/api/articles`, { article: {
       title: `load ${n}`, description: "load", body: "load body", tagList: [pick(seed.tags)] } }, user);
+    const made = field(res, "article", "slug");
+    if (made) send("DELETE", `${BASE}/api/articles/${made}`, null, user);
   } else if (r < 97) {
-    send("POST", `${BASE}/api/articles/${slug}/comments`, { comment: { body: "load comment" } }, user);
+    // 코멘트 쌍: 이 VU의 사용자로 작성 후 그 코멘트를 삭제한다.
+    const res = send("POST", `${BASE}/api/articles/${slug}/comments`, { comment: { body: "load comment" } }, user);
+    const id = field(res, "comment", "id");
+    if (id !== null && id !== undefined) send("DELETE", `${BASE}/api/articles/${slug}/comments/${id}`, null, user);
   } else {
     // 즐겨찾기 쌍: 시드 때 이 사용자가 즐겨찾기하지 않은 slug에 favorite 후 unfavorite → 재즐겨찾기 없이 상태 복원
     let fav = pick(seed.slugs);
