@@ -8,7 +8,7 @@
 # 실패하면 1부의 이후 단계를 건너뛰고 실패 단계 이름을 error.txt에 쓴다(뒤 단계 파일은 없다 = 빈 칸). 2부는 그래도 실행한다.
 # 2부 산출물: scc.json, hints.txt, trivy.json(빌드된 이미지 lb/<run>:rt를 trivy image로 스캔),
 #   언어 스캐너 보고서(typescript npm.json, python pip.json, go go.json, rust cargo.json, cpp는 trivy만).
-#   2부는 임시 clean clone에서 정적으로 돌므로 컨테이너가 실패해도 코드량·의존성·스캐너는 의미가 있다.
+#   2부는 내보낸 작업 트리에서 정적으로 돌므로 컨테이너가 실패해도 코드량·의존성·스캐너는 의미가 있다.
 #   스캐너 하나가 실패(실행 불가·유효 JSON 없음)해도 다른 스캐너는 계속한다. 실패한 스캐너는 보고서를 만들지 않고
 #   error.txt에 "scan:<이름>: <사유>" 줄을 덧붙인다. 취약점을 찾으면 비0으로 끝나는 스캐너(npm audit, cargo audit,
 #   pip-audit)가 있으므로 종료 코드가 아니라 "유효한 JSON 보고서가 나왔는가"로 성공을 판정한다.
@@ -17,7 +17,9 @@
 #   PIP_AUDIT_BIN(기본 $HOME/.local/share/langbench-tools/venv/bin/pip-audit), GOVULNCHECK_BIN(기본 $HOME/go/bin/govulncheck)
 #   cargo audit는 $HOME/.cargo/bin을 PATH에 넣어 호출한다. trivy·scc·npm은 PATH에서 찾는다.
 # 스캐너는 취약점 DB를 받으려고 네트워크를 쓴다.
-# 빌드는 repo의 git HEAD를 임시 디렉터리에 새로 clone해서 한다(작업 트리의 node_modules·target·DB 같은 미추적 파일이 build_sec·image_mb에 섞이지 않게).
+# 빌드는 게이트가 채점한 작업 트리를 임시 디렉터리로 내보내서 한다(R25). 내보내는 파일은 `git ls-files -co --exclude-standard`
+#   (추적 파일 + 무시되지 않은 미추적 파일)이므로 .gitignore가 가리는 node_modules·target·DB는 빠진다(R8 의도 유지).
+#   source.txt에 HEAD sha, `git status --porcelain` 줄 수(dirty), 내보낸 파일 수를 남긴다. git 리포가 아니면 error.txt `export: not a git repo`.
 # 컨테이너는 --cpus=2 --memory=1g (모든 언어 동일). 포트는 40000-49999의 빈 포트를 PORT로 주입한다.
 BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$1"; RUN="$2"; LANG_KEY="$3"
@@ -72,9 +74,25 @@ mem_now() {
       printf "%.1f\n", v; exit }'
 }
 
-# 임시 clean clone: 1부(docker build)와 2부(정적 분석)가 함께 쓴다.
+# 작업 트리 내보내기: 1부(docker build)와 2부(정적 분석)가 함께 쓴다.
 SRC="$TMP/src"
-git clone -q --no-hardlinks "$REPO" "$SRC" 2>"$TMP/clone.log" || fail "clone"
+[ "$(git -C "$REPO" rev-parse --show-toplevel 2>/dev/null)" = "$(cd "$REPO" && pwd -P)" ] || fail "export: not a git repo"
+# 추적 파일 중 작업 트리에서 지운 것은 건너뛴다. 심볼릭 링크는 링크로 복사한다.
+NFILES=$(git -C "$REPO" ls-files -z -co --exclude-standard | python3 -c '
+import os, shutil, sys
+src, dst = sys.argv[1], sys.argv[2]
+n = 0
+for rel in sys.stdin.buffer.read().decode("utf-8", "surrogateescape").split("\0"):
+    p = os.path.join(src, rel)
+    if not rel or not os.path.lexists(p) or (os.path.isdir(p) and not os.path.islink(p)):
+        continue
+    os.makedirs(os.path.dirname(os.path.join(dst, rel)), exist_ok=True)
+    shutil.copy2(p, os.path.join(dst, rel), follow_symlinks=False)
+    n += 1
+print(n)' "$REPO" "$SRC") || fail "export"
+{ echo "head=$(git -C "$REPO" rev-parse HEAD 2>/dev/null)"
+  echo "dirty=$(git -C "$REPO" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+  echo "files=$NFILES"; } > "$OUT/source.txt"
 
 # 1부는 서브셸에서 돈다. fail은 서브셸만 끝내므로 2부가 이어진다. 서브셸의 EXIT 트랩은 자기 백그라운드 작업만 정리한다.
 (
@@ -86,8 +104,8 @@ stage_cleanup() {
 }
 trap stage_cleanup EXIT
 
-# 1. 빌드 (fresh clone, --no-cache)
-[ -f "$SRC/Dockerfile" ] || fail "build: Dockerfile이 git HEAD에 없음"
+# 1. 빌드 (작업 트리 내보내기, --no-cache)
+[ -f "$SRC/Dockerfile" ] || fail "build: Dockerfile이 작업 트리에 없음"
 T0=$(now_ms)
 docker build --no-cache -t "$IMAGE" "$SRC" > "$TMP/build.log" 2>&1 < /dev/null &
 BP=$!
@@ -173,6 +191,7 @@ scan_fail() {  # scan_fail <이름> <사유>
 }
 
 # 유효한 JSON 값이 하나 이상이고(스트림 허용) 선택적으로 최상위 키를 갖는지 검사한다.
+# 필수 키가 "stream:<키>"이면 스트림의 값 중 하나가 그 키를 가진 객체여야 한다(govulncheck의 config 메시지).
 json_ok() {  # json_ok <파일> [필수 키]
   python3 - "$1" "${2:-}" <<'PY'
 import json, sys
@@ -191,13 +210,17 @@ except ValueError:
 if not vals:
     sys.exit(1)
 key = sys.argv[2]
-if key and not (len(vals) == 1 and isinstance(vals[0], dict) and key in vals[0]):
+if key.startswith("stream:"):
+    if not any(isinstance(v, dict) and key[7:] in v for v in vals):
+        sys.exit(1)
+elif key and not (len(vals) == 1 and isinstance(vals[0], dict) and key in vals[0]):
     sys.exit(1)
 PY
 }
 
 # run_scan <이름> <출력파일> <필수 키|-> <작업 디렉터리> <명령...>
-# 명령의 stdout을 임시 파일에 받아 유효 JSON이면 보고서로 옮긴다. 종료 코드는 보지 않는다.
+# 명령의 stdout을 임시 파일에 받아 유효 JSON이면 보고서로 옮긴다. 기본은 종료 코드를 보지 않는다.
+# SCAN_OK_RC="0 3"처럼 호출 앞에 주면 그 종료 코드일 때만 보고서로 인정한다(govulncheck, R22).
 run_scan() {
   local name="$1" file="$2" key="$3" dir="$4"; shift 4
   local tmpout="$TMP/scan-$name.json" pid
@@ -213,6 +236,9 @@ run_scan() {
   fi
   wait "$pid"; local rc=$?
   if [ "$rc" = 126 ] || [ "$rc" = 127 ]; then scan_fail "$name" "실행 불가: $(head -c 200 "$CTR_ERR" | tr '\n' ' ')"; return 1; fi
+  if [ -n "${SCAN_OK_RC:-}" ] && ! case " $SCAN_OK_RC " in *" $rc "*) true ;; *) false ;; esac; then
+    scan_fail "$name" "실패 종료 코드 $rc: $(head -c 200 "$CTR_ERR" | tr '\n' ' ')"; return 1
+  fi
   if json_ok "$tmpout" "$key"; then
     mv "$tmpout" "$OUT/$file"
   else
@@ -240,7 +266,9 @@ case "$LANG_KEY" in
     else
       run_scan pip pip.json dependencies "$SRC" "$PIP_AUDIT_BIN" -f json .
     fi ;;
-  go) run_scan govulncheck go.json - "$SRC" "$GOVULNCHECK_BIN" -json ./... ;;
+  # govulncheck는 패키지 로드·빌드 실패에도 config·progress 메시지만 담긴 유효 JSON을 낸다. 종료 코드 0(취약점 없음)·3(취약점 있음)이고
+  # 스트림에 config 메시지가 있을 때만 보고서로 인정한다. 그 밖은 실패로 보아 go.json을 만들지 않는다(빈 칸, R22).
+  go) SCAN_OK_RC="0 3" run_scan go go.json stream:config "$SRC" "$GOVULNCHECK_BIN" -json ./... ;;
   rust) run_scan cargo-audit cargo.json vulnerabilities "$SRC" cargo audit --json ;;
   cpp) ;;
   *) scan_fail lang "언어를 알 수 없음: run=$RUN 언어=$LANG_KEY" ;;

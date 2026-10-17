@@ -1,0 +1,7 @@
+#!/bin/bash
+# 테스트용 가짜 govulncheck: FAKE_GOVULN_STREAM(config 또는 progress)의 JSON 스트림을 내고 FAKE_GOVULN_RC로 끝난다.
+if [ "${FAKE_GOVULN_STREAM:-config}" = config ]; then
+  echo '{"config":{"protocol_version":"v1.0.0","scanner_name":"govulncheck"}}'
+fi
+echo '{"progress":{"message":"Scanning your code..."}}'
+exit "${FAKE_GOVULN_RC:-0}"

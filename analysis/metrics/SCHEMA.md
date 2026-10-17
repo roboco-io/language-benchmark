@@ -53,7 +53,7 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 
 **k6 시나리오.** 시드는 사용자 50명, 글 500개, 태그 풀 20개(글당 태그 3개), 앞의 글 100개에 각 댓글 5개, 팔로우 250건, 즐겨찾기 250건이다. 부하 스크립트 `assets/k6/load.js`는 VU 32개로 다음 비율의 요청을 섞는다: 글 목록 35%, 글 단건 20%, 태그 10%, 피드 10%, 댓글 15%, 쓰기 10%(글 작성·즐겨찾기·댓글 작성이 4:3:3). 측정 순서는 워밍업 15초 후 30초 부하 3회이며, `rps`는 3회의 중앙값이다. 최대 메모리(`peak_rss_mb`)는 이 부하 중에 잰다. 이어서 600초 soak를 실행해 `soak_error_rate`와 `soak_mem_growth_mb`를 얻는다.
 
-**빌드와 기동.** `build_sec`와 `image_mb`는 앱 HEAD를 깨끗한 git clone으로 받아 캐시 없이(no-cache) Docker 빌드한 시간과 최종 이미지 크기다. `cold_start_ms`는 컨테이너 기동부터 첫 정상 응답까지이고, `idle_rss_mb`는 기동 후 시드 전에 잰다.
+**빌드와 기동.** `build_sec`와 `image_mb`는 게이트가 채점한 앱 작업 트리를 임시 디렉터리로 내보내(`git ls-files -co --exclude-standard`, 즉 `.gitignore`가 가리는 의존성·빌드 산출물·DB 제외) 캐시 없이(no-cache) Docker 빌드한 시간과 최종 이미지 크기다. 내보낸 원본의 HEAD sha, 미커밋 변경 줄 수, 파일 수는 `runtime-<run>/source.txt`에 남는다. `cold_start_ms`는 컨테이너 기동부터 첫 정상 응답까지이고, `idle_rss_mb`는 기동 후 시드 전에 잰다.
 
 **`loc`.** scc `--format json` 결과에서 주 언어의 코드 줄(Code)만 합산한다. 주 언어는 typescript는 `TypeScript`·`JavaScript`, python은 `Python`, go는 `Go`, rust는 `Rust`, cpp는 `C++`·`C++ Header`·`C Header`다. scc 호출 시 `--exclude-dir test,tests,__tests__,hurl,node_modules,target,build,.venv,vendor`와 `--not-match '(_test\.go|test_.*\.py|.*_test\.py|\.(test|spec)\.[jt]s|_test\.(cc|cpp))$'`로 테스트와 의존성·빌드 디렉터리를 뺀다. 구현은 `runtime_parse.loc`이다.
 
@@ -72,7 +72,7 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 - Trivy: `Results[].Vulnerabilities[].VulnerabilityID`
 - npm: `vulnerabilities.*.via[]` 중 dict인 항목의 `url` 끝에 있는 GHSA ID
 - pip-audit: `dependencies[].vulns[].id`와 `aliases`
-- govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다
+- govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다. 종료 코드가 0·3이 아니거나 스트림에 `config` 메시지가 없으면 보고서가 없는 것으로 본다(빈 칸)
 - cargo audit: `vulnerabilities.list[].advisory.id`와 `aliases`
 
 **`wall_min`.** `driver.log`의 run 시작 시각부터 `pass` 행 종료 시각까지의 시간이다(분, 소수 첫째 자리). 불합격 run은 빈 칸이다.
