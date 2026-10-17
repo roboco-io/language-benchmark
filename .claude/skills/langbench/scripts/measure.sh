@@ -50,9 +50,31 @@ free_port() {
   done
 }
 
-# CWD가 리포 안인 프로세스가 하나라도 있으면 0 (start.sh가 죽은 뒤에도 백그라운드 서버가 남았는지 판단)
+# measure.sh의 조상 중 하나를 조상으로 둔(또는 그 자체인) 프로세스인지.
+# driver.sh가 리포 안에서 measure.sh를 실행하므로 driver와 그 자손(watchdog 등)은 리포 소속 서버가 아니다.
+# start.sh가 죽은 뒤 남은 백그라운드 서버는 init(ppid 1)에 입양되므로 이 사슬에 걸리지 않는다.
+is_self_related() {
+  local p="$1"
+  while [ -n "$p" ] && [ "$p" -gt 1 ] 2>/dev/null; do
+    case " $ANCESTORS " in *" $p "*) return 0;; esac
+    p=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' ')
+  done
+  return 1
+}
+ANCESTORS=""
+_a=$$; while [ -n "$_a" ] && [ "$_a" -gt 1 ] 2>/dev/null; do ANCESTORS="$ANCESTORS $_a"; _a=$(ps -o ppid= -p "$_a" 2>/dev/null | tr -d ' '); done
+
+# 리포 소속 프로세스(CWD가 리포 안이거나 명령줄에 리포 경로 포함)가 measure.sh 계보 밖에 남아 있으면 0
+# start.sh가 죽은 뒤에도 백그라운드 서버가 남았는지 판단한다.
 repo_alive() {
-  lsof -d cwd -Fn 2>/dev/null | awk -v r="$REPO" '/^n/{p=substr($0,2); if (p==r || index(p, r"/")==1) f=1} END{exit !f}'
+  local pid
+  for pid in $( { lsof -d cwd -Fpn 2>/dev/null | awk -v r="$REPO" '/^p/{pid=substr($0,2)} /^n/{p=substr($0,2); if (p==r || index(p, r"/")==1) print pid}'
+                  ps -axo pid=,command= 2>/dev/null | awk -v r="$REPO" '{c=$0; sub(/^ *[0-9]+ /,"",c); if (index(c, r"/")>0 || index(c, r" ")>0) print $1}'
+                } | sort -u ); do
+    kill -0 "$pid" 2>/dev/null || continue   # 목록을 만드는 동안 끝난 프로세스(lsof·ps 파이프라인 자체 등)는 제외
+    is_self_related "$pid" || return 0
+  done
+  return 1
 }
 
 # 리포 소속 프로세스가 LISTEN 중인 첫 포트 반환

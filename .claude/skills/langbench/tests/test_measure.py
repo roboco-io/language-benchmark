@@ -33,10 +33,10 @@ class MeasureBase(unittest.TestCase):
         shutil.copytree(os.path.join(FAKES, "app-" + name), dst)
         return dst
 
-    def run_script(self, script, *args, env=None, timeout=300):
+    def run_script(self, script, *args, env=None, timeout=300, cwd=None):
         e = dict(os.environ, **(env or {}))
         return subprocess.run(["bash", os.path.join(self.base, script), *args],
-                              capture_output=True, text=True, env=e, timeout=timeout)
+                              capture_output=True, text=True, env=e, timeout=timeout, cwd=cwd)
 
 
 class HostMeasureTest(MeasureBase):
@@ -75,7 +75,9 @@ class HostMeasureTest(MeasureBase):
 
     def test_dead_start_sh_returns_early(self):
         t0 = time.time()
-        r = self.run_script("measure.sh", self.app("dies"), HURL, env={"START_SEC": "120"})
+        repo = self.app("dies")
+        # driver.sh처럼 리포 안을 cwd로 measure.sh를 실행한다(자신·조상의 cwd가 리포 안이어도 조기 종료해야 한다).
+        r = self.run_script("measure.sh", repo, HURL, env={"START_SEC": "120"}, cwd=repo)
         self.assertEqual(r.stdout.strip(), "0,0")
         self.assertLess(time.time() - t0, 30)
 

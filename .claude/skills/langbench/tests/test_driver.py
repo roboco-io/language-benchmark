@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import time
 import unittest
 
 from test_measure import DOCKER, FAKES, HURL, SKILL
@@ -85,6 +86,17 @@ PRICE_TIERS=""
         r, row = self.drive("sonnet55-typescript-3", os.path.join(FAKES, "app-slow"))
         self.assertEqual(row[3:5], ["0", "0"], (r.stderr, row))
         self.assertEqual(row[-1], "rejected")
+
+    def test_dead_start_sh_ends_iteration_early(self):
+        # driver 경로(cwd=리포)에서 즉시 죽는 start.sh는 START_SEC=300을 다 기다리지 않는다.
+        with open(os.path.join(self.base, "bench.env")) as f:
+            env_txt = f.read().replace("START_SEC=60", "START_SEC=300")
+        with open(os.path.join(self.base, "bench.env"), "w") as f:
+            f.write(env_txt)
+        t0 = time.time()
+        r, row = self.drive("sonnet55-typescript-4", os.path.join(FAKES, "app-dies"))
+        self.assertLess(time.time() - t0, 60, (r.stderr, row))
+        self.assertEqual(row[3:5], ["0", "0"])
 
 
 if __name__ == "__main__":
