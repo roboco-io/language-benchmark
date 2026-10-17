@@ -11,8 +11,9 @@ import unittest
 from test_measure import DOCKER, FAKES, HURL, SKILL
 
 
-@unittest.skipUnless(DOCKER, "docker 미기동")
-class DriverGateTest(unittest.TestCase):
+class HarnessCase(unittest.TestCase):
+    """스크립트·PROMPT·단가 0 사양·bench.env를 담은 임시 BASE와 가짜 claude PATH."""
+
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
@@ -51,6 +52,26 @@ PRICE_TIERS=""
         os.makedirs(self.fakebin)
         shutil.copy(os.path.join(FAKES, "claude"), self.fakebin)
 
+    def set_env(self, **kv):
+        """bench.env의 KEY=값 줄을 바꾼다."""
+        path = os.path.join(self.base, "bench.env")
+        with open(path) as f:
+            lines = f.read().splitlines()
+        for k, v in kv.items():
+            lines = [l for l in lines if not l.startswith(k + "=")] + ["%s=%s" % (k, v)]
+        with open(path, "w") as f:
+            f.write("\n".join(lines) + "\n")
+
+    def read(self, name):
+        p = os.path.join(self.base, name)
+        if not os.path.exists(p):
+            return ""
+        with open(p) as f:
+            return f.read()
+
+
+@unittest.skipUnless(DOCKER, "docker 미기동")
+class DriverGateTest(HarnessCase):
     def tearDown(self):
         ids = subprocess.run(["docker", "ps", "-aq", "--filter", "name=lb-sonnet55-typescript"],
                              capture_output=True, text=True).stdout.split()
@@ -170,6 +191,75 @@ PRICE_TIERS=""
         self.assertEqual(rows[-1][-1], "na")
         # 복사본에서 원 run의 .ralph-done이 지워져 있어야 한다
         self.assertFalse(os.path.exists(os.path.join(self.base, "app-%s-fu" % run, ".ralph-done")))
+
+
+class DriverHoldTest(HarnessCase):
+    """구독 한도 보류(R18)와 재개 시 남은 예산(R19). 채점은 start.sh 없는 앱이라 0,0으로 곧바로 끝난다(Docker 불필요)."""
+    RUN = "sonnet55-typescript-1"
+
+    def drive(self, run=RUN, **extra):
+        env = dict(os.environ, HOME=self.home, HURL_DIRS=HURL,
+                   FAKE_CLAUDE_LOG=os.path.join(self.tmp, "claude-calls.log"),
+                   PATH=self.fakebin + os.pathsep + os.environ["PATH"], **extra)
+        return subprocess.run(["bash", os.path.join(self.base, "driver.sh"), run],
+                              capture_output=True, text=True, env=env, timeout=300)
+
+    def assert_held(self, r, marker):
+        self.assertEqual(r.returncode, 75, r.stderr)
+        self.assertFalse(os.path.exists(os.path.join(self.base, "done-" + self.RUN)))
+        rows = [l for l in self.read("metrics-%s.csv" % self.RUN).splitlines() if l[:1].isdigit()]
+        self.assertEqual(rows, [])
+        hold = self.read("hold-" + self.RUN)
+        self.assertIn(marker, hold)
+        self.assertRegex(hold.splitlines()[0], r"^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$")
+        self.assertIn("=== RUN %s held: " % self.RUN, self.read("driver.log"))
+
+    def test_limit_message_on_stdout_holds(self):
+        self.assert_held(self.drive(FAKE_CLAUDE_LIMIT="stdout"), "usage limit reached")
+
+    def test_limit_record_in_session_holds(self):
+        self.assert_held(self.drive(FAKE_CLAUDE_LIMIT="session"), "hit your limit")
+
+    def test_held_run_is_not_resumed_by_driver(self):
+        self.drive(FAKE_CLAUDE_LIMIT="stdout")
+        os.remove(os.path.join(self.tmp, "claude-calls.log"))
+        r = self.drive()
+        self.assertEqual(r.returncode, 75)
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "claude-calls.log")))
+
+    def test_normal_exit_mentioning_429_is_not_a_hold(self):
+        # 정상 종료(0) 출력은 에이전트 요약일 수 있으므로 패턴이 있어도 보류하지 않는다.
+        fake = os.path.join(self.fakebin, "claude")
+        with open(fake, "w") as f:
+            f.write("#!/bin/bash\necho 'implemented rate limit middleware returning 429'\n")
+        os.chmod(fake, 0o755)
+        r = self.drive()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertTrue(os.path.exists(os.path.join(self.base, "done-" + self.RUN)))
+        self.assertFalse(os.path.exists(os.path.join(self.base, "hold-" + self.RUN)))
+
+    def resume_with_previous_segment(self, seconds):
+        """이전 구간 1개(seconds초, finished 줄 있음)와 iteration 1 행을 만들고 MAX_ITER=2로 재개한다."""
+        self.set_env(MAX_SEC="150", MAX_ITER="2")
+        with open(os.path.join(self.base, "driver.log"), "w") as f:
+            f.write("=== RUN %s (claude-native m, PROMPT-typescript.md, PORT=1) start: 2026-10-17 10:00:00 ===\n" % self.RUN)
+            f.write("=== RUN %s finished: 2026-10-17 10:%02d:%02d | x ===\n" % (self.RUN, seconds // 60, seconds % 60))
+        with open(os.path.join(self.base, "metrics-%s.csv" % self.RUN), "w") as f:
+            f.write("1,2026-10-17 10:00:30,0,0,0,,,0,na\n")
+        return self.drive()
+
+    def test_resume_gets_remaining_budget(self):
+        r = self.resume_with_previous_segment(100)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("budget 50s of 150s) start:", self.read("driver.log"))
+        rows = self.read("metrics-%s.csv" % self.RUN).splitlines()
+        self.assertEqual(rows[-1].split(",")[0], "2")
+
+    def test_resume_past_cap_times_out_without_agent(self):
+        r = self.resume_with_previous_segment(200)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertTrue(self.read("metrics-%s.csv" % self.RUN).splitlines()[-1].startswith("timeout,"))
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "claude-calls.log")))
 
 
 if __name__ == "__main__":

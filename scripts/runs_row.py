@@ -70,15 +70,20 @@ def last_gate(met_path):
 def run_minutes(driver_log, run, ended):
     """driver.log의 run 구간(`=== RUN <run> (…) start:` ~ `=== RUN <run> finished:`)을 모두 합친 분.
     driver는 DONE_ITER+1부터 재개하므로 iterations가 모든 구간에 걸치듯 시간도 모든 구간을 합친다(R16).
-    마지막 구간은 finished 줄 대신 pass 행의 종료 시각까지 센다. 시작 줄이 없거나 앞 구간의 finished 줄이 없으면 None."""
+    마지막 구간은 finished 줄 대신 pass 행의 종료 시각까지 센다. 시작 줄이 없거나 앞 구간의 finished 줄이 없으면 None.
+    `=== RUN <run> held:` 줄(구독 한도 보류, R18)은 그때까지의 구간을 모두 버린다. 보류 run은 held/로 옮기고 처음부터 다시 돌리기 때문이다."""
     text = read_text(driver_log)
     if text is None:
         return None
     name = re.escape(run)
     start_re = re.compile(r"^=== RUN " + name + r" \(.*\) start: (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) ===")
     end_re = re.compile(r"^=== RUN " + name + r" finished: (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) ")
+    held_re = re.compile(r"^=== RUN " + name + r" held: ")
     segments = []  # [시작, 종료 또는 None]
     for line in text.splitlines():
+        if held_re.match(line):
+            segments = []
+            continue
         mt = start_re.match(line)
         if mt:
             segments.append([datetime.strptime(mt.group(1), TIME_FORMAT), None])

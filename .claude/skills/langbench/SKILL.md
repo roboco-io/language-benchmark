@@ -38,11 +38,13 @@ description: Use when running or re-running the language-benchmark experiment (�
    - TS run으로 자매 리포 기준선(iteration 1 완주, 4-8분) 재현을 확인한 결과.
 
    `MAX_SEC`는 채점 시간(호스트 기동 대기, Docker 빌드)을 포함한 run 전체의 wall-clock 상한이며 모든 언어에 같은 값을 쓴다(R5). 빌드가 느린 언어는 같은 상한 안에서 iteration 여유가 줄어들며, 이는 metrics 타임스탬프에 그대로 드러난다.
-6. **기동**: `nohup caffeinate -is bash $BASE/run-all.sh >/dev/null 2>&1 &`. 진행은 `orchestrator.log`, `driver.log`, `metrics-<run>.csv`, `cost-guard.csv`(30초 간격 추정 비용)로 확인하고 개입하지 않는다. 같은 오류가 반복되는 등 이상 징후가 보이면 원인을 조사하기 전에 먼저 멈추고 사용자에게 알린다. 구독 한도로 중단된 run은 서비스 장애 보류로 처리하고 재실행한다. driver는 중단된 run을 다시 시작하면 `metrics-<run>.csv`의 마지막 iteration 다음부터 이어서 실행한다.
+6. **기동**: `nohup caffeinate -is bash $BASE/run-all.sh >/dev/null 2>&1 &`. 진행은 `orchestrator.log`, `driver.log`, `metrics-<run>.csv`, `cost-guard.csv`(30초 간격 추정 비용)로 확인하고 개입하지 않는다. 같은 오류가 반복되는 등 이상 징후가 보이면 원인을 조사하기 전에 먼저 멈추고 사용자에게 알린다. driver는 중단된 run을 다시 시작하면 `metrics-<run>.csv`의 마지막 iteration 다음부터 이어서 실행한다. 이때 이번 구간의 wall-clock 예산은 `MAX_SEC`에서 `driver.log`의 이전 구간 경과 합을 뺀 값이다(R19). 구간 규칙은 `runs_row.py`의 `wall_min`과 같고, 시작 줄에 `budget <남은 초>s of <MAX_SEC>s`로 남는다. 후속 과제는 `FU_MAX_SEC`로 같은 계산을 한다.
+
+   구독 한도로 중단된 run은 서비스 장애 보류로 처리하고 처음부터 다시 실행한다(R18). driver는 iteration이 끝날 때마다 한도 메시지를 찾는다. 패턴은 `driver.sh`의 `LIMIT_PATTERNS` 한 변수에 있다(`usage limit`, `limit reached`, `hit your limit`, `rate limit`·`rate_limit`, `API Error: 429`, `overloaded`, 대소문자 무시). 오탐을 줄이려고 claude stdout·stderr는 비정상 종료일 때만 보고, 세션 jsonl은 그 iteration에 갱신된 파일의 API 오류 기록(`isApiErrorMessage`, 모델 `<synthetic>`)만 본다. 찾으면 그 iteration은 metrics에 남기지 않고 `done-<run>`도 만들지 않으며, `$BASE/hold-<run>`(시각과 일치한 줄)과 `driver.log`의 `=== RUN <run> held:` 줄을 쓰고 exit 75로 끝난다. run-all.sh·run_followups.sh는 75를 받으면 `HOLD: subscription limit`을 출력하고 배치 전체를 exit 75로 멈춘다. 한도가 풀린 뒤 같은 명령을 다시 실행하면, `hold-<run>`이 있는 run의 앱·metrics·실행 로그·세션(`~/.claude/projects`의 원본 포함)을 `$BASE/held/<run>-<시각>/`로 옮기고 iteration 1부터 다시 시작한다. `held` 줄 앞의 구간은 `wall_min`과 재개 예산 계산에서 버린다. 보관된 세션은 비용 가드의 실험 누적 비용에 계속 들어간다. 한도 메시지의 실제 문구는 Phase 0에서 확인해 `phase0.md`에 기록한다.
 7. **독립 재검증**: 완주(게이트 `pass`) run마다 `measure.sh`와 `measure_docker.sh`를 각각 2회 실행해 결과가 `13,154`로 일치하는지 확인하고 `recheck.csv`로 남긴다.
    - 호스트: `bash $BASE/measure.sh $BASE/app-<run> $BASE/harness-hurl`
    - Docker: `bash $BASE/measure_docker.sh $BASE/app-<run> <run>-recheck $BASE/harness-hurl`
-8. **usage 집계**: `python3 scripts/aggregate_tokens.py --json $BASE/sessions-<run>/`(message.id 중복 제거). 결과는 토큰 대리지표이며 청구 비용이 아니다.
+8. **usage 집계**: `python3 scripts/aggregate_tokens.py --json --recursive $BASE/sessions-<run>/`(message.id 중복 제거). `--recursive`는 서브에이전트 세션(`<세션 id>/subagents/agent-*.jsonl`)을 포함하며, `runs_row.py`의 `token_proxy`·`cost_usd`와 비용 가드(`cost_guard.py`)도 같은 범위를 센다(R21). 결과는 토큰 대리지표이며 청구 비용이 아니다.
 9. **후속 과제**: 8단계까지 끝나 `done-all`이 생긴 뒤 `nohup caffeinate -is bash $BASE/run_followups.sh >/dev/null 2>&1 &`를 실행한다. 스크립트는 metrics 마지막 게이트가 `pass`인 run마다 `FOLLOWUP=1 driver.sh`로 코멘트 수정 API 과제를 순차 실행한다. 앱은 `app-<run>-fu`로 복사되어 이어서 작업하며 채점은 14파일(본 과제 13 + 후속 1)이다. 세션은 `sessions-<run>-fu`에 분리된다.
 10. **런타임 측정**: 게이트를 통과한 run마다 `bash $BASE/runtime.sh $BASE/app-<run> <run>`을 순차로 실행한다. 다른 Docker 부하(다른 컨테이너 빌드, 후속 과제 채점, 병렬 측정)가 없는 상태에서 한 번에 한 run씩만 돌린다. 부하가 겹치면 rps·지연·메모리가 오염된다. 측정 동작은 다음과 같다.
     - 1부: 빌드, 콜드 스타트, 유휴 메모리, 시드(`seed.py`), 워밍업 후 k6 부하 3회, soak. 컨테이너는 모든 언어에 `--cpus=2 --memory=1g`이다.
@@ -60,12 +62,13 @@ description: Use when running or re-running the language-benchmark experiment (�
 
 ## metrics CSV
 
-열은 `iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트`다. 게이트 `pass`만 완주다. 에이전트가 `.ralph-done`을 선언해도 호스트와 Docker 채점이 모두 기대 파일 수(본 과제 13, 후속 14)를 통과하지 못하면 `rejected`로 삭제된다. Docker 채점은 호스트 채점이 기대 파일 수를 통과한 iteration에서만 실행하므로, 그렇지 않은 행의 Docker 열은 비어 있다. `timeout,<시각>` 행은 `MAX_SEC` 도달, `budget,<시각>` 행은 비용 상한 도달이다. iteration exit `124`는 정체 감시(`STALL_SEC`), `125`는 run 상한, `126`은 비용 상한이 종료한 것이다.
+열은 `iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트`다. 게이트 `pass`만 완주다. 에이전트가 `.ralph-done`을 선언해도 호스트와 Docker 채점이 모두 기대 파일 수(본 과제 13, 후속 14)를 통과하지 못하면 `rejected`로 삭제된다. Docker 채점은 호스트 채점이 기대 파일 수를 통과한 iteration에서만 실행하므로, 그렇지 않은 행의 Docker 열은 비어 있다. `timeout,<시각>` 행은 `MAX_SEC` 도달(재개 구간 합산 기준), `budget,<시각>` 행은 비용 상한 도달이다. 구독 한도에 걸린 iteration은 행을 남기지 않는다(`hold-<run>`, exit 75). iteration exit `124`는 정체 감시(`STALL_SEC`), `125`는 run 상한, `126`은 비용 상한이 종료한 것이다.
 
 ## 흔한 실수
 
 | 실수 | 결과 | 대응 |
 |---|---|---|
+| 구독 한도 도달을 정상 iteration으로 기록 | 에이전트가 아무 일도 못 한 iteration이 MAX_ITER를 소진하고, 남은 run이 연쇄로 가짜 실패가 된다(R18) | driver가 한도 메시지를 감지하면 행을 남기지 않고 exit 75로 보류한다. 오케스트레이터가 배치를 멈추고, 다음 실행에서 보류 run을 `held/`로 옮겨 처음부터 다시 시작한다 |
 | 입력 한도·과금 체계를 확인하지 않고 기동 | 작은 컨텍스트 모델이 한도에 닿아 400 반복·구간 최고 단가 과금(자매 리포 EXP-042) | `model-specs.json` 작성, preflight 보고서, `AskUserQuestion` 승인, `approve.sh`. 승인이 없으면 smoke·run-all이 거부한다 |
 | 비용 상한을 사후 집계로만 둠 | 제공자 usage 누락으로 2 run에 약 $92 과금(자매 리포 EXP-042) | `RUN_BUDGET_USD`·`EXP_BUDGET_USD` 필수. 하네스가 30초마다 추정해 초과하면 종료(exit 126)하고 `budget-stop`을 만든다 |
 | `cost-guard.csv`가 0만 기록하는데 그대로 둠 | 빈 `PRICE_*`로 `cost_guard.py`가 예외를 내 비용 상한이 무력화(자매 리포 EXP-045) | driver는 추정 실패 시 run을 멈추고(fail-closed, `cost-guard.err`) smoke가 조건마다 `cost_guard.py`를 실행해 점검한다. 구독 실행의 단가 0과 예외를 구분한다 |

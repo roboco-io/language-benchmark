@@ -75,4 +75,4 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 - govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다. 종료 코드가 0·3이 아니거나 스트림에 `config` 메시지가 없으면 보고서가 없는 것으로 본다(빈 칸)
 - cargo audit: `vulnerabilities.list[].advisory.id`와 `aliases`
 
-**`wall_min`.** `driver.log`의 run 시작 시각부터 `pass` 행 종료 시각까지의 시간이다(분, 소수 첫째 자리). 불합격 run은 빈 칸이다.
+**`wall_min`.** `driver.log`의 run 구간(`=== RUN <run> (…) start:`부터 `=== RUN <run> finished:`까지)을 모두 합친 시간이다(분, 소수 첫째 자리). 재개된 run은 구간마다 더하고 마지막 구간은 `pass` 행 종료 시각까지 센다. 앞 구간에 finished 줄이 없으면 빈 칸이다. 구독 한도로 보류된 시도(`=== RUN <run> held:` 줄 앞의 구간)는 처음부터 다시 돌리므로 버린다. 불합격 run은 빈 칸이다. `followup_min`도 `<run>-fu` 구간에 같은 규칙을 쓴다.

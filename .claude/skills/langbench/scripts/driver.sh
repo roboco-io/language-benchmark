@@ -26,6 +26,8 @@ fi
 
 REPO="$BASE/app-$RUN"; MET="$BASE/metrics-$RUN.csv"; LOG="$BASE/ralph-run-$RUN.log"
 [ -f "$BASE/done-$RUN" ] && exit 0
+# 구독 한도 보류 run은 이어서 돌리지 않는다. run-all.sh·run_followups.sh가 부분 산출물을 held/로 옮기고 처음부터 다시 시작한다(R18).
+[ -f "$BASE/hold-$RUN" ] && { echo "hold-$RUN 있음 — 오케스트레이터가 처음부터 다시 시작해야 함 ($RUN)" >> "$BASE/driver.log"; exit 75; }
 
 # 빈 포트 선택: 3000번대 고정 포트가 외부 프로세스(VS Code Live Preview 등)와 충돌하지 않도록 (EXP-029 D-1, EXP-031)
 free_port() {
@@ -57,7 +59,8 @@ budget_check() {  # 상한 초과 시 사유를 출력, 아니면 아무것도 �
   # 추정 실패는 0으로 보지 않고 run을 멈춘다(fail-closed). EXP-045에서 예외를 0으로 삼켜 가드가 무력화됐다.
   cur=$(python3 "$BASE/cost_guard.py" "$BASE" "$HARNESS" "$RUN" "$(cost_path)" 2>>"$BASE/cost-guard.err") \
     || { echo "$(date '+%F %T'),$RUN,ERR," >> "$BASE/cost-guard.csv"; echo "비용 추정 실패(cost-guard.err 참조)"; return; }
-  for p in "$BASE"/sessions-*; do [ -d "$p" ] && [ "$p" != "$BASE/sessions-$RUN" ] && others+=("$p"); done
+  # 구독 한도로 보류돼 held/에 옮긴 시도의 세션도 실험 누적 비용에 넣는다(R18).
+  for p in "$BASE"/sessions-* "$BASE"/held/*/sessions-*; do [ -d "$p" ] && [ "$p" != "$BASE/sessions-$RUN" ] && others+=("$p"); done
   prev=0; [ ${#others[@]} -gt 0 ] && { prev=$(python3 "$BASE/cost_guard.py" "$BASE" "$HARNESS" ALL "${others[@]}" 2>>"$BASE/cost-guard.err") \
     || { echo "$(date '+%F %T'),$RUN,$cur,ERR" >> "$BASE/cost-guard.csv"; echo "비용 추정 실패(cost-guard.err 참조)"; return; }; }
   echo "$(date '+%F %T'),$RUN,$cur,$prev" >> "$BASE/cost-guard.csv"
@@ -70,6 +73,88 @@ budget_check() {  # 상한 초과 시 사유를 출력, 아니면 아무것도 �
 watch_paths() {
   echo "$LOG"; echo "$REPO"
   echo "$HOME/.claude/projects/$(echo "$REPO" | sed 's|[/.]|-|g')"
+}
+
+# 구독 한도·과부하 메시지 패턴(대소문자 무시 ERE, R18). 실제 문구는 Phase 0에서 확인해 phase0.md에 기록한다.
+LIMIT_PATTERNS='usage limit|limit reached|hit your limit|rate[ _-]?limit|API Error: 429|overloaded'
+# limit_hit <iteration 출력 시작 바이트> <iteration 시작 표시 파일> <exit> — 한도 메시지를 찾으면 그 줄을 출력한다.
+# 오탐을 줄이려고 범위를 좁힌다. claude stdout·stderr는 비정상 종료(0·124·125·126 외)일 때만 본다. 정상 종료 출력에는
+# 에이전트가 쓴 요약(예: "429 rate limit 구현")이 있을 수 있기 때문이다. 세션 jsonl은 이 iteration에 갱신된 파일의
+# API 오류 기록(isApiErrorMessage 또는 model "<synthetic>")만 본다. 서브에이전트 세션도 포함한다.
+limit_hit() {
+  local off="$1" marker="$2" rc="$3" line
+  case "$rc" in 0|124|125|126) ;; *)
+    line=$(tail -c +"$((off + 1))" "$LOG" | grep -iE -m1 "$LIMIT_PATTERNS")
+    [ -n "$line" ] && { echo "stdout: ${line:0:300}"; return; } ;;
+  esac
+  find "$(cost_path)" -name '*.jsonl' -newer "$marker" 2>/dev/null | LIMIT_PATTERNS="$LIMIT_PATTERNS" python3 -c '
+import json, os, re, sys
+pat = re.compile(os.environ["LIMIT_PATTERNS"], re.I)
+for path in sys.stdin.read().splitlines():
+    try:
+        lines = open(path, errors="replace").read().splitlines()
+    except OSError:
+        continue
+    for line in lines:
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
+        m = r.get("message") if isinstance(r, dict) else None
+        if not isinstance(m, dict) or not (r.get("isApiErrorMessage") or m.get("model") == "<synthetic>"):
+            continue
+        c = m.get("content")
+        text = " ".join(x.get("text", "") for x in c if isinstance(x, dict)) if isinstance(c, list) else str(c)
+        if pat.search(text):
+            print("session: " + " ".join(text.split())[:300])
+            sys.exit()
+'
+}
+
+# 이전 구간들이 쓴 wall-clock 초 합(R19). scripts/runs_row.py run_minutes와 같은 구간 규칙이다.
+# 구간 = driver.log의 `=== RUN <run> (…) start:` ~ `=== RUN <run> finished:`. `=== RUN <run> held:` 줄은 그때까지의 구간을 모두 버린다
+# (보류 run은 처음부터 다시 돌리므로). finished 줄 없이 끝난 구간(driver 강제 종료)은 그 구간의 마지막 metrics 행 시각까지로 센다.
+prev_elapsed() {
+  python3 - "$BASE/driver.log" "$RUN" "$MET" <<'EOF'
+import csv, re, sys
+from datetime import datetime
+F = "%Y-%m-%d %H:%M:%S"
+TS = r"(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)"
+log, run, met = sys.argv[1:4]
+try:
+    text = open(log).read()
+except OSError:
+    print(0)
+    sys.exit()
+name = re.escape(run)
+start_re = re.compile(r"^=== RUN " + name + r" \(.*\) start: " + TS + " ===")
+end_re = re.compile(r"^=== RUN " + name + r" finished: " + TS + " ")
+held_re = re.compile(r"^=== RUN " + name + r" held: ")
+segs = []
+for line in text.splitlines():
+    if held_re.match(line):
+        segs = []
+    elif start_re.match(line):
+        segs.append([datetime.strptime(start_re.match(line).group(1), F), None])
+    elif end_re.match(line) and segs and segs[-1][1] is None:
+        segs[-1][1] = datetime.strptime(end_re.match(line).group(1), F)
+stamps = []
+try:
+    for row in csv.reader(open(met)):
+        try:
+            stamps.append(datetime.strptime(row[1], F))
+        except (IndexError, ValueError):
+            pass
+except OSError:
+    pass
+total = 0.0
+for k, (start, end) in enumerate(segs):
+    if end is None:
+        nxt = segs[k + 1][0] if k + 1 < len(segs) else datetime.max
+        end = max([t for t in stamps if start <= t < nxt] or [start])
+    total += (end - start).total_seconds()
+print(int(total))
+EOF
 }
 
 invoke_agent() {
@@ -88,13 +173,16 @@ git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1 || git -C "$REPO" init -q
 cd "$REPO" || exit 1
 DONE_ITER=$(grep -c '^[0-9]' "$MET" 2>/dev/null | head -1)
 DONE_ITER=${DONE_ITER:-0}
+# 재개한 run도 run 전체 상한은 MAX_SEC 하나다. 이번 구간 예산 = MAX_SEC - 이전 구간 경과(R19).
+PREV_SEC=$(prev_elapsed) || PREV_SEC=0
+REMAIN=$(( MAX_SEC - ${PREV_SEC:-0} ))
 START=$(date +%s)
 # 에이전트 세션이 띄우는 서버도 빈 포트를 쓰도록 run 단위로 PORT 주입 (PROMPT는 불변)
 export PORT="$(free_port)"
-echo "=== RUN $RUN ($HARNESS $MODEL, $(basename "$PROMPT"), PORT=$PORT) start: $(date '+%F %T') ===" >> "$BASE/driver.log"
+echo "=== RUN $RUN ($HARNESS $MODEL, $(basename "$PROMPT"), PORT=$PORT, budget ${REMAIN}s of ${MAX_SEC}s) start: $(date '+%F %T') ===" >> "$BASE/driver.log"
 for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
-  if [ $(( $(date +%s) - START )) -gt "$MAX_SEC" ]; then
-    echo "=== [$RUN] wall-clock cap ${MAX_SEC}s reached before iteration $i: $(date '+%F %T') ===" >> "$LOG"
+  if [ "$REMAIN" -le 0 ] || [ $(( $(date +%s) - START )) -gt "$REMAIN" ]; then
+    echo "=== [$RUN] wall-clock cap ${MAX_SEC}s reached before iteration $i (이번 구간 예산 ${REMAIN}s): $(date '+%F %T') ===" >> "$LOG"
     echo "timeout,$(date '+%F %T')" >> "$MET"
     break
   fi
@@ -105,9 +193,21 @@ for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
     break
   fi
   echo "=== [$RUN] iteration $i start: $(date '+%F %T') ===" >> "$LOG"
+  OFF=$(wc -c < "$LOG" | tr -d ' ')
+  ITER_MARK="$BASE/.iter-start-$RUN"; touch "$ITER_MARK"
   WATCH=(); while IFS= read -r w; do WATCH+=("$w"); done < <(watch_paths)
-  run_with_watchdog "$STALL_SEC" $((START + MAX_SEC)) "${WATCH[@]}" -- invoke_agent < /dev/null >> "$LOG" 2>&1
+  run_with_watchdog "$STALL_SEC" $((START + REMAIN)) "${WATCH[@]}" -- invoke_agent < /dev/null >> "$LOG" 2>&1
   EXIT=$?
+  HIT=$(limit_hit "$OFF" "$ITER_MARK" "$EXIT" | head -1)
+  rm -f "$ITER_MARK"
+  if [ -n "$HIT" ]; then
+    # 구독 한도: 이 iteration은 metrics에 남기지 않고 done도 만들지 않는다. 오케스트레이터가 배치를 멈춘다(R18).
+    NOW="$(date '+%F %T')"
+    printf '%s\n%s\n' "$NOW" "$HIT" > "$BASE/hold-$RUN"
+    echo "=== [$RUN] HOLD: subscription limit — iteration $i 미기록 (exit $EXIT): $HIT : $NOW ===" >> "$LOG"
+    echo "=== RUN $RUN held: $NOW | $HIT ===" >> "$BASE/driver.log"
+    exit 75
+  fi
   [ -n "$WATCHDOG_REASON" ] && echo "=== [$RUN] watchdog: iteration $i 종료 — $WATCHDOG_REASON (exit $EXIT, 124=정체·125=run 상한·126=비용 상한) ===" >> "$LOG"
   echo "=== [$RUN] iteration $i end (exit $EXIT): $(date '+%F %T') ===" >> "$LOG"
   RESULT=$(bash "$BASE/measure.sh" "$REPO" $HURL_DIRS)

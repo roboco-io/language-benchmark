@@ -12,14 +12,17 @@ gate_of(){ # $1 run — metrics 마지막 데이터 행(숫자 iter로 시작)�
   grep '^[0-9]' "$BASE/metrics-$1.csv" 2>/dev/null | tail -1 | awk -F, '{print $NF}'
 }
 run_fu(){
-  local run="$1"
+  local run="$1" rc held
   [ "$(gate_of "$run")" = pass ] || { log "skip $run-fu (원 run 게이트 $(gate_of "$run"))"; return; }
   [ -f "$BASE/done-$run-fu" ] && { log "skip $run-fu"; return; }
   [ -f "$BASE/budget-stop" ] && { log "skip $run-fu (budget-stop)"; return; }
+  # 구독 한도 보류 run은 app-<run>-fu까지 held/로 옮겨 원 run 앱에서 다시 복사해 시작한다(R18)
+  held=$(restart_held "$run-fu") && log "restart $run-fu from iteration 1 (보류 시도 보관: $held)"
   log "start $run-fu"
-  FOLLOWUP=1 bash "$BASE/driver.sh" "$run"
+  FOLLOWUP=1 bash "$BASE/driver.sh" "$run"; rc=$?
   archive_sessions "$run-fu"
-  log "end $run-fu | $(tail -1 "$BASE/metrics-$run-fu.csv" 2>/dev/null)"
+  log "end $run-fu (exit $rc) | $(tail -1 "$BASE/metrics-$run-fu.csv" 2>/dev/null)"
+  [ "$rc" = 75 ] && hold_stop "$run-fu"
 }
 log "starting follow-up runs ($HARNESS: $CONDITIONS / $LANGS / n=$N)"
 for n in $(seq 1 "$N"); do

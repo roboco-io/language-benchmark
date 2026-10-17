@@ -84,6 +84,17 @@ class RunsRowTests(unittest.TestCase):
             "cache_read_input_tokens": 0}}}) + "\n")
         self.assertEqual(self.row("opus55-go-1", base)["token_proxy"], "12.0")
 
+    def test_wall_min_drops_held_attempt(self):
+        # R18: 보류된 시도(held 줄 앞의 구간)는 버리고 처음부터 다시 돈 구간만 센다.
+        base = self.base()
+        log = base / "driver.log"
+        text = log.read_text().replace(
+            "=== RUN opus55-go-1 (", "=== RUN opus55-go-1 (claude-native claude-opus-5-5, PROMPT-go.md, PORT=40999) "
+            "start: 2026-10-17 08:00:00 ===\n=== RUN opus55-go-1 held: 2026-10-17 08:30:00 | stdout: limit ===\n"
+            "=== RUN opus55-go-1 (", 1)
+        log.write_text(text)
+        self.assertEqual(self.row("opus55-go-1", base)["wall_min"], "12.5")
+
     def test_partial_load_blanks_latency(self):
         base = self.base()
         (base / "runtime-opus55-go-1" / "load-3.json").unlink()
