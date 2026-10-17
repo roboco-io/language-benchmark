@@ -50,6 +50,8 @@ def build(rows: list[dict]) -> dict:
     for r in rows:
         if r.get("language") not in LANGUAGES:
             raise ValueError(f"알 수 없는 언어: {r.get('language')!r} (run {r.get('run')})")
+        if str(r.get("pass", "")).strip() not in ("0", "1"):
+            raise ValueError(f"pass는 0 또는 1이어야 함: {r.get('pass')!r} (run {r.get('run')})")
         if r.get("model") not in MODELS:
             raise ValueError(f"알 수 없는 모델: {r.get('model')!r} (run {r.get('run')})")
     cells = {}

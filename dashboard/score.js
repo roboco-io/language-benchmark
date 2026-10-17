@@ -32,7 +32,13 @@
     return Object.fromEntries(langs.map((l) => [l, wsum[l] ? sum[l] / wsum[l] : null]));
   }
 
-  const api = { normalize, composite };
+  // 과정 지표 외 칸의 표본 수 "측정 run/전체 run". run이 없으면 빈 문자열.
+  function sampleLabel(cell, metric) {
+    if (metric.group === "process" || !cell.n) return "";
+    return `${cell[metric.key + "_n"] || 0}/${cell.n}`;
+  }
+
+  const api = { normalize, composite, sampleLabel };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.Score = api;
 })(typeof window !== "undefined" ? window : globalThis);

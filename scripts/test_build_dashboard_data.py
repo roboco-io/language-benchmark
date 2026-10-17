@@ -57,6 +57,10 @@ class BuildTests(unittest.TestCase):
         rows = [row("go", "opus55", 1, followup_pass=1), row("go", "opus55", 2, followup_pass=0)]
         self.assertEqual(build(rows)["cells"]["go"]["opus55"]["followup_pass"], 0.5)
 
+    def test_blank_pass_rejected(self):
+        with self.assertRaises(ValueError):
+            build([row("go", "opus55", 1, passed="")])
+
     def test_unknown_language_rejected(self):
         with self.assertRaises(ValueError):
             build([row("java", "opus55", 1)])
