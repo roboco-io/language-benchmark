@@ -118,16 +118,16 @@ class RuntimeParse(unittest.TestCase):
         self.assertEqual(runtime_parse.vulns({"go": go, "trivy": trivy}), 1)
 
     def test_trivy_npm_linked_via_references(self):
-        # 지정된 예시 ID(abcd-efgh-jkmp)는 GHSA 알파벳(a,b,d,e,k 불가)에 맞지 않아 유효한 ID로 바꿨다.
+        # 유효한 GHSA 알파벳 ID를 쓴다.
         trivy = {"Results": [{"Vulnerabilities": [{
             "VulnerabilityID": "CVE-2025-7",
-            "References": ["https://github.com/advisories/GHSA-cfgh-jmpq-rvwx"]}]}]}
+            "References": ["https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"]}]}]}
         npm = {"vulnerabilities": {"x": {"via": [
-            {"url": "https://github.com/advisories/GHSA-cfgh-jmpq-rvwx"}]}}}
+            {"url": "https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"}]}}}
         self.assertEqual(runtime_parse.vulns({"trivy": trivy, "npm": npm}), 1)
         trivy2 = {"Results": [{"Vulnerabilities": [{
             "VulnerabilityID": "CVE-2025-8",
-            "PrimaryURL": "https://github.com/advisories/ghsa-CFGH-JMPQ-RVWX"}]}]}
+            "PrimaryURL": "https://github.com/advisories/ghsa-2C3F-4G5H-6J7M"}]}]}
         self.assertEqual(runtime_parse.vulns({"trivy": trivy2, "npm": npm}), 1)
 
     def test_load_report_json_stream(self):
