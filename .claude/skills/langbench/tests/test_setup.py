@@ -99,6 +99,27 @@ PRICE_TIERS=""
         self.assertNotIn("정본 해시 불일치", r.stderr)
         self.assertIn("PROMPT-python.md 없음 또는 checksums.md5에 미등록", r.stderr)
 
+    def test_setup_fails_without_toolchain(self):
+        # cmake만 숨긴 PATH(심볼릭 링크 디렉터리)에서 LB_SKIP_TOOLCHAIN 없이 실행하면 툴체인 점검에서 중단돼야 한다.
+        bin_dir = os.path.join(self.tmp, "bin")
+        os.makedirs(bin_dir)
+        for d in ("/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin", "/sbin", "/usr/sbin"):
+            if not os.path.isdir(d):
+                continue
+            for name in os.listdir(d):
+                link = os.path.join(bin_dir, name)
+                if name != "cmake" and not os.path.lexists(link):
+                    os.symlink(os.path.join(d, name), link)
+        env_file = os.path.join(self.tmp, "bench.env")
+        self.run_setup()  # bench.env 작성(툴체인 점검 생략 모드)
+        shutil.rmtree(os.path.join(self.home, "experiments"))
+        env = dict(os.environ, HOME=self.home, PATH=bin_dir)
+        env.pop("LB_SKIP_TOOLCHAIN", None)
+        r = subprocess.run(["/bin/bash", os.path.join(self.skill, "scripts", "setup.sh"), env_file],
+                           env=env, capture_output=True, text=True)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("없음: cmake", r.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,7 @@
 ## 현재 우선순위 (2026-10-17)
 
 - [x] 리포 생성, 운영 골격 이식, 빈 대시보드 배포 ([설계](docs/superpowers/specs/2026-10-17-language-benchmark-design.md))
-- [ ] 다언어 Ralph 하네스 이식: 자매 리포 `ralph-model-benchmark` 스킬에 언어 축, `start.sh`·Docker 이중 게이트 추가
+- [x] 다언어 Ralph 하네스 이식: 자매 리포 `ralph-model-benchmark` 스킬에 언어 축, `start.sh`·Docker 이중 게이트 추가
 - [ ] 런타임 측정 하네스: Docker 리소스 제한, 시드 스크립트, k6 부하·장시간 부하, 빌드·이미지·콜드 스타트, LOC·의존성, 취약점 스캔
 - [ ] 후속 과제(코멘트 수정 API) Hurl 정본 작성·해시 고정
 - [ ] Phase 0: 툴체인 버전 기록, Hurl 바이너리 확정, 언어별 빌드 시간으로 run 상한 확정, TS 기준선 재현 확인

@@ -10,6 +10,7 @@
 - 과제 정의, 언어별 스택, 기동 규약(`start.sh` + `Dockerfile`), 워커·SQLite 규칙은 [과제 README](tasks/realworld-backend/README.md)가 정본이다. 언어 간 조건을 다르게 두지 않는다.
 - 지표 정의와 `analysis/metrics/runs.csv` 열은 [지표 스키마](analysis/metrics/SCHEMA.md)가 정본이다. 미측정 값은 빈 칸으로 두고 0으로 채우지 않는다.
 - 가설 코드의 `L` 축은 이 리포에서 **구현 언어**를 뜻한다(자매 리포의 L 축은 자연어 EN/KO였다).
+- 실험 실행 절차(하네스 생성부터 `runs.csv` 행 생성까지)는 스킬 [langbench](.claude/skills/langbench/SKILL.md)를 따른다.
 - 이 규칙은 실험 관리용이다. 실험 대상 에이전트에 노출할 지침·스킬·MCP는 설계에서 고정하고 실제 노출 상태를 기록한다.
 
 ## 실험 종료 시 필수 절차

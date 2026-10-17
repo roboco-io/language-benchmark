@@ -19,6 +19,12 @@ NRUNS=$(( $(echo $CONDITIONS | wc -w) * $(echo $LANGS | wc -w) * N ))
 echo "비용 상한: run당 \$$RUN_BUDGET_USD, 실험 \$$EXP_BUDGET_USD (run ${NRUNS}개, 최악 run당 상한×run 수 = \$$(awk -v a="$RUN_BUDGET_USD" -v n="$NRUNS" 'BEGIN{print a*n}'))"
 [ -e "$BASE/done-all" ] && { echo "이미 완료된 하네스: $BASE" >&2; exit 1; }
 mkdir -p "$BASE"
+# 툴체인 점검: 하나라도 없으면 중단한다. 출력은 실험 README에 옮길 버전 기록이다.
+# LB_SKIP_TOOLCHAIN=1은 테스트 전용 우회다(실험에서는 쓰지 않는다).
+if [ "${LB_SKIP_TOOLCHAIN:-}" != 1 ]; then
+  bash "$SKILL/scripts/toolchain.sh" > "$BASE/toolchain.txt" \
+    || { echo "툴체인 점검 실패 — 위 '없음' 도구를 설치한 뒤 다시 실행 (설치는 사용자 승인 후)" >&2; exit 1; }
+fi
 cp "$CFG" "$BASE/bench.env"
 cp "$MODEL_SPECS" "$BASE/model-specs.json"
 cp "$SKILL/assets/reference-profile.json" "$BASE/"
