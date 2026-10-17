@@ -1,0 +1,18 @@
+.superpowers/
+.DS_Store
+__pycache__/
+dashboard/og.png
+.env
+# 앱 소스는 커밋하되 빌드 산출물·의존성·DB는 제외
+node_modules/
+target/
+.venv/
+venv/
+build/
+dist/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
