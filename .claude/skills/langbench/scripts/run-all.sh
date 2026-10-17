@@ -1,6 +1,7 @@
 #!/bin/bash
 # 사용: nohup caffeinate -is bash $BASE/run-all.sh >/dev/null 2>&1 &
-# 순차 실행(동시 실행 금지). 순서는 반복 번호 단위로 조건×언어를 교차해 시점 편향을 줄인다.
+# 순차 실행(동시 실행 금지). 순서는 조건×언어×반복 목록을 RUN_ORDER_SEED(기본 20261018)로 결정적으로 섞은 것이다(R26).
+# 목록은 첫 run 전에 run-order.txt로 남기고, 다시 실행하면(재개·보류 재시작) 그 파일을 그대로 쓴다.
 # run 종료마다 세션 로그를 run별 디렉터리로 옮겨 usage 계측 범위를 분리한다.
 BASE="$(cd "$(dirname "$0")" && pwd)"
 source "$BASE/bench.env"
@@ -22,11 +23,13 @@ run_one(){
   # 75 = 구독 한도 보류. 남은 run도 같은 한도에 걸리므로 배치 전체를 멈춘다.
   [ "$rc" = 75 ] && hold_stop "$1"
 }
-log "starting sequential runs ($HARNESS: $CONDITIONS / $LANGS / n=$N)"
-for n in $(seq 1 "$N"); do
-  for l in $LANGS; do
-    for c in $CONDITIONS; do run_one "${c%%:*}-$l-$n"; done
-  done
-done
+ORDER="$BASE/run-order.txt"
+if [ ! -s "$ORDER" ]; then
+  python3 "$BASE/run_order.py" "${RUN_ORDER_SEED:-20261018}" "$CONDITIONS" "$LANGS" "$N" > "$ORDER.tmp" && mv "$ORDER.tmp" "$ORDER" \
+    || { log "거부: run-order.txt 생성 실패"; exit 1; }
+  log "run order written: $ORDER (seed ${RUN_ORDER_SEED:-20261018})"
+fi
+log "starting sequential runs ($HARNESS: $CONDITIONS / $LANGS / n=$N, order $ORDER)"
+for r in $(cat "$ORDER"); do run_one "$r"; done
 log "ALL RUNS FINISHED"
 touch "$BASE/done-all"

@@ -25,10 +25,8 @@ run_fu(){
   [ "$rc" = 75 ] && hold_stop "$run-fu"
 }
 log "starting follow-up runs ($HARNESS: $CONDITIONS / $LANGS / n=$N)"
-for n in $(seq 1 "$N"); do
-  for l in $LANGS; do
-    for c in $CONDITIONS; do run_fu "${c%%:*}-$l-$n"; done
-  done
-done
+# 본 과제와 같은 순서(run-order.txt, R26)로 돈다.
+[ -s "$BASE/run-order.txt" ] || { log "거부: run-order.txt 없음 — run-all.sh가 만든 실행 순서가 필요하다"; exit 1; }
+for r in $(cat "$BASE/run-order.txt"); do run_fu "$r"; done
 log "ALL FOLLOW-UPS FINISHED"
 touch "$BASE/done-followups"

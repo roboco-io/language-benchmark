@@ -18,7 +18,7 @@ description: Use when running or re-running the language-benchmark experiment (�
 | HARNESS | `claude-native` (구독 인증. 실행 시 `env -u ANTHROPIC_API_KEY -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL`로 API 키를 제거한다) |
 | 모델 조건 | `sonnet55:claude-sonnet-5-5`, `opus55:claude-opus-5-5` (조건명에 `-` 금지) |
 | run 이름 | `<조건>-<언어>-<n>` (예: `opus55-rust-2`). 후속 과제 run은 `<원 run>-fu` |
-| 실행 순서 | 반복 번호 단위로 언어×조건을 교차하는 순차 실행. 다른 실험·Docker 작업과 동시 실행 금지 |
+| 실행 순서 | 조건×언어×반복 목록을 `RUN_ORDER_SEED`(기본 `20261018`)로 결정적으로 섞은 순차 실행(R26). run-all.sh가 첫 run 전에 `$BASE/run-order.txt`로 남기고, 다시 실행하면 그 파일을 그대로 쓴다. run_followups.sh도 같은 순서를 쓴다. 다른 실험·Docker 작업과 동시 실행 금지 |
 
 ## 절차
 

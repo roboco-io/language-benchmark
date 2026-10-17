@@ -102,6 +102,8 @@ PRICE_TIERS=""
         self.assertEqual(len(holds), 1, holds)
         first = holds[0]
         second = ({"sonnet55-typescript-1", "opus55-typescript-1"} - {first}).pop()
+        with open(self.path("run-order.txt")) as f:
+            self.assertEqual(f.read().split(), [first, second])  # R26: 기록된 순서대로 돈다
         self.assertFalse(os.path.exists(self.path("app-" + second)), "보류 뒤 다음 run이 시작됨")
         self.assertFalse(os.path.exists(self.path("done-all")))
         with open(self.path("orchestrator.log")) as f:
@@ -119,6 +121,39 @@ PRICE_TIERS=""
             with open(self.path("metrics-%s.csv" % run)) as f:
                 self.assertEqual(f.readline().split(",")[0], "1", run)
         self.assertTrue(os.path.exists(self.path("done-all")))
+
+
+    def test_existing_run_order_is_reused(self):
+        # R26: 재실행은 seed를 다시 쓰지 않고 run-order.txt를 그대로 쓴다.
+        with open(self.path("run-order.txt"), "w") as f:
+            f.write("opus55-typescript-1\nsonnet55-typescript-1\n")
+        r = self.run_all(RUN_ORDER_SEED="1")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.path("orchestrator.log")) as f:
+            starts = [l.split()[2] for l in f if l.startswith("=== start ")]
+        self.assertEqual(starts, ["opus55-typescript-1", "sonnet55-typescript-1"])
+
+
+class RunOrderTest(unittest.TestCase):
+    SCRIPT = os.path.join(SKILL, "scripts", "run_order.py")
+    CONDS = "sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5"
+    LANGS = "typescript python go rust cpp"
+
+    def order(self, seed):
+        return subprocess.run(["python3", self.SCRIPT, str(seed), self.CONDS, self.LANGS, "3"],
+                              capture_output=True, text=True, check=True).stdout.split()
+
+    def test_same_seed_same_order(self):
+        a = self.order(20261018)
+        self.assertEqual(a, self.order(20261018))
+        self.assertEqual(len(a), 30)
+        self.assertEqual(len(set(a)), 30)
+        self.assertNotEqual(a, self.order(1))
+
+    def test_default_seed_puts_both_models_in_both_halves(self):
+        a = self.order(20261018)
+        for half in (a[:15], a[15:]):
+            self.assertEqual({r.split("-")[0] for r in half}, {"sonnet55", "opus55"})
 
 
 if __name__ == "__main__":
