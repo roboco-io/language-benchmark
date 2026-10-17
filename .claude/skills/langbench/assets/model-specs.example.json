@@ -1,0 +1,19 @@
+{
+  "_comment": "Phase 0에서 공식 가격 문서로 채운다. 가격·컨텍스트 한도를 추측해 넣지 않는다. null이 남아 있으면 preflight.py가 사양 누락으로 보고한다.",
+  "claude-sonnet-5-5": {
+    "provider": "Anthropic (Claude Code 구독)",
+    "context_window": null, "max_output": null,
+    "context_source": null,
+    "billing": "subscription",
+    "pricing": {"input": null, "output": null, "cache_read": null, "cache_write": null, "tiers": [],
+                "source": null, "checked_at": null}
+  },
+  "claude-opus-5-5": {
+    "provider": "Anthropic (Claude Code 구독)",
+    "context_window": null, "max_output": null,
+    "context_source": null,
+    "billing": "subscription",
+    "pricing": {"input": null, "output": null, "cache_read": null, "cache_write": null, "tiers": [],
+                "source": null, "checked_at": null}
+  }
+}

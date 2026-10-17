@@ -1,0 +1,3 @@
+#!/bin/bash
+# 테스트용 가짜 claude CLI: 실제 호출 없이 SMOKE-OK만 돌려준다.
+echo '{"apiKeySource":"none","result":"SMOKE-OK","is_error":false}'
