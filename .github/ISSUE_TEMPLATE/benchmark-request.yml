@@ -1,0 +1,32 @@
+name: "언어·스택 추가 요청 / Language or stack request"
+description: "새 언어나 다른 스택을 같은 과제로 측정해 달라는 요청 / Ask us to benchmark another language or stack on the same task"
+title: "[요청] "
+labels: ["benchmark-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        모든 측정은 같은 과제(RealWorld 백엔드), 같은 채점기(Hurl 13파일·154요청), 같은 런타임 측정 조건으로 모델(Sonnet 5.5, Opus 5.5)마다 run 3회를 돌립니다. 요청을 받아도 실행 여부와 시점은 보장하지 않습니다.
+        Every benchmark uses the same task, grader and runtime measurement setup, with 3 runs per model (Sonnet 5.5, Opus 5.5). We cannot guarantee that or when a request will run.
+
+        **API 키·토큰 등 비밀값은 붙이지 마세요. / Do not paste API keys or other secrets.**
+  - type: input
+    id: language
+    attributes:
+      label: "언어 / Language"
+      placeholder: "Kotlin, Java, C#, Elixir ..."
+    validations:
+      required: true
+  - type: textarea
+    id: stack
+    attributes:
+      label: "웹 프레임워크·DB 접근 라이브러리 / Web framework and DB library"
+      description: "SQLite를 쓸 수 있어야 합니다. 그 언어에서 가장 널리 쓰이는 조합이면 좋습니다 / Must support SQLite; the most common combination in that language is preferred"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: "요청 이유·비교하고 싶은 것 / Why, and what to compare"
+    validations:
+      required: true
