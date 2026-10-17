@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- 1200×630 Open Graph 카드 — scripts/render_og.sh가 dashboard/data.js와 함께 렌더링한다 -->
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1200px;height:630px;background:#0d0d0d;color:#f0efec;font-family:-apple-system,"Segoe UI","Noto Sans KR",sans-serif;padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between}
+h1{font-size:68px;letter-spacing:-.02em}
+p{font-size:30px;color:#c3c2b7;margin-top:16px;max-width:980px;line-height:1.35}
+.langs{display:flex;gap:14px;flex-wrap:wrap}
+.langs span{font-size:30px;font-weight:600;padding:10px 22px;border-radius:12px;background:#1a1a19;border:2px solid #2c2c2a}
+.foot{display:flex;justify-content:space-between;font-size:24px;color:#898781}
+</style></head>
+<body>
+<div><h1>Language Benchmark</h1>
+<p>Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) builds the same RealWorld backend in five languages.</p></div>
+<div class="langs" id="langs"></div>
+<div class="foot"><span id="runs"></span><span>roboco.io/language-benchmark</span></div>
+<script src="data.js"></script>
+<script>
+const B = window.BENCH;
+document.getElementById("langs").innerHTML = B.languages.map((l) => `<span>${l.name}</span>`).join("");
+const passed = B.runs.filter((r) => +r.pass === 1).length;
+document.getElementById("runs").textContent = B.runs.length ? `${B.runs.length} runs · ${passed} passed` : "Experiments in progress";
+</script>
+</body></html>

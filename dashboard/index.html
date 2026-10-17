@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Language Benchmark</title>
+<meta name="description" content="Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the RealWorld backend in TypeScript, Python, Go, Rust and C++.">
+<meta property="og:title" content="Language Benchmark">
+<meta property="og:description" content="Which language suits vibe-coded backends? Same RealWorld backend, five languages, two Claude models.">
+<meta property="og:image" content="https://roboco.io/language-benchmark/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root {
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: #e1e0d9;
+  --t1: #6da7ec; --t2: #b7d3f6; --t3: #f0efec;
+  --s1: #2a78d6; --s2: #eb6834; --accent: #256abf; --warn-bg: #fff4dc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: #2c2c2a;
+    --t1: #2a78d6; --t2: #143e70; --t3: #262624;
+    --s1: #3987e5; --s2: #d95926; --accent: #86b6ef; --warn-bg: #2e2614;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: #2c2c2a;
+  --t1: #2a78d6; --t2: #143e70; --t3: #262624;
+  --s1: #3987e5; --s2: #d95926; --accent: #86b6ef; --warn-bg: #2e2614;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 64px; }
+header h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+header p { margin: 0; color: var(--ink-2); max-width: 820px; }
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 20px 0 12px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; color: var(--ink-2); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.label { font-size: 12px; color: var(--muted); margin-right: 4px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.card h2 { font-size: 16px; margin: 0 0 8px; }
+.note { font-size: 13px; color: var(--ink-2); }
+.empty { background: var(--warn-bg); border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.matrix { border-collapse: separate; border-spacing: 2px; font-size: 13px; min-width: 100%; }
+.matrix th, .matrix td { padding: 6px 8px; text-align: right; white-space: nowrap; border-radius: 4px; }
+.matrix thead th { color: var(--ink-2); font-weight: 600; font-size: 12px; vertical-align: bottom; }
+.matrix thead tr.grp th { color: var(--muted); font-weight: 500; text-align: left; border-bottom: 1px solid var(--axis); border-radius: 0; }
+.matrix th.lang { text-align: left; position: sticky; left: 0; background: var(--surface); z-index: 1; }
+.matrix td { font-variant-numeric: tabular-nums; background: var(--t3); }
+.matrix td.t1 { background: var(--t1); } .matrix td.t2 { background: var(--t2); }
+.matrix td.na { background: transparent; color: var(--muted); }
+.matrix td.score { font-weight: 700; }
+.matrix small { color: var(--ink-2); font-weight: 400; margin-left: 4px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--ink-2); align-items: center; }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--border); }
+.weights { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 18px; margin-top: 8px; }
+.weights label { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
+.weights input { width: 96px; accent-color: var(--accent); }
+.weights output { width: 14px; text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.link-btn { border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+select { font: inherit; font-size: 13px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); }
+svg text { fill: var(--ink-2); font-size: 12px; }
+svg .grid { stroke: var(--grid); } svg .axis { stroke: var(--axis); }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--page); font-size: 12px; padding: 6px 8px; border-radius: 6px; opacity: 0; transition: opacity .1s; max-width: 260px; z-index: 10; }
+table.plain { border-collapse: collapse; font-size: 13px; }
+.plain th, .plain td { text-align: left; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--border); }
+footer { font-size: 13px; color: var(--ink-2); }
+footer a, .note a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 data-t="title"></h1>
+    <p data-t="lead"></p>
+  </header>
+
+  <div class="bar">
+    <span><span class="label" data-t="model"></span><span class="seg" id="modelSeg"></span></span>
+    <span><span class="label">🌐</span><span class="seg" id="langSeg"></span></span>
+  </div>
+
+  <section class="card">
+    <h2 data-t="matrixTitle"></h2>
+    <div id="empty" class="empty" hidden data-t="empty"></div>
+    <div class="scroll"><table class="matrix" id="matrix"></table></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="weightsTitle"></h2>
+    <p class="note" data-t="weightsNote"></p>
+    <button class="link-btn" id="resetW" data-t="reset"></button>
+    <div class="weights" id="weights"></div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="detailTitle"></h2>
+    <select id="metricSel" aria-label="metric"></select>
+    <div class="scroll"><svg id="detail" role="img" width="100%" height="260"></svg></div>
+    <div class="legend" id="detailLegend"></div>
+  </section>
+
+  <section class="card">
+    <h2 data-t="stackTitle"></h2>
+    <div class="scroll"><table class="plain" id="stack"></table></div>
+  </section>
+
+  <footer class="card">
+    <p data-t="limits"></p>
+    <p><span data-t="updated"></span> <span id="generated"></span> ·
+      <a href="https://github.com/roboco-io/language-benchmark">GitHub</a> ·
+      <a href="https://github.com/roboco-io/coding-agent-benchmark" data-t="sister"></a></p>
+  </footer>
+</main>
+<div id="tip" role="tooltip"></div>
+<script src="score.js"></script>
+<script src="data.js"></script>
+<script>
+const T = {
+  en: {
+    title: "Language Benchmark",
+    lead: "Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the same RealWorld backend in five languages. This compares code written by an agent, not raw language runtimes.",
+    model: "Model", both: "Both models",
+    matrixTitle: "Language × metric", score: "Score",
+    grp: { process: "Building it (agent)", product: "What it built", maintain: "Maintainability" },
+    empty: "No experiments yet. The grid fills in as EXP-001 (5 languages × 2 models × 3 runs) completes.",
+    legendBest: "Top third in column", legendMid: "Middle", legendLow: "Bottom third", legendNa: "— not measured · n/3 = runs measured",
+    weightsTitle: "Score weights", weightsNote: "The score is a weighted average of per-metric normalized values (0 worst – 1 best within each column). Changing weights changes the ranking; treat it as an aid, not a verdict.",
+    reset: "Reset to equal weights",
+    detailTitle: "Per-run detail", detailEmpty: "No measured runs for this metric yet.",
+    stackTitle: "Stacks (fixed for all runs)", lang: "Language", fw: "Framework", db: "DB access",
+    limits: "Runtime numbers are measured in Docker Desktop on macOS (a VM) with identical CPU and memory limits for every language. Read them as relative comparisons, not absolute values. Costs are API-price equivalents; runs used an existing subscription.",
+    updated: "Data generated", sister: "Sister repo: coding-agent-benchmark",
+  },
+  ko: {
+    title: "Language Benchmark",
+    lead: "바이브 코딩 백엔드에는 어떤 언어가 적합할까? Claude Code(Sonnet 5.5 / Opus 5.5)가 같은 RealWorld 백엔드를 5개 언어로 구현한 결과를 비교한다. 언어 런타임 자체가 아니라 에이전트가 만든 코드를 비교한다.",
+    model: "모델", both: "두 모델",
+    matrixTitle: "언어 × 지표", score: "종합 점수",
+    grp: { process: "만드는 과정(에이전트)", product: "만들어진 결과물", maintain: "유지보수성" },
+    empty: "아직 실험 결과가 없다. EXP-001(5개 언어 × 2개 모델 × 3회)이 끝나면 표가 채워진다.",
+    legendBest: "열 내 상위 1/3", legendMid: "중간", legendLow: "하위 1/3", legendNa: "— 미측정 · n/3 = 측정한 run 수",
+    weightsTitle: "종합 점수 가중치", weightsNote: "종합 점수는 지표별 정규화 값(각 열 안에서 0 최하 – 1 최상)의 가중평균이다. 가중치를 바꾸면 순위도 바뀌므로 결론이 아니라 해석 보조로 본다.",
+    reset: "가중치 균등으로 초기화",
+    detailTitle: "run별 상세", detailEmpty: "이 지표를 측정한 run이 아직 없다.",
+    stackTitle: "언어별 스택(모든 run 고정)", lang: "언어", fw: "웹 프레임워크", db: "DB 접근",
+    limits: "런타임 수치는 macOS Docker Desktop(VM)에서 모든 언어에 같은 CPU·메모리 제한을 걸고 측정했다. 절대값이 아니라 언어 간 상대 비교로 해석한다. 비용은 API 단가 환산값이며 실제 실행은 기존 구독으로 했다.",
+    updated: "데이터 생성", sister: "자매 리포: coding-agent-benchmark",
+  },
+  ja: {
+    title: "Language Benchmark",
+    lead: "バイブコーディングのバックエンドにはどの言語が向いているか? Claude Code(Sonnet 5.5 / Opus 5.5)が同じ RealWorld バックエンドを5言語で実装した結果を比較する。比較対象は言語ランタイムではなく、エージェントが書いたコードである。",
+    model: "モデル", both: "両モデル",
+    matrixTitle: "言語 × 指標", score: "総合スコア",
+    grp: { process: "作る過程(エージェント)", product: "成果物", maintain: "保守性" },
+    empty: "実験結果はまだない。EXP-001(5言語 × 2モデル × 3回)が終わると表が埋まる。",
+    legendBest: "列内上位1/3", legendMid: "中位", legendLow: "下位1/3", legendNa: "— 未測定 · n/3 = 測定した run 数",
+    weightsTitle: "総合スコアの重み", weightsNote: "総合スコアは指標ごとの正規化値(各列内で 0 最低 – 1 最高)の加重平均である。重みを変えると順位も変わるため、結論ではなく解釈の補助として扱う。",
+    reset: "重みを均等に戻す",
+    detailTitle: "run 別詳細", detailEmpty: "この指標を測定した run はまだない。",
+    stackTitle: "言語別スタック(全 run 固定)", lang: "言語", fw: "フレームワーク", db: "DB アクセス",
+    limits: "ランタイムの数値は macOS の Docker Desktop(VM)で、全言語に同じ CPU・メモリ制限をかけて測定した。絶対値ではなく言語間の相対比較として読む。コストは API 単価換算で、実行は既存のサブスクリプションで行った。",
+    updated: "データ生成", sister: "姉妹リポジトリ: coding-agent-benchmark",
+  },
+  zh: {
+    title: "Language Benchmark",
+    lead: "哪种语言最适合氛围编程(vibe coding)后端?Claude Code(Sonnet 5.5 / Opus 5.5)用 5 种语言实现同一个 RealWorld 后端,本页比较其结果。比较的是智能体编写的代码,而非语言运行时本身。",
+    model: "模型", both: "两个模型",
+    matrixTitle: "语言 × 指标", score: "综合得分",
+    grp: { process: "构建过程(智能体)", product: "产出物", maintain: "可维护性" },
+    empty: "尚无实验结果。EXP-001(5 种语言 × 2 个模型 × 3 次)完成后表格将被填充。",
+    legendBest: "列内前 1/3", legendMid: "中间", legendLow: "后 1/3", legendNa: "— 未测量 · n/3 = 已测量 run 数",
+    weightsTitle: "综合得分权重", weightsNote: "综合得分是各指标归一化值(每列内 0 最差 – 1 最好)的加权平均。改变权重会改变排名,请将其视为解读辅助而非结论。",
+    reset: "重置为等权重",
+    detailTitle: "各 run 详情", detailEmpty: "尚无测量此指标的 run。",
+    stackTitle: "各语言技术栈(所有 run 固定)", lang: "语言", fw: "框架", db: "数据库访问",
+    limits: "运行时数据在 macOS 的 Docker Desktop(虚拟机)中测量,所有语言使用相同的 CPU 与内存限制。请作为语言间的相对比较解读,而非绝对值。成本为按 API 单价换算的值,实际运行使用现有订阅。",
+    updated: "数据生成于", sister: "姊妹仓库: coding-agent-benchmark",
+  },
+};
+const LANG_UI = [["en", "EN"], ["ko", "KO"], ["ja", "JA"], ["zh", "中文"]];
+const STACKS = [
+  ["TypeScript", "Fastify", "Prisma"], ["Python", "FastAPI (uvicorn)", "SQLAlchemy"],
+  ["Go", "Gin", "GORM (modernc SQLite)"], ["Rust", "Axum (tokio)", "SQLx"], ["C++", "Drogon (C++20)", "Drogon ORM"],
+];
+const qTheme = new URLSearchParams(location.search).get("theme");
+if (qTheme === "light" || qTheme === "dark") document.documentElement.dataset.theme = qTheme;
+const B = window.BENCH;
+const metrics = B.metrics;
+const PCT = new Set(["pass_rate", "followup_pass", "error_rate", "soak_error_rate"]);
+const RATIO = new Set(["pass_rate", "followup_pass"]); // 0-1로 저장, %로 표시
+const store = {
+  get(k, d) { try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+};
+const state = {
+  ui: store.get("lb.ui", (navigator.language || "en").slice(0, 2)),
+  model: store.get("lb.model", "all"),
+  metric: "rps",
+  weights: Object.fromEntries(metrics.map((m) => [m.key, 1])),
+};
+if (!T[state.ui]) state.ui = "en";
+const t = () => T[state.ui];
+const label = (m) => m[state.ui] || m.en;
+const tip = document.getElementById("tip");
+
+function fmt(m, v) {
+  if (v === null || v === undefined) return "—";
+  if (RATIO.has(m.key)) return Math.round(v * 100) + "%";
+  if (PCT.has(m.key)) return (+v).toFixed(2) + "%";
+  if (m.unit === "USD") return "$" + v.toFixed(2);
+  const a = Math.abs(v);
+  const s = Number.isInteger(v) ? v.toLocaleString() : a >= 100 ? Math.round(v).toLocaleString() : a >= 10 ? v.toFixed(1) : v.toFixed(2);
+  return m.unit && !["%", "USD"].includes(m.unit) ? s + " " + m.unit : s;
+}
+function showTip(e, html) { tip.innerHTML = html; tip.style.opacity = 1; moveTip(e); }
+function moveTip(e) { tip.style.left = Math.min(e.clientX + 12, innerWidth - 270) + "px"; tip.style.top = e.clientY + 12 + "px"; }
+function hideTip() { tip.style.opacity = 0; }
+function bindTip(el, html) {
+  el.addEventListener("mouseenter", (e) => showTip(e, html));
+  el.addEventListener("mousemove", moveTip);
+  el.addEventListener("mouseleave", hideTip);
+}
+function seg(el, items, current, onPick) {
+  el.innerHTML = "";
+  for (const [k, name] of items) {
+    const b = document.createElement("button");
+    b.textContent = name; b.setAttribute("aria-pressed", k === current);
+    b.onclick = () => onPick(k);
+    el.appendChild(b);
+  }
+}
+const cellsFor = () => Object.fromEntries(B.languages.map((l) => [l.key, B.cells[l.key][state.model]]));
+
+function renderText() {
+  document.documentElement.lang = state.ui === "zh" ? "zh-CN" : state.ui;
+  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t()[el.dataset.t]; });
+  document.getElementById("generated").textContent = B.generated.replace("T", " ").replace("+00:00", " UTC");
+  document.getElementById("empty").hidden = B.runs.length > 0;
+  seg(document.getElementById("langSeg"), LANG_UI, state.ui, (k) => { state.ui = k; store.set("lb.ui", k); render(); });
+  seg(document.getElementById("modelSeg"), [...B.models.map((m) => [m.key, m.name]), ["all", t().both]], state.model,
+    (k) => { state.model = k; store.set("lb.model", k); render(); });
+}
+
+function renderMatrix() {
+  const cells = cellsFor();
+  const langs = B.languages;
+  const score = Score.composite(cells, metrics, state.weights);
+  const groups = ["process", "product", "maintain"];
+  let h = '<thead><tr class="grp"><th class="lang"></th><th></th>';
+  for (const g of groups) h += `<th colspan="${metrics.filter((m) => m.group === g).length}">${t().grp[g]}</th>`;
+  h += '</tr><tr><th class="lang"></th><th>' + t().score + "</th>";
+  for (const g of groups) for (const m of metrics.filter((x) => x.group === g)) h += `<th>${label(m)}</th>`;
+  h += "</tr></thead><tbody>";
+  // 값이 2개 이상이고 서로 다를 때만 칠한다(전부 같으면 순위가 없다)
+  const tier = (v, distinct) => (v === null || distinct < 2 ? "" : v >= 2 / 3 ? "t1" : v >= 1 / 3 ? "t2" : "");
+  const distinctOf = (vals) => new Set(vals.filter((v) => v !== null)).size;
+  const scoreVals = langs.map((l) => score[l.key]);
+  const scoreNorm = Score.normalize(scoreVals, "higher");
+  const scoreCount = distinctOf(scoreVals);
+  const ordered = groups.flatMap((g) => metrics.filter((m) => m.group === g));
+  const norms = Object.fromEntries(ordered.map((m) => {
+    const vals = langs.map((l) => cells[l.key][m.key]);
+    return [m.key, { norm: Score.normalize(vals, m.better), count: distinctOf(vals) }];
+  }));
+  langs.forEach((l, i) => {
+    const c = cells[l.key];
+    h += `<tr><th class="lang">${l.name}</th>`;
+    const sv = score[l.key];
+    h += `<td class="score ${sv === null ? "na" : tier(scoreNorm[i], scoreCount)}">${sv === null ? "—" : Math.round(sv * 100)}</td>`;
+    for (const m of ordered) {
+      const v = c[m.key];
+      const n = c[m.key + "_n"];
+      const sample = m.group !== "process" && v !== null && n !== undefined ? `<small>${n}/${c.passed}</small>` : "";
+      const cls = v === null ? "na" : tier(norms[m.key].norm[i], norms[m.key].count);
+      h += `<td class="${cls}" data-l="${l.key}" data-m="${m.key}">${fmt(m, v)}${sample}</td>`;
+    }
+    h += "</tr>";
+  });
+  const table = document.getElementById("matrix");
+  table.innerHTML = h + "</tbody>";
+  table.querySelectorAll("td[data-m]").forEach((td) => {
+    const m = metrics.find((x) => x.key === td.dataset.m);
+    const c = cells[td.dataset.l];
+    const dir = m.better === "higher" ? "↑" : "↓";
+    bindTip(td, `<b>${B.languages.find((l) => l.key === td.dataset.l).name} · ${label(m)}</b><br>${fmt(m, c[m.key])} (${dir})<br>runs ${c.passed}/${c.n}`);
+  });
+  document.getElementById("legend").innerHTML =
+    `<span><i class="sw" style="background:var(--t1)"></i>${t().legendBest}</span>` +
+    `<span><i class="sw" style="background:var(--t2)"></i>${t().legendMid}</span>` +
+    `<span><i class="sw" style="background:var(--t3)"></i>${t().legendLow}</span>` +
+    `<span>${t().legendNa} · ↑/↓</span>`;
+}
+
+function renderWeights() {
+  const box = document.getElementById("weights");
+  box.innerHTML = "";
+  for (const m of metrics) {
+    const lab = document.createElement("label");
+    lab.innerHTML = `<span>${label(m)}</span><span><input type="range" min="0" max="3" step="1" value="${state.weights[m.key]}"> <output>${state.weights[m.key]}</output></span>`;
+    const input = lab.querySelector("input");
+    input.setAttribute("aria-label", label(m));
+    input.oninput = () => { state.weights[m.key] = +input.value; lab.querySelector("output").textContent = input.value; renderMatrix(); };
+    box.appendChild(lab);
+  }
+}
+
+function renderDetail() {
+  const sel = document.getElementById("metricSel");
+  sel.innerHTML = metrics.filter((m) => !["pass_rate", "cost_per_pass"].includes(m.key))
+    .map((m) => `<option value="${m.key}" ${m.key === state.metric ? "selected" : ""}>${label(m)}</option>`).join("");
+  sel.onchange = () => { state.metric = sel.value; renderDetail(); };
+  const m = metrics.find((x) => x.key === state.metric);
+  const svg = document.getElementById("detail");
+  const W = Math.max(svg.clientWidth || 600, 320), rowH = 40, top = 16, left = 96, right = 24;
+  const H = top + rowH * B.languages.length + 28;
+  svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const models = state.model === "all" ? B.models.map((x) => x.key) : [state.model];
+  const runs = B.runs.filter((r) => +r.pass === 1 && models.includes(r.model) && r[m.key] !== "" && r[m.key] !== undefined)
+    .map((r) => ({ ...r, v: RATIO.has(m.key) ? +r[m.key] : +r[m.key] }));
+  const NS = "http://www.w3.org/2000/svg";
+  svg.innerHTML = "";
+  const add = (tag, attrs, text) => { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text !== undefined) el.textContent = text; svg.appendChild(el); return el; };
+  B.languages.forEach((l, i) => {
+    const y = top + rowH * i + rowH / 2;
+    add("line", { x1: left, x2: W - right, y1: y, y2: y, class: "grid" });
+    add("text", { x: 0, y: y + 4 }, l.name);
+  });
+  if (!runs.length) {
+    add("text", { x: left, y: H - 8 }, t().detailEmpty);
+  } else {
+    const vals = runs.map((r) => r.v);
+    const raw = Math.max(...vals) - Math.min(0, ...vals) || 1;
+    const p = Math.pow(10, Math.floor(Math.log10(raw / 4)));
+    const step = [1, 2, 2.5, 5, 10].map((k) => k * p).find((k) => k * 4 >= raw);
+    const lo = Math.floor(Math.min(0, ...vals) / step) * step, hi = lo + step * 4;
+    const x = (v) => left + ((v - lo) / (hi - lo)) * (W - left - right);
+    const axisY = top + rowH * B.languages.length;
+    add("line", { x1: left, x2: W - right, y1: axisY, y2: axisY, class: "axis" });
+    for (let k = 0; k <= 4; k++) {
+      const v = lo + step * k;
+      add("text", { x: x(v), y: axisY + 18, "text-anchor": k === 4 ? "end" : k === 0 ? "start" : "middle" }, fmt(m, v));
+    }
+    runs.forEach((r) => {
+      const i = B.languages.findIndex((l) => l.key === r.language);
+      const y = top + rowH * i + rowH / 2 + (r.model === "opus55" ? 7 : -7);
+      const color = r.model === "opus55" ? "var(--s2)" : "var(--s1)";
+      const dot = r.model === "opus55"
+        ? add("rect", { x: x(r.v) - 5, y: y - 5, width: 10, height: 10, rx: 2, fill: color, stroke: "var(--surface)", "stroke-width": 2 })
+        : add("circle", { cx: x(r.v), cy: y, r: 5.5, fill: color, stroke: "var(--surface)", "stroke-width": 2 });
+      bindTip(dot, `<b>${r.run}</b><br>${label(m)}: ${fmt(m, r.v)}`);
+    });
+  }
+  document.getElementById("detailLegend").innerHTML = B.models.map((md) =>
+    `<span><svg width="14" height="14" style="vertical-align:-2px">${md.key === "opus55"
+      ? '<rect x="2" y="2" width="10" height="10" rx="2" fill="var(--s2)"/>'
+      : '<circle cx="7" cy="7" r="5.5" fill="var(--s1)"/>'}</svg> ${md.name}</span>`).join("");
+}
+
+function renderStack() {
+  document.getElementById("stack").innerHTML =
+    `<tr><th>${t().lang}</th><th>${t().fw}</th><th>${t().db}</th></tr>` +
+    STACKS.map((s) => `<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]} · SQLite</td></tr>`).join("");
+}
+
+document.getElementById("resetW").onclick = () => {
+  state.weights = Object.fromEntries(metrics.map((m) => [m.key, 1]));
+  renderWeights(); renderMatrix();
+};
+function render() { renderText(); renderMatrix(); renderWeights(); renderDetail(); renderStack(); }
+addEventListener("resize", () => renderDetail());
+render();
+</script>
+</body>
+</html>
