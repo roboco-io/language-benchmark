@@ -26,8 +26,13 @@ class Fake(BaseHTTPRequestHandler):
 
     def do_POST(self):
         n = int(self.headers.get("Content-Length") or 0)
-        body = json.loads(self.rfile.read(n) or b"{}")
+        raw = self.rfile.read(n)
         path = self.path
+        # Fastify처럼: 본문 없는 요청에 Content-Type: application/json이 있으면 400
+        if not raw and "json" in (self.headers.get("Content-Type") or ""):
+            COUNTS["bodyless_with_content_type"] += 1
+            return self.reply(400, {})
+        body = json.loads(raw or b"{}")
         if path == "/api/users":
             COUNTS["user"] += 1
             u = body["user"]["username"]
@@ -62,6 +67,8 @@ class SeedTest(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stderr)
             with open(out) as f:
                 data = json.load(f)
+        self.assertEqual(COUNTS["bodyless_with_content_type"], 0)
+        self.assertEqual(len(data["users"][0]["favorited"]), 5)
         self.assertEqual(dict(COUNTS), {"user": 50, "article": 500, "comment": 500, "follow": 250, "favorite": 250})
         self.assertEqual(len(data["slugs"]), 500)
         self.assertEqual(len(data["users"]), 50)

@@ -3,7 +3,7 @@
 사용: seed.py <base_url> <out.json>
 사용자 50, 사용자당 아티클 10(총 500), 태그 풀 20 중 아티클당 3, 앞 100개 아티클에 코멘트 5개씩(500),
 사용자마다 다음 5명 팔로우(250), 사용자마다 아티클 5개 즐겨찾기(250).
-out.json = {"users":[{"username","token"}], "slugs":[...], "tags":[...]}. 요청이 하나라도 실패하면 종료 코드 1.
+out.json = {"users":[{"username","token","favorited":[slug...]}], "slugs":[...], "tags":[...]}. 요청이 하나라도 실패하면 종료 코드 1.
 """
 import json
 import random
@@ -22,7 +22,8 @@ class Failed(Exception):
 def call(base, method, path, body=None, token=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(base + path, data=data, method=method)
-    req.add_header("Content-Type", "application/json")
+    if data is not None:  # 본문 없는 요청에 Content-Type을 붙이면 Fastify 등이 400을 준다
+        req.add_header("Content-Type", "application/json")
     if token:
         req.add_header("Authorization", "Token " + token)
     try:
@@ -57,7 +58,8 @@ def main(base, out):
     for i, u in enumerate(users):
         for d in range(1, FOLLOWS + 1):
             call(base, "POST", "/api/profiles/%s/follow" % users[(i + d) % N_USERS]["username"], None, u["token"])
-        for slug in rng.sample(slugs, FAVS):
+        u["favorited"] = rng.sample(slugs, FAVS)  # load.js가 이미 즐겨찾기한 slug를 피하는 데 쓴다
+        for slug in u["favorited"]:
             call(base, "POST", "/api/articles/%s/favorite" % slug, None, u["token"])
     with open(out, "w") as f:
         json.dump({"users": users, "slugs": slugs, "tags": TAGS}, f)
