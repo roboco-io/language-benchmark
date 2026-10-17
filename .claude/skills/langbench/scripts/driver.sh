@@ -1,5 +1,6 @@
 #!/bin/bash
 # 사용: bash driver.sh <run>   (run = <조건>-<언어>-<n>, 예: sol-en-1)
+#       FOLLOWUP=1 bash driver.sh <run>   후속 과제: app-<run>을 app-<run>-fu로 복사해 이어서 작업(모델은 원 run의 조건)
 # 랄프 루프 1 run: iteration마다 에이전트 1회 호출 → measure.sh(호스트)·measure_docker.sh(Docker) 채점 → .ralph-done 게이트.
 # claude-native 전용 driver (자매 리포 EXP-026 driver에서 이식).
 RUN="$1"
@@ -10,7 +11,18 @@ MODEL=""
 for c in $CONDITIONS; do [ "${c%%:*}" = "$COND" ] && MODEL="${c#*:}"; done
 [ -n "$MODEL" ] || { echo "unknown condition $COND ($RUN)" >> "$BASE/driver.log"; exit 1; }
 PROMPT="$BASE/PROMPT-$LANG_.md"
-[ -f "$PROMPT" ] || { echo "unknown language $LANG_ ($RUN)" >> "$BASE/driver.log"; exit 1; }
+SRC_REPO="$BASE/app-$RUN"
+if [ "${FOLLOWUP:-}" = 1 ]; then
+  # 후속 과제: 원 run에서 모델·언어를 정하고, 이후 모든 산출물은 <run>-fu 이름을 쓴다.
+  PROMPT="$BASE/PROMPT-followup.md"
+  [ -d "$SRC_REPO" ] || { echo "no original app for follow-up ($RUN)" >> "$BASE/driver.log"; exit 1; }
+  RUN="$RUN-fu"
+  MAX_ITER="${FU_MAX_ITER:-$MAX_ITER}"; MAX_SEC="${FU_MAX_SEC:-$MAX_SEC}"
+  HURL_DIRS="${HURL_DIRS:-$BASE/harness-hurl $BASE/followup-hurl}"
+else
+  [ -f "$PROMPT" ] || { echo "unknown language $LANG_ ($RUN)" >> "$BASE/driver.log"; exit 1; }
+fi
+[ -f "$PROMPT" ] || { echo "missing $(basename "$PROMPT") ($RUN)" >> "$BASE/driver.log"; exit 1; }
 
 REPO="$BASE/app-$RUN"; MET="$BASE/metrics-$RUN.csv"; LOG="$BASE/ralph-run-$RUN.log"
 [ -f "$BASE/done-$RUN" ] && exit 0
@@ -24,7 +36,7 @@ free_port() {
   done
 }
 
-# 채점 Hurl 디렉터리(공백 구분). 본 과제는 정본 13파일, 후속 과제는 14파일 디렉터리를 추가로 넘긴다.
+# 채점 Hurl 디렉터리(공백 구분). 본 과제는 정본 13파일, 후속 과제는 followup-hurl(1파일)을 더해 14파일이다.
 HURL_DIRS="${HURL_DIRS:-$BASE/harness-hurl}"
 EXPECT_FILES=0
 for d in $HURL_DIRS; do EXPECT_FILES=$(( EXPECT_FILES + $(ls "$d"/*.hurl 2>/dev/null | wc -l) )); done
@@ -66,6 +78,10 @@ invoke_agent() {
     claude -p "$(cat "$REPO/PROMPT.md")" --model "$MODEL" --dangerously-skip-permissions
 }
 
+if [ "${FOLLOWUP:-}" = 1 ] && [ ! -d "$REPO" ]; then
+  # 최초 실행 시에만 원 run 앱을 .git 포함 복사한다. 원본은 건드리지 않고 완료 선언만 지운다.
+  cp -R "$SRC_REPO" "$REPO" && rm -f "$REPO/.ralph-done"
+fi
 mkdir -p "$REPO"
 cp "$PROMPT" "$REPO/PROMPT.md"
 git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1 || git -C "$REPO" init -q

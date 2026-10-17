@@ -130,5 +130,16 @@ class DockerMeasureTest(MeasureBase):
         self.assertEqual(r.stdout.strip(), "0,0")
 
 
+class FollowupHurlTest(unittest.TestCase):
+    def test_followup_hurl_is_valid(self):
+        # 서버 없이 파싱만 확인한다: 파싱을 통과해야 첫 요청의 연결 실패까지 도달한다.
+        f = os.path.join(SKILL, "assets", "followup-hurl", "comments_update.hurl")
+        r = subprocess.run(["/opt/homebrew/bin/hurl", "--test", "--variable", "host=http://127.0.0.1:1",
+                            "--variable", "uid=x", "--connect-timeout", "1", f],
+                           capture_output=True, text=True, timeout=60)
+        self.assertNotIn("Parsing error", r.stderr, r.stderr)
+        self.assertIn("HTTP connection", r.stderr, r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

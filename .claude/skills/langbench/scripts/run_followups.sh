@@ -1,0 +1,31 @@
+#!/bin/bash
+# 사용: nohup caffeinate -is bash $BASE/run_followups.sh >/dev/null 2>&1 &
+# done-all 이후 실행. metrics의 마지막 게이트가 pass인 run마다 후속 과제(FOLLOWUP=1 driver.sh)를 순차 실행한다.
+BASE="$(cd "$(dirname "$0")" && pwd)"
+source "$BASE/bench.env"
+source "$BASE/gate.sh"; require_approval 2>>"$BASE/orchestrator.log" || { echo "=== 거부: 실행 승인 없음 또는 승인 뒤 설정 변경 : $(date '+%F %T') ===" >> "$BASE/orchestrator.log"; exit 1; }
+source "$BASE/common.sh"
+LOG="$BASE/orchestrator.log"
+log(){ echo "=== $* : $(date '+%F %T') ===" >> "$LOG"; }
+[ -f "$BASE/done-all" ] || { log "거부: done-all 없음 — 본 과제 run이 끝나기 전에는 후속 과제를 시작하지 않는다"; exit 1; }
+gate_of(){ # $1 run — metrics 마지막 데이터 행(숫자 iter로 시작)의 마지막 열
+  grep '^[0-9]' "$BASE/metrics-$1.csv" 2>/dev/null | tail -1 | awk -F, '{print $NF}'
+}
+run_fu(){
+  local run="$1"
+  [ "$(gate_of "$run")" = pass ] || { log "skip $run-fu (원 run 게이트 $(gate_of "$run"))"; return; }
+  [ -f "$BASE/done-$run-fu" ] && { log "skip $run-fu"; return; }
+  [ -f "$BASE/budget-stop" ] && { log "skip $run-fu (budget-stop)"; return; }
+  log "start $run-fu"
+  FOLLOWUP=1 bash "$BASE/driver.sh" "$run"
+  archive_sessions "$run-fu"
+  log "end $run-fu | $(tail -1 "$BASE/metrics-$run-fu.csv" 2>/dev/null)"
+}
+log "starting follow-up runs ($HARNESS: $CONDITIONS / $LANGS / n=$N)"
+for n in $(seq 1 "$N"); do
+  for l in $LANGS; do
+    for c in $CONDITIONS; do run_fu "${c%%:*}-$l-$n"; done
+  done
+done
+log "ALL FOLLOW-UPS FINISHED"
+touch "$BASE/done-followups"

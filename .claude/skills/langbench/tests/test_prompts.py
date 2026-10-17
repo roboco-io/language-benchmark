@@ -50,6 +50,27 @@ class PromptTests(unittest.TestCase):
             with open(os.path.join(ASSETS, name), "rb") as f:
                 self.assertEqual(hashlib.md5(f.read()).hexdigest(), entries[name], name)
 
+    def test_checksums_cover_prompts(self):
+        # 언어별 PROMPT 5종 + 후속 과제 PROMPT + 후속 Hurl 정본이 모두 해시로 고정돼 있어야 한다.
+        entries = {}
+        for line in read(os.path.join(ASSETS, "checksums.md5")).splitlines():
+            if line.strip():
+                md5, name = line.split(None, 1)
+                entries[name.strip()] = md5
+        names = [f"PROMPT-{l}.md" for l in LANGS] + ["PROMPT-followup.md", "followup-hurl/comments_update.hurl"]
+        for name in names:
+            self.assertIn(name, entries)
+            with open(os.path.join(ASSETS, name), "rb") as f:
+                self.assertEqual(hashlib.md5(f.read()).hexdigest(), entries[name], name)
+        self.assertEqual(sum(1 for n in entries if n.startswith("PROMPT-")), 6)
+
+    def test_followup_prompt_contract(self):
+        text = read(os.path.join(ASSETS, "PROMPT-followup.md"))
+        for word in ("PUT /api/articles/:slug/comments/:id", "403", "401", "422", "404", "154 requests",
+                     "start.sh", "Dockerfile", ".ralph-done", "Do not modify PROMPT.md."):
+            self.assertIn(word, text, word)
+        self.assertNotIn("comments_update", text)  # 채점 정본 파일명은 에이전트에 노출하지 않는다
+
 
 if __name__ == "__main__":
     unittest.main()

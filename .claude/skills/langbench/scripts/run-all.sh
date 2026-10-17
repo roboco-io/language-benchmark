@@ -7,10 +7,7 @@ source "$BASE/bench.env"
 source "$BASE/gate.sh"; require_approval 2>>"$BASE/orchestrator.log" || { echo "=== 거부: 실행 승인 없음 또는 승인 뒤 설정 변경 : $(date '+%F %T') ===" >> "$BASE/orchestrator.log"; exit 1; }
 LOG="$BASE/orchestrator.log"
 log(){ echo "=== $* : $(date '+%F %T') ===" >> "$LOG"; }
-archive_sessions(){ # $1 run — 기본 설정 디렉터리의 해당 app 프로젝트 로그만 복사
-  local enc; enc=$(echo "$BASE/app-$1" | sed 's|[/.]|-|g')
-  cp -r "$HOME/.claude/projects/$enc" "$BASE/sessions-$1" 2>/dev/null
-}
+source "$BASE/common.sh"   # archive_sessions
 run_one(){
   [ -f "$BASE/done-$1" ] && { log "skip $1"; return; }
   # 비용 상한으로 멈춘 실험은 남은 run을 시작하지 않는다 (EXP-042 재발 방지)
