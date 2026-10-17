@@ -24,13 +24,13 @@ class SetupTest(unittest.TestCase):
         with open(os.path.join(assets, "checksums.md5"), "a") as f:
             f.write(md5)
 
-    def run_setup(self, harness="claude-native"):
+    def run_setup(self, harness="claude-native", langs="typescript"):
         env_file = os.path.join(self.tmp, "bench.env")
         with open(env_file, "w") as f:
             f.write(f'''EXP=901
 HARNESS={harness}
 CONDITIONS="sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5"
-LANGS="typescript"
+LANGS="{langs}"
 N=1
 MAX_ITER=3
 MAX_SEC=60
@@ -75,9 +75,20 @@ PRICE_TIERS=""
         self.assertIn("unknown HARNESS", r.stderr)
 
     def test_setup_rejects_lang_without_prompt(self):
-        os.remove(os.path.join(self.skill, "assets", "PROMPT-typescript.md"))
-        r = self.run_setup()
+        # python은 PROMPT 파일이 없다. 해시 검증은 통과하므로 PROMPT 존재 검사에서 중단돼야 한다.
+        r = self.run_setup(langs="typescript python")
         self.assertNotEqual(r.returncode, 0)
+        self.assertNotIn("정본 해시 불일치", r.stderr)
+        self.assertIn("PROMPT-python.md 없음 또는 checksums.md5에 미등록", r.stderr)
+
+    def test_setup_rejects_unregistered_prompt(self):
+        # 파일은 있으나 checksums.md5에 없는 PROMPT도 중단돼야 한다.
+        with open(os.path.join(self.skill, "assets", "PROMPT-python.md"), "w") as f:
+            f.write("unregistered\n")
+        r = self.run_setup(langs="typescript python")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertNotIn("정본 해시 불일치", r.stderr)
+        self.assertIn("PROMPT-python.md 없음 또는 checksums.md5에 미등록", r.stderr)
 
 
 if __name__ == "__main__":
