@@ -15,8 +15,10 @@ HURL_BIN="/opt/homebrew/bin/hurl"
 
 # 프로세스가 리포 소속인지: command에 리포 경로 포함 OR CWD가 리포 안
 belongs_to_repo() {
-  local pid="$1" cwd
-  ps -p "$pid" -o command= 2>/dev/null | grep -q "$REPO" && return 0
+  local pid="$1" cwd cmd
+  # 경로 경계를 지킨다: app-x-1이 app-x-1-fu의 프로세스를 소속으로 오판하지 않게 "$REPO/"·"$REPO "·끝에서만 일치시킨다
+  cmd=$(ps -p "$pid" -o command= 2>/dev/null)
+  case "$cmd" in *"$REPO/"*|*"$REPO "*|*"$REPO") return 0;; esac
   cwd=$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p' | head -1)
   case "$cwd" in "$REPO"|"$REPO"/*) return 0;; esac
   return 1
@@ -48,6 +50,11 @@ free_port() {
   done
 }
 
+# CWD가 리포 안인 프로세스가 하나라도 있으면 0 (start.sh가 죽은 뒤에도 백그라운드 서버가 남았는지 판단)
+repo_alive() {
+  lsof -d cwd -Fn 2>/dev/null | awk -v r="$REPO" '/^n/{p=substr($0,2); if (p==r || index(p, r"/")==1) f=1} END{exit !f}'
+}
+
 # 리포 소속 프로세스가 LISTEN 중인 첫 포트 반환
 find_port() {
   lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null | tail -n +2 | while read -r _ pid _ _ _ _ _ _ name _; do
@@ -67,6 +74,8 @@ PORT=""
 for _ in $(seq 1 "$START_SEC"); do
   PORT=$(find_port | head -1)
   [ -n "$PORT" ] && break
+  # start.sh가 이미 죽었고 리포 소속 프로세스도 남아 있지 않으면 기다려도 LISTEN하지 않는다
+  kill -0 "$SRV" 2>/dev/null || repo_alive || break
   sleep 1
 done
 if [ -z "$PORT" ]; then cleanup; echo "0,0"; exit 0; fi

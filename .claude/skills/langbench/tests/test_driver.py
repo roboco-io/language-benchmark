@@ -75,6 +75,17 @@ PRICE_TIERS=""
         r, row = self.drive("sonnet55-typescript-2", os.path.join(FAKES, "app-ok"))
         self.assertEqual(row[3:9], ["1", "1", "1", "1", "1", "pass"], (r.stderr, row))
 
+    def test_bench_env_start_sec_reaches_measure(self):
+        # bench.env의 START_SEC=5가 measure.sh까지 전달되면 40초 뒤 LISTEN하는 앱은 0,0이다(기본 600이면 1,1).
+        with open(os.path.join(self.base, "bench.env")) as f:
+            env_txt = f.read().replace("START_SEC=60", "START_SEC=5")
+        with open(os.path.join(self.base, "bench.env"), "w") as f:
+            f.write(env_txt)
+        shutil.copytree(os.path.join(FAKES, "app-ok"), os.path.join(self.base, "app-ok"))
+        r, row = self.drive("sonnet55-typescript-3", os.path.join(FAKES, "app-slow"))
+        self.assertEqual(row[3:5], ["0", "0"], (r.stderr, row))
+        self.assertEqual(row[-1], "rejected")
+
 
 if __name__ == "__main__":
     unittest.main()

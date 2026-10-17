@@ -73,6 +73,28 @@ class HostMeasureTest(MeasureBase):
                 owned.append(pid)
         self.assertEqual(owned, [])
 
+    def test_dead_start_sh_returns_early(self):
+        t0 = time.time()
+        r = self.run_script("measure.sh", self.app("dies"), HURL, env={"START_SEC": "120"})
+        self.assertEqual(r.stdout.strip(), "0,0")
+        self.assertLess(time.time() - t0, 30)
+
+    def test_sibling_dir_with_shared_prefix_is_not_owned(self):
+        # X-fu의 서버(명령줄에 X-fu 경로 포함)를 X의 프로세스로 오판해 채점·종료하면 안 된다.
+        repo = self.app("ok")
+        with open(os.path.join(repo, "start.sh"), "w") as f:
+            f.write("#!/bin/bash\nexit 0\n")
+        sib = repo + "-fu"
+        shutil.copytree(os.path.join(FAKES, "app-ok"), sib)
+        env = dict(os.environ, PORT="47123")
+        srv = subprocess.Popen(["python3", os.path.join(sib, "server.py")], cwd=self.tmp, env=env,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        self.addCleanup(srv.kill)
+        time.sleep(1)
+        r = self.run_script("measure.sh", repo, HURL, env={"START_SEC": "10"})
+        self.assertEqual(r.stdout.strip(), "0,0")
+        self.assertIsNone(srv.poll(), "형제 디렉터리 서버가 종료됨")
+
 
 @unittest.skipUnless(DOCKER, "docker 미기동")
 class DockerMeasureTest(MeasureBase):

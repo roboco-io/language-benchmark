@@ -4,7 +4,7 @@
 # stdout: "succ_files,exec_reqs"   Dockerfile이 없거나 빌드 실패·DOCKER_BUILD_SEC 초과·기동 실패면 "0,0"
 # 환경변수: DOCKER_BUILD_SEC(빌드 한도, 기본 900)
 # 컨테이너 이름 lb-<tag>, 이미지 lb/<tag>. 이미지는 남긴다(정리는 cleanup.sh가 lb/* 삭제).
-# 로그: $BASE/docker-build-last.log, $BASE/hurl-last.log
+# 로그: $BASE/docker-build-last.log, $BASE/hurl-docker-last.log
 BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$1"; TAG="$2"; shift 2
 HURL_BIN="/opt/homebrew/bin/hurl"
@@ -54,7 +54,7 @@ for _ in $(seq 1 60); do
 done
 [ "$UP" = 1 ] || { echo "0,0"; exit 0; }
 
-HURL_OUT="$BASE/hurl-last.log"
+HURL_OUT="$BASE/hurl-docker-last.log"
 UID_VAL="$(date +%s)$$"
 ( "$HURL_BIN" --test --jobs 1 --max-time 10 \
     --variable "host=http://localhost:$P" --variable "uid=$UID_VAL" \
