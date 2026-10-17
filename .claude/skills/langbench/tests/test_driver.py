@@ -8,7 +8,7 @@ import tempfile
 import time
 import unittest
 
-from test_measure import DOCKER, FAKES, HURL, SKILL
+from test_measure import DOCKER, FAKES, HURL, SKILL, write_manifest
 
 
 class HarnessCase(unittest.TestCase):
@@ -51,6 +51,7 @@ PRICE_TIERS=""
         self.fakebin = os.path.join(self.tmp, "bin")
         os.makedirs(self.fakebin)
         shutil.copy(os.path.join(FAKES, "claude"), self.fakebin)
+        write_manifest(self.base)
 
     def set_env(self, **kv):
         """bench.env의 KEY=값 줄을 바꾼다."""
@@ -137,6 +138,7 @@ class DriverGateTest(HarnessCase):
             d = os.path.join(self.base, name)
             os.makedirs(d)
             shutil.copy(os.path.join(HURL, "ping.hurl"), os.path.join(d, src))
+        write_manifest(self.base)
         return app
 
     def tree_hash(self, root):
@@ -237,6 +239,23 @@ class DriverHoldTest(HarnessCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertTrue(os.path.exists(os.path.join(self.base, "done-" + self.RUN)))
         self.assertFalse(os.path.exists(os.path.join(self.base, "hold-" + self.RUN)))
+
+    def test_tampered_grading_assets_end_run_without_pass(self):
+        # R24: iteration 중 에이전트가 $BASE의 채점 정본을 고치면 게이트가 tampered이고 run은 pass 없이 끝난다.
+        self.set_env(MAX_ITER="3")
+        hurl = os.path.join(self.base, "harness-hurl")
+        os.makedirs(hurl)
+        shutil.copy(os.path.join(HURL, "ping.hurl"), hurl)
+        write_manifest(self.base)
+        r = self.drive(FAKE_CLAUDE_TAMPER=os.path.join(hurl, "ping.hurl"))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        rows = self.read("metrics-%s.csv" % self.RUN).splitlines()
+        self.assertEqual([l.split(",")[-1] for l in rows], ["tampered"])
+        self.assertTrue(os.path.exists(os.path.join(self.base, "tampered-" + self.RUN)))
+        # 변조된 하네스로는 다음 run을 시작하지 않는다
+        r = self.drive("sonnet55-typescript-2")
+        self.assertEqual(r.returncode, 1)
+        self.assertEqual(self.read("metrics-sonnet55-typescript-2.csv"), "")
 
     def resume_with_previous_segment(self, seconds):
         """이전 구간 1개(seconds초, finished 줄 있음)와 iteration 1 행을 만들고 MAX_ITER=2로 재개한다."""

@@ -16,6 +16,7 @@ run_fu(){
   [ "$(gate_of "$run")" = pass ] || { log "skip $run-fu (원 run 게이트 $(gate_of "$run"))"; return; }
   [ -f "$BASE/done-$run-fu" ] && { log "skip $run-fu"; return; }
   [ -f "$BASE/budget-stop" ] && { log "skip $run-fu (budget-stop)"; return; }
+  ls "$BASE"/tampered-* >/dev/null 2>&1 && { log "skip $run-fu (tampered: $(cd "$BASE" && ls tampered-* | tr '\n' ' '))"; return; }
   # 구독 한도 보류 run은 app-<run>-fu까지 held/로 옮겨 원 run 앱에서 다시 복사해 시작한다(R18)
   held=$(restart_held "$run-fu") && log "restart $run-fu from iteration 1 (보류 시도 보관: $held)"
   log "start $run-fu"

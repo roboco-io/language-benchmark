@@ -14,6 +14,8 @@ run_one(){
   [ -f "$BASE/done-$1" ] && { log "skip $1"; return; }
   # 비용 상한으로 멈춘 실험은 남은 run을 시작하지 않는다 (EXP-042 재발 방지)
   [ -f "$BASE/budget-stop" ] && { log "skip $1 (budget-stop)"; return; }
+  # 채점 정본·하네스 변조가 감지되면(tampered-<run>) 남은 run도 같은 하네스를 쓰므로 시작하지 않는다(R24)
+  ls "$BASE"/tampered-* >/dev/null 2>&1 && { log "skip $1 (tampered: $(cd "$BASE" && ls tampered-* | tr '\n' ' '))"; return; }
   # 구독 한도로 보류된 run은 부분 산출물을 held/로 옮기고 iteration 1부터 다시 시작한다(R18, CLAUDE.md 서비스 장애 보류)
   held=$(restart_held "$1") && log "restart $1 from iteration 1 (보류 시도 보관: $held)"
   log "start $1"

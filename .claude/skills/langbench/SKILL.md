@@ -44,7 +44,9 @@ description: Use when running or re-running the language-benchmark experiment (�
 7. **독립 재검증**: 완주(게이트 `pass`) run마다 `measure.sh`와 `measure_docker.sh`를 각각 2회 실행해 결과가 `13,154`로 일치하는지 확인하고 `recheck.csv`로 남긴다.
    - 호스트: `bash $BASE/measure.sh $BASE/app-<run> $BASE/harness-hurl`
    - Docker: `bash $BASE/measure_docker.sh $BASE/app-<run> <run>-recheck $BASE/harness-hurl`
-8. **usage 집계**: `python3 scripts/aggregate_tokens.py --json --recursive $BASE/sessions-<run>/`(message.id 중복 제거). `--recursive`는 서브에이전트 세션(`<세션 id>/subagents/agent-*.jsonl`)을 포함하며, `runs_row.py`의 `token_proxy`·`cost_usd`와 비용 가드(`cost_guard.py`)도 같은 범위를 센다(R21). 결과는 토큰 대리지표이며 청구 비용이 아니다.
+8. **오염 검사(집계 전 필수)**: 모든 run(후속 과제 `<run>-fu` 포함)마다 `python3 scripts/contamination_check.py $BASE <run>`을 실행한다(R24). 이 스크립트는 그 run의 세션(서브에이전트 포함)에서 자기 앱 디렉터리 밖의 하네스 경로(다른 `app-*`, `harness-hurl`, `followup-hurl`, `metrics-*`, `sessions-*` 등)를 참조한 도구 호출을 찾아 출력하고, 참조가 있으면 종료 코드 1이다. 결과(참조 0건 포함)를 run별로 `runs/contamination.txt`에 남기고, 참조가 있는 run은 `report.md`와 `runs/deviations.md`에 그 내용과 판단(제외 여부)을 적는다. 게이트 쪽 방어는 별도다. setup이 `$BASE/checksums.md5`에 정본·스크립트 해시를 고정하고, driver가 매 게이트 전에, measure.sh·measure_docker.sh가 `$BASE` 안의 Hurl로 채점할 때마다 대조한다. 다르면 게이트가 `tampered`이고 `tampered-<run>`이 생기며 그 run은 pass 없이 끝나고, run-all.sh·run_followups.sh는 남은 run을 시작하지 않는다(measure 스크립트는 `tampered,0`, 종료 코드 3). 해시 목록도 `$BASE` 안에 있으므로 이 검사는 정본과 목록을 함께 고치는 경우를 막지 못한다. 그 경우는 오염 검사가 세션 기록으로 잡는다.
+
+   **usage 집계**: `python3 scripts/aggregate_tokens.py --json --recursive $BASE/sessions-<run>/`(message.id 중복 제거). `--recursive`는 서브에이전트 세션(`<세션 id>/subagents/agent-*.jsonl`)을 포함하며, `runs_row.py`의 `token_proxy`·`cost_usd`와 비용 가드(`cost_guard.py`)도 같은 범위를 센다(R21). 결과는 토큰 대리지표이며 청구 비용이 아니다.
 9. **후속 과제**: 8단계까지 끝나 `done-all`이 생긴 뒤 `nohup caffeinate -is bash $BASE/run_followups.sh >/dev/null 2>&1 &`를 실행한다. 스크립트는 metrics 마지막 게이트가 `pass`인 run마다 `FOLLOWUP=1 driver.sh`로 코멘트 수정 API 과제를 순차 실행한다. 앱은 `app-<run>-fu`로 복사되어 이어서 작업하며 채점은 14파일(본 과제 13 + 후속 1)이다. 세션은 `sessions-<run>-fu`에 분리된다.
 10. **런타임 측정**: 게이트를 통과한 run마다 `bash $BASE/runtime.sh $BASE/app-<run> <run>`을 순차로 실행한다. 다른 Docker 부하(다른 컨테이너 빌드, 후속 과제 채점, 병렬 측정)가 없는 상태에서 한 번에 한 run씩만 돌린다. 부하가 겹치면 rps·지연·메모리가 오염된다. 측정 동작은 다음과 같다.
     - 1부: 빌드, 콜드 스타트, 유휴 메모리, 시드(`seed.py`), 워밍업 후 k6 부하 3회, soak. 컨테이너는 모든 언어에 `--cpus=2 --memory=1g`이다.
@@ -62,7 +64,7 @@ description: Use when running or re-running the language-benchmark experiment (�
 
 ## metrics CSV
 
-열은 `iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트`다. 게이트 `pass`만 완주다. 에이전트가 `.ralph-done`을 선언해도 호스트와 Docker 채점이 모두 기대 파일 수(본 과제 13, 후속 14)를 통과하지 못하면 `rejected`로 삭제된다. Docker 채점은 호스트 채점이 기대 파일 수를 통과한 iteration에서만 실행하므로, 그렇지 않은 행의 Docker 열은 비어 있다. `timeout,<시각>` 행은 `MAX_SEC` 도달(재개 구간 합산 기준), `budget,<시각>` 행은 비용 상한 도달이다. 구독 한도에 걸린 iteration은 행을 남기지 않는다(`hold-<run>`, exit 75). iteration exit `124`는 정체 감시(`STALL_SEC`), `125`는 run 상한, `126`은 비용 상한이 종료한 것이다.
+열은 `iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트`다. 게이트 `pass`만 완주다. `tampered`는 채점 정본·하네스 스크립트 해시 불일치로 run을 끝낸 행이다(R24). 에이전트가 `.ralph-done`을 선언해도 호스트와 Docker 채점이 모두 기대 파일 수(본 과제 13, 후속 14)를 통과하지 못하면 `rejected`로 삭제된다. Docker 채점은 호스트 채점이 기대 파일 수를 통과한 iteration에서만 실행하므로, 그렇지 않은 행의 Docker 열은 비어 있다. `timeout,<시각>` 행은 `MAX_SEC` 도달(재개 구간 합산 기준), `budget,<시각>` 행은 비용 상한 도달이다. 구독 한도에 걸린 iteration은 행을 남기지 않는다(`hold-<run>`, exit 75). iteration exit `124`는 정체 감시(`STALL_SEC`), `125`는 run 상한, `126`은 비용 상한이 종료한 것이다.
 
 ## 흔한 실수
 

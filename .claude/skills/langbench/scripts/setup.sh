@@ -44,6 +44,10 @@ for l in $LANGS; do
     || { echo "PROMPT-$l.md 없음 또는 checksums.md5에 미등록" >&2; exit 1; }
 done
 cp "$SKILL"/scripts/* "$BASE/"
+# 실행 중 무결성 검사용 해시 목록(R24): 검증을 통과한 정본과 동결한 스크립트를 $BASE/checksums.md5에 고정한다.
+# driver.sh는 매 게이트 전에, measure.sh·measure_docker.sh는 재검증 때 이 목록과 대조한다.
+# shellcheck source=common.sh
+source "$BASE/common.sh"; write_manifest
 
 command -v /opt/homebrew/bin/hurl >/dev/null || { echo "hurl 없음 (/opt/homebrew/bin/hurl)" >&2; exit 1; }
 echo "OK: $BASE ($HARNESS)"

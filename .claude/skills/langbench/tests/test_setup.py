@@ -69,6 +69,13 @@ PRICE_TIERS=""
         self.assertTrue(os.path.isfile(os.path.join(base, "bench.env")))
         self.assertTrue(os.path.isfile(os.path.join(base, "driver.sh")))
         self.assertTrue(os.path.isfile(os.path.join(base, "PROMPT-typescript.md")))
+        # R24: 실행 중 무결성 검사용 해시 목록이 정본·스크립트를 담고 현재 상태와 일치한다.
+        with open(os.path.join(base, "checksums.md5")) as f:
+            listed = {l.split()[1] for l in f}
+        self.assertTrue({"harness-hurl/auth.hurl", "followup-hurl/comments_update.hurl", "k6/load.js",
+                         "PROMPT-typescript.md", "driver.sh", "measure.sh", "cost_guard.py"} <= listed, listed)
+        ok = subprocess.run(["bash", "-c", 'BASE="$1"; source "$BASE/common.sh"; harness_intact', "-", base])
+        self.assertEqual(ok.returncode, 0)
 
     def test_setup_rejects_tampered_hurl(self):
         path = os.path.join(self.skill, "assets", "harness-hurl", "auth.hurl")

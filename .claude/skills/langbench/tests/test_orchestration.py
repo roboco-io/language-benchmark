@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 import unittest
 
-from test_measure import FAKES, HURL, SKILL
+from test_measure import FAKES, HURL, SKILL, write_manifest
 
 
 def count_files(root):
@@ -84,6 +84,7 @@ PRICE_TIERS=""
         self.fakebin = os.path.join(self.tmp, "bin")
         os.makedirs(self.fakebin)
         shutil.copy(os.path.join(FAKES, "claude"), self.fakebin)
+        write_manifest(self.base)
 
     def run_all(self, **extra):
         env = dict(os.environ, HOME=self.home, PATH=self.fakebin + os.pathsep + os.environ["PATH"], **extra)

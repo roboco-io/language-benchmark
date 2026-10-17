@@ -20,6 +20,11 @@ def docker_up():
 DOCKER = docker_up()
 
 
+def write_manifest(base):
+    """setup.sh처럼 base의 PROMPT·Hurl·k6·스크립트 해시 목록(checksums.md5)을 만든다(R24)."""
+    subprocess.run(["bash", "-c", 'BASE="$1"; source "$BASE/common.sh"; write_manifest', "-", base], check=True)
+
+
 class MeasureBase(unittest.TestCase):
     def setUp(self):
         # 스크립트를 임시 BASE로 복사해 로그가 리포를 더럽히지 않게 한다.
@@ -128,6 +133,40 @@ class DockerMeasureTest(MeasureBase):
         os.remove(os.path.join(repo, "Dockerfile"))
         r = self.run_script("measure_docker.sh", repo, "t3-ok", HURL)
         self.assertEqual(r.stdout.strip(), "0,0")
+
+
+class IntegrityTest(MeasureBase):
+    """R24: 하네스 안의 Hurl로 채점할 때 정본·스크립트가 setup 때와 다르면 채점하지 않는다."""
+
+    def setUp(self):
+        super().setUp()
+        self.hurl = os.path.join(self.base, "harness-hurl")
+        os.makedirs(self.hurl)
+        shutil.copy(os.path.join(HURL, "ping.hurl"), self.hurl)
+        write_manifest(self.base)
+
+    def test_intact_harness_grades(self):
+        r = self.run_script("measure.sh", self.app("ok"), self.hurl)
+        self.assertEqual(r.stdout.strip(), "1,1", r.stderr)
+
+    def test_tampered_hurl_is_not_graded(self):
+        with open(os.path.join(self.hurl, "ping.hurl"), "a") as f:
+            f.write("# tampered\n")
+        app = self.app("ok")
+        for script, args in (("measure.sh", ()), ("measure_docker.sh", ("t3-ok",))):
+            r = self.run_script(script, app, *args, self.hurl)
+            self.assertEqual((r.returncode, r.stdout.strip()), (3, "tampered,0"), (script, r.stderr))
+
+    def test_added_hurl_file_and_changed_script_are_tampering(self):
+        app = self.app("ok")
+        shutil.copy(os.path.join(HURL, "ping.hurl"), os.path.join(self.hurl, "extra.hurl"))
+        r = self.run_script("measure.sh", app, self.hurl)
+        self.assertEqual(r.stdout.strip(), "tampered,0")
+        os.remove(os.path.join(self.hurl, "extra.hurl"))
+        with open(os.path.join(self.base, "gate.sh"), "a") as f:
+            f.write("\n")
+        r = self.run_script("measure.sh", app, self.hurl)
+        self.assertEqual(r.stdout.strip(), "tampered,0")
 
 
 class FollowupHurlTest(unittest.TestCase):

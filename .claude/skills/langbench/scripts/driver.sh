@@ -6,6 +6,8 @@
 RUN="$1"
 BASE="$(cd "$(dirname "$0")" && pwd)"
 source "$BASE/bench.env"
+# shellcheck source=common.sh
+source "$BASE/common.sh"   # harness_intact
 COND="${RUN%%-*}"; REST="${RUN#*-}"; LANG_="${REST%%-*}"
 MODEL=""
 for c in $CONDITIONS; do [ "${c%%:*}" = "$COND" ] && MODEL="${c#*:}"; done
@@ -28,6 +30,8 @@ REPO="$BASE/app-$RUN"; MET="$BASE/metrics-$RUN.csv"; LOG="$BASE/ralph-run-$RUN.l
 [ -f "$BASE/done-$RUN" ] && exit 0
 # 구독 한도 보류 run은 이어서 돌리지 않는다. run-all.sh·run_followups.sh가 부분 산출물을 held/로 옮기고 처음부터 다시 시작한다(R18).
 [ -f "$BASE/hold-$RUN" ] && { echo "hold-$RUN 있음 — 오케스트레이터가 처음부터 다시 시작해야 함 ($RUN)" >> "$BASE/driver.log"; exit 75; }
+# 채점 정본·하네스 스크립트가 setup 때와 다르면 시작하지 않는다(R24)
+harness_intact || { touch "$BASE/tampered-$RUN"; echo "=== RUN $RUN 거부: 채점 정본·하네스 해시 불일치($BASE/checksums.md5): $(date '+%F %T') ===" >> "$BASE/driver.log"; exit 1; }
 
 # 빈 포트 선택: 3000번대 고정 포트가 외부 프로세스(VS Code Live Preview 등)와 충돌하지 않도록 (EXP-029 D-1, EXP-031)
 free_port() {
@@ -216,7 +220,12 @@ for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
   [ "${RESULT%%,*}" = "$EXPECT_FILES" ] && DRES=$(bash "$BASE/measure_docker.sh" "$REPO" "$RUN-i$i" $HURL_DIRS)
   CLAIM=0; [ -f "$REPO/.ralph-done" ] && CLAIM=1
   GATE=na
-  if [ "$CLAIM" = 1 ]; then
+  # 게이트 판정 전 무결성 검사(R24): 채점 정본·스크립트가 바뀌었으면 이 iteration 채점을 믿을 수 없으므로 pass 없이 run을 끝낸다.
+  if ! harness_intact; then
+    GATE=tampered
+    rm -f "$REPO/.ralph-done"; touch "$BASE/tampered-$RUN"
+    echo "=== [$RUN] GATE tampered: 채점 정본·하네스 해시 불일치 iter $i ===" >> "$LOG"
+  elif [ "$CLAIM" = 1 ]; then
     if [ "${RESULT%%,*}" = "$EXPECT_FILES" ] && [ "${DRES%%,*}" = "$EXPECT_FILES" ]; then
       GATE=pass
     else
@@ -227,6 +236,7 @@ for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
   fi
   # metrics 열: iter,종료시각,exit,host_succ,host_reqs,docker_succ,docker_reqs,완료 선언,게이트
   echo "$i,$(date '+%F %T'),$EXIT,$RESULT,$DRES,$CLAIM,$GATE" >> "$MET"
+  [ "$GATE" = tampered ] && break
   [ -f "$REPO/.ralph-done" ] && break
   if [ "$EXIT" = 126 ]; then
     echo "budget,$(date '+%F %T')" >> "$MET"; touch "$BASE/budget-stop"

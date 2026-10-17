@@ -8,6 +8,12 @@
 BASE="$(cd "$(dirname "$0")" && pwd)"
 REPO="$1"; TAG="$2"; shift 2
 HURL_BIN="/opt/homebrew/bin/hurl"
+# 하네스 안의 Hurl로 채점하면 먼저 정본·스크립트 해시를 대조한다(R24, measure.sh와 같음). 다르면 "tampered,0", 종료 코드 3.
+# shellcheck source=common.sh
+source "$BASE/common.sh"
+if grades_from_base "$@" && ! harness_intact; then
+  echo "채점 정본·하네스 해시 불일치($BASE/checksums.md5) — 채점하지 않음" >&2; echo "tampered,0"; exit 3
+fi
 DOCKER_BUILD_SEC="${DOCKER_BUILD_SEC:-900}"
 NAME="lb-$TAG"; IMAGE="lb/$TAG"
 HURL_FILES=()
