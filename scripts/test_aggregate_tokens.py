@@ -68,6 +68,18 @@ class AggregationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 aggregate(Path(directory))
 
+    def test_recursive_includes_subagent_sessions(self):
+        # R21: <세션>/subagents/*.jsonl은 기본(최상위만) 집계에서 빠지고 recursive=True에서 포함된다.
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory, 'top.jsonl').write_text(json.dumps(event('a')) + '\n')
+            sub = Path(directory, 'sid', 'subagents')
+            sub.mkdir(parents=True)
+            Path(sub, 'agent-1.jsonl').write_text(json.dumps(event('b')) + '\n' + json.dumps(event('a')) + '\n')
+            top = aggregate(Path(directory))
+            deep = aggregate(Path(directory), recursive=True)
+        self.assertEqual((top['messages'], top['input_tokens']), (1, 10))
+        self.assertEqual((deep['messages'], deep['input_tokens'], deep['duplicates']), (2, 20, 1))
+
     def test_empty_input_is_not_zero_usage(self):
         with self.assertRaises(ValueError):
             self.run_logs([])

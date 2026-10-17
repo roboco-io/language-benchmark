@@ -74,6 +74,16 @@ class RunsRowTests(unittest.TestCase):
         r = self.row("sonnet55-go-2")
         self.assertEqual((r["pass"], r["wall_min"]), ("1", "12.5"))
 
+    def test_subagent_tokens_included(self):
+        # R21: 서브에이전트 세션 토큰(1000+2000+3000)이 token_proxy에 더해진다.
+        base = self.base()
+        sub = base / "sessions-opus55-go-1" / "sid" / "subagents"
+        sub.mkdir(parents=True)
+        (sub / "agent-1.jsonl").write_text(json.dumps({"type": "assistant", "message": {"id": "sub-a", "usage": {
+            "input_tokens": 1000, "output_tokens": 2000, "cache_creation_input_tokens": 3000,
+            "cache_read_input_tokens": 0}}}) + "\n")
+        self.assertEqual(self.row("opus55-go-1", base)["token_proxy"], "12.0")
+
     def test_partial_load_blanks_latency(self):
         base = self.base()
         (base / "runtime-opus55-go-1" / "load-3.json").unlink()

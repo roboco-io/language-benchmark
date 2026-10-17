@@ -95,11 +95,12 @@ def run_minutes(driver_log, run, ended):
 
 
 def tokens(base, run):
-    """sessions-<run>의 집계. 세션이 없으면 None."""
+    """sessions-<run>의 집계. 서브에이전트 세션(<세션>/subagents/*.jsonl)까지 재귀로 포함한다(R21, cost_guard.py와 같은 범위).
+    message.id 중복 제거는 aggregate가 한다. 세션이 없으면 None."""
     d = Path(base) / ("sessions-%s" % run)
-    if not d.is_dir() or not list(d.glob("*.jsonl")):
+    if not d.is_dir() or not list(d.rglob("*.jsonl")):
         return None
-    return aggregate(d)
+    return aggregate(d, recursive=True)
 
 
 def token_proxy_k(totals):

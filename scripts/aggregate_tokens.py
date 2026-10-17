@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Aggregate archived Claude message usage, deduplicated within each run.
 
-Usage: python3 scripts/aggregate_tokens.py [--json] <run-log-dir> [...]
-Each directory is ONE run. Only top-level *.jsonl files are included.
+Usage: python3 scripts/aggregate_tokens.py [--json] [--recursive] <run-log-dir> [...]
+Each directory is ONE run. By default only top-level *.jsonl files are included;
+--recursive also includes nested files such as <session>/subagents/agent-*.jsonl
+(the same scope as the harness cost guard).
 Codex cumulative usage and conflicting streaming snapshots are rejected.
 The token proxy is input + output + cache creation, NOT billed cost.
 """
@@ -15,8 +17,8 @@ FIELDS = ['input_tokens', 'output_tokens', 'cache_creation_input_tokens',
 VERSION = 2
 
 
-def aggregate(log_dir: Path) -> dict:
-    files = sorted(log_dir.glob('*.jsonl'))
+def aggregate(log_dir: Path, recursive: bool = False) -> dict:
+    files = sorted(log_dir.rglob('*.jsonl') if recursive else log_dir.glob('*.jsonl'))
     if not files:
         raise ValueError(f'No JSONL files: {log_dir}')
     seen = {}
@@ -81,6 +83,8 @@ def aggregate(log_dir: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--json', action='store_true', help='machine-readable output')
+    parser.add_argument('--recursive', action='store_true',
+                        help='include nested JSONL files (subagent sessions)')
     parser.add_argument('directories', nargs='+', type=Path)
     args = parser.parse_args()
     results = {}
@@ -88,12 +92,13 @@ def main() -> int:
         for directory in args.directories:
             if not directory.is_dir():
                 raise ValueError(f'Not a directory: {directory}')
-            results[str(directory)] = aggregate(directory)
+            results[str(directory)] = aggregate(directory, args.recursive)
     except ValueError as error:
         parser.exit(2, f'error: {error}\n')
     if args.json:
         print(json.dumps({'aggregator_version': VERSION, 'format': 'claude-message-usage',
-                          'scope': 'one directory per run; top-level JSONL only',
+                          'scope': ('one directory per run; all nested JSONL' if args.recursive
+                                    else 'one directory per run; top-level JSONL only'),
                           'results': results}, ensure_ascii=False, indent=2))
     else:
         for name, result in results.items():
