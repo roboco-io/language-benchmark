@@ -14,6 +14,7 @@ from metrics import CSV_COLUMNS
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "harness"
 SCRIPT = Path(__file__).resolve().parent / "runs_row.py"
+PREV_ELAPSED = Path(__file__).resolve().parents[1] / ".claude" / "skills" / "langbench" / "scripts" / "prev_elapsed.py"
 
 
 def as_dict(line):
@@ -94,6 +95,26 @@ class RunsRowTests(unittest.TestCase):
             "=== RUN opus55-go-1 (", 1)
         log.write_text(text)
         self.assertEqual(self.row("opus55-go-1", base)["wall_min"], "12.5")
+
+    def test_driver_prev_elapsed_matches_run_minutes(self):
+        # R29: driver의 재개 예산(prev_elapsed.py)과 runs_row의 wall_min이 같은 구간 규칙을 쓴다.
+        # 보류 시도(held 앞)는 둘 다 버리고, finished 구간 2개(5분 + 7분 30초)를 더한다.
+        base = self.base()
+        run = "sonnet55-rust-1"
+        log = base / "driver.log"
+        log.write_text(
+            "=== RUN %s (claude-native m, PROMPT-rust.md, PORT=1) start: 2026-10-17 08:00:00 ===\n" % run
+            + "=== RUN %s held: 2026-10-17 08:20:00 | stdout: limit ===\n" % run
+            + "=== RUN %s (claude-native m, PROMPT-rust.md, PORT=2) start: 2026-10-17 10:00:00 ===\n" % run
+            + "=== RUN other-x (m) start: 2026-10-17 10:01:00 ===\n"
+            + "=== RUN %s finished: 2026-10-17 10:05:00 | 1,x ===\n" % run
+            + "=== RUN %s (claude-native m, PROMPT-rust.md, PORT=3) start: 2026-10-17 11:00:00 ===\n" % run
+            + "=== RUN %s finished: 2026-10-17 11:07:30 | 2,x ===\n" % run)
+        out = subprocess.run([sys.executable, str(PREV_ELAPSED), str(log), run, str(base / "none.csv")],
+                             capture_output=True, text=True, check=True).stdout
+        minutes = runs_row.run_minutes(log, run, runs_row.datetime(2026, 10, 17, 11, 7, 30))
+        self.assertEqual(minutes, 12.5)
+        self.assertEqual(round(int(out) / 60, 1), minutes)
 
     def test_partial_load_blanks_latency(self):
         base = self.base()
