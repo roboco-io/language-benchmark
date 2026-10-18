@@ -9,7 +9,7 @@
 | 열 | 단위 | 뜻 |
 |---|---|---|
 | `exp`, `run`, `rep` | | 실험 ID(`EXP-001`), run ID, 반복 번호 |
-| `language` | | `typescript`, `python`, `go`, `rust`, `cpp` 중 하나 |
+| `language` | | 언어 레지스트리(`.claude/skills/langbench/languages/<key>.json`)에 등록된 `key` 중 하나. EXP-001은 `typescript`, `python`, `go`, `rust`, `cpp` |
 | `model` | | `sonnet55`(claude-sonnet-5-5), `opus55`(claude-opus-5-5) |
 | `pass` | 0/1 | 호스트(`start.sh`)와 Docker 양쪽 Hurl 154요청 통과 여부 |
 | `wall_min` | 분 | 첫 프롬프트부터 합격 판정까지 벽시계 시간 |
@@ -24,7 +24,7 @@
 | `soak_error_rate`, `soak_mem_growth_mb` | %, MB | 장시간 부하의 에러율과 시작 대비 종료 시점 메모리 증가 |
 | `loc`, `deps` | 줄, 개 | 테스트 제외 코드 줄 수, 매니페스트의 직접 의존성 수 |
 | `build_sec`, `image_mb`, `cold_start_ms` | s, MB, ms | 캐시 없는 Docker 빌드 시간, 최종 이미지 크기, 컨테이너 기동부터 첫 정상 응답까지 |
-| `vulns` | 건 | Trivy 이미지 스캔 + 언어별 스캐너(`npm audit`, `pip-audit`, `govulncheck`, `cargo audit`)의 고유 취약점 수 |
+| `vulns` | 건 | Trivy 이미지 스캔 + 언어별 스캐너(레지스트리 `scanner` 항목. EXP-001은 `npm audit`, `pip-audit`, `govulncheck`, `cargo audit`)의 고유 취약점 수 |
 | `followup_pass`, `followup_min`, `followup_token_proxy` | 0/1, 분, K | 후속 과제(코멘트 수정 API) 성공 여부, 시간, 토큰 대리지표 |
 
 ## 집계 규칙
@@ -71,9 +71,11 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 
 **빌드와 기동.** `build_sec`와 `image_mb`는 게이트가 채점한 앱 작업 트리를 임시 디렉터리로 내보내(`git ls-files -co --exclude-standard`, 즉 `.gitignore`가 가리는 의존성·빌드 산출물·DB 제외) 캐시 없이(no-cache) Docker 빌드한 시간과 최종 이미지 크기다. 내보낸 원본의 HEAD sha, 미커밋 변경 줄 수, 파일 수는 `runtime-<run>/source.txt`에 남는다. `cold_start_ms`는 컨테이너 기동부터 첫 정상 응답까지이고, `idle_rss_mb`는 기동 후 시드 전에 잰다.
 
-**`loc`.** scc `--format json` 결과에서 주 언어의 코드 줄(Code)만 합산한다. 주 언어는 typescript는 `TypeScript`·`JavaScript`, python은 `Python`, go는 `Go`, rust는 `Rust`, cpp는 `C++`·`C++ Header`·`C Header`다. scc 호출 시 `--exclude-dir test,tests,__tests__,hurl,node_modules,target,build,.venv,vendor`와 `--not-match '(_test\.go|test_.*\.py|.*_test\.py|\.(test|spec)\.[jt]s|_test\.(cc|cpp))$'`로 테스트와 의존성·빌드 디렉터리를 뺀다. 구현은 `runtime_parse.loc`이다.
+**`loc`.** scc `--format json` 결과에서 주 언어의 코드 줄(Code)만 합산한다. 언어별 scc 이름·테스트 파일 정규식·제외 디렉터리는 레지스트리의 `loc` 항목이 정본이다. EXP-001 언어의 주 언어는 typescript는 `TypeScript`·`JavaScript`, python은 `Python`, go는 `Go`, rust는 `Rust`, cpp는 `C++`·`C++ Header`·`C Header`다. scc 호출 시 `--exclude-dir test,tests,__tests__,hurl,node_modules,target,build,.venv,vendor`와 `--not-match '(_test\.go|test_.*\.py|.*_test\.py|\.(test|spec)\.[jt]s|_test\.(cc|cpp))$'`로 테스트와 의존성·빌드 디렉터리를 뺀다. 구현은 `runtime_parse.loc`이다.
 
 **`deps`.** 매니페스트의 직접 런타임 의존성 수이다(`runtime_parse.deps`). 매니페스트가 없으면 빈 칸이다.
+
+언어별 매니페스트와 형식 종류는 레지스트리의 `deps.kind`가 정한다. 아래 표는 EXP-001 언어의 계산 방식이며, 새 형식은 `runtime_parse.DEPS_BY_KIND`에 구현한다.
 
 | 언어 | 계산 방식 |
 |---|---|
@@ -83,7 +85,7 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 | rust | `Cargo.toml`의 `[dependencies]` 키 수 |
 | cpp | `CMakeLists.txt`의 `find_package(X`, `FetchContent_Declare(X`, `pkg_check_modules(… X`에서 고유 이름 수. `Threads`는 뺀다 |
 
-**`vulns`.** 필요한 보고서가 모두 있을 때만 값을 낸다. 하나라도 없으면 빈 칸이다. 필요한 보고서는 Trivy 이미지 스캔과 언어별 스캐너이며, typescript는 `npm audit`, python은 `pip-audit`, go는 `govulncheck`, rust는 `cargo audit`이다. cpp는 Trivy만 쓴다. 각 보고서에서 ID와 alias를 뽑고, alias로 서로 연결되는 ID를 한 묶음으로 보아 묶음 수를 센다(`runtime_parse.vulns`). 추출 위치는 다음과 같다.
+**`vulns`.** 필요한 보고서가 모두 있을 때만 값을 낸다. 하나라도 없으면 빈 칸이다. 필요한 보고서는 Trivy 이미지 스캔과 언어별 스캐너이며, 스캐너 명령과 리포트 형식은 레지스트리의 `scanner` 항목이 정하고 새 형식의 ID 추출은 `runtime_parse._EXTRACT`에 구현한다. EXP-001 언어는 typescript는 `npm audit`, python은 `pip-audit`, go는 `govulncheck`, rust는 `cargo audit`이다. cpp는 Trivy만 쓴다. 각 보고서에서 ID와 alias를 뽑고, alias로 서로 연결되는 ID를 한 묶음으로 보아 묶음 수를 센다(`runtime_parse.vulns`). 추출 위치는 다음과 같다.
 
 - Trivy: `Results[].Vulnerabilities[].VulnerabilityID`
 - npm: `vulnerabilities.*.via[]` 중 dict인 항목의 `url` 끝에 있는 GHSA ID

@@ -21,6 +21,8 @@
 | Rust | Axum | SQLx | tokio |
 | C++ | Drogon | Drogon ORM | CMake, C++20 |
 
+위 표는 EXP-001의 다섯 언어다. 언어별 스택의 정본은 레지스트리(`.claude/skills/langbench/languages/<key>.json`의 `stack`·`prompt`)이며, 새 언어는 [langbench-add-language](../../.claude/skills/langbench-add-language/SKILL.md) 스킬로 추가한다.
+
 ## 기동 규약
 
 자매 리포 하네스는 `npm run dev`로 서버를 띄웠으므로 TypeScript 전용이었다. 이 리포는 언어와 무관하게 다음 두 진입점을 요구한다.

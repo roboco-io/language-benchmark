@@ -7,9 +7,9 @@ description: Use when running or re-running the language-benchmark experiment (�
 
 ## 개요
 
-같은 RealWorld 백엔드 과제를 구현 언어 5종으로 만들게 하고, 과정 지표(iteration, 시간, 토큰)와 결과물 지표(런타임 성능, 코드량, 취약점)를 비교한다. 정본(PROMPT 6종, Hurl 14파일, k6 스크립트)과 공통 스크립트는 이 스킬의 `assets/`·`scripts/`에 있다. 실행 시 `$HOME/experiments/langbench-expNNN`(NNN은 3자리 실험 번호)으로 복사되고 해시 검증으로 고정된다. 실험 품질 규칙은 `docs/experiment-quality-rules.md`, 과제 정의는 `tasks/realworld-backend/README.md`, 지표 정의는 `analysis/metrics/SCHEMA.md`가 정본이다. 이 스킬은 그 절차를 실행 가능한 형태로 묶은 것이다.
+같은 RealWorld 백엔드 과제를 구현 언어(EXP-001은 5종, 이후 실험은 `languages/`의 레지스트리에 등록한 언어)로 만들게 하고, 과정 지표(iteration, 시간, 토큰)와 결과물 지표(런타임 성능, 코드량, 취약점)를 비교한다. 정본(PROMPT는 언어별 1종과 후속 과제 1종, Hurl 14파일, k6 스크립트)과 공통 스크립트는 이 스킬의 `assets/`·`scripts/`에 있다. 실행 시 `$HOME/experiments/langbench-expNNN`(NNN은 3자리 실험 번호)으로 복사되고 해시 검증으로 고정된다. 실험 품질 규칙은 `docs/experiment-quality-rules.md`, 과제 정의는 `tasks/realworld-backend/README.md`, 지표 정의는 `analysis/metrics/SCHEMA.md`가 정본이다. 이 스킬은 그 절차를 실행 가능한 형태로 묶은 것이다.
 
-자매 리포(`vibecoding-token-experiments`)의 `ralph-model-benchmark` 스킬에서 이식했으며 달라진 점은 다음과 같다. 하네스는 `claude-native` 하나만 지원한다. 실험 축은 자연어(EN/KO)가 아니라 구현 언어이며 `LANGS`는 `typescript python go rust cpp`다. 완주 게이트는 호스트 Hurl 채점과 Docker 이미지 Hurl 채점을 모두 통과해야 한다. 본 과제 뒤에 후속 과제와 런타임 측정 단계가 있다.
+자매 리포(`vibecoding-token-experiments`)의 `ralph-model-benchmark` 스킬에서 이식했으며 달라진 점은 다음과 같다. 하네스는 `claude-native` 하나만 지원한다. 실험 축은 자연어(EN/KO)가 아니라 구현 언어다. 언어별 설정(프롬프트 슬롯, 툴체인, 스캐너, 의존성·코드량 규칙, 정리 대상)의 정본은 `languages/<key>.json` 레지스트리이며, EXP-001의 `LANGS`는 `typescript python go rust cpp`다. 언어를 추가하는 절차는 스킬 [langbench-add-language](../langbench-add-language/SKILL.md)를 따른다. 완주 게이트는 호스트 Hurl 채점과 Docker 이미지 Hurl 채점을 모두 통과해야 한다. 본 과제 뒤에 후속 과제와 런타임 측정 단계가 있다.
 
 ## 하네스와 조건
 
@@ -18,7 +18,7 @@ description: Use when running or re-running the language-benchmark experiment (�
 | HARNESS | `claude-native` (구독 인증. 실행 시 `env -u ANTHROPIC_API_KEY -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL`로 API 키를 제거한다) |
 | 모델 조건 | `sonnet55:claude-sonnet-5-5`, `opus55:claude-opus-5-5` (조건명에 `-` 금지) |
 | run 이름 | `<조건>-<언어>-<n>` (예: `opus55-rust-2`). 후속 과제 run은 `<원 run>-fu` |
-| 실행 순서 | 반복 번호 블록(1, 2, 3) 순서로 돌고, 블록 안의 조건×언어 10개 run을 블록별 seed `<RUN_ORDER_SEED>-<반복>`(기본 `20261018`)로 결정적으로 섞은 순차 실행(설계 4.3, R26·R27). run-all.sh가 첫 run 전에 `$BASE/run-order.txt`로 남기고, 다시 실행하면 그 파일을 그대로 쓴다. run_followups.sh도 같은 순서를 쓴다. 다른 실험·Docker 작업과 동시 실행 금지 |
+| 실행 순서 | 반복 번호 블록(1, 2, 3) 순서로 돌고, 블록 안의 조건×언어 run(EXP-001은 10개)을 블록별 seed `<RUN_ORDER_SEED>-<반복>`(기본 `20261018`)로 결정적으로 섞은 순차 실행(설계 4.3, R26·R27). run-all.sh가 첫 run 전에 `$BASE/run-order.txt`로 남기고, 다시 실행하면 그 파일을 그대로 쓴다. run_followups.sh도 같은 순서를 쓴다. 다른 실험·Docker 작업과 동시 실행 금지 |
 
 ## 절차
 
@@ -53,7 +53,8 @@ description: Use when running or re-running the language-benchmark experiment (�
     - 빌드는 게이트가 채점한 작업 트리를 임시 디렉터리로 내보내서 한다(R25). 내보내는 파일은 `git ls-files -co --exclude-standard`(추적 파일과 무시되지 않은 미추적 파일)다. 그래서 커밋하지 않은 마지막 수정도 측정에 들어가고, `.gitignore`가 가리는 `node_modules`·`target`·DB는 빠진다(R8 의도 유지). 무시 파일에 기대는 Dockerfile은 빌드에 실패하며, 이는 재현성 결함으로 본다. `source.txt`에 HEAD sha, `git status --porcelain` 줄 수(`dirty`), 내보낸 파일 수를 남긴다. 앱이 git 리포가 아니면 `error.txt`가 `export: not a git repo`다.
     - 2부(정적 분석): `scc`, `hints.txt`, 이미지 `lb/<run>:rt`의 trivy 스캔, 언어별 취약점 스캐너. 1부의 Docker 단계가 실패해도 2부는 실행한다(R13). trivy는 이미지가 없으면 보고서를 만들지 않는다. 스캐너 하나가 실패하면 `error.txt`에 `scan:<이름>: <사유>`를 덧붙이고 나머지를 계속한다. govulncheck는 종료 코드가 0 또는 3이고 JSON 스트림에 `config` 메시지가 있을 때만 `go.json`을 남긴다. 그 밖은 `scan:go: …`로 기록하고 보고서를 만들지 않으므로 Go의 취약점 수는 빈 칸이 된다(R22).
     - 산출물은 `$BASE/runtime-<run>/`에 쓴다. 메모리 파일(`idle_mem.txt`, `peak_mem.txt`, `soak_mem_start.txt`, `soak_mem_end.txt`)은 MiB 숫자 하나, `cold_start_ms.txt`는 정수다(R11). `load-1.json`·`load-2.json`·`load-3.json`은 k6 요약이다. `error.txt`가 있으면 종료 코드가 1이다.
-    - 스캐너 경로: `PIP_AUDIT_BIN`(기본 `$HOME/.local/share/langbench-tools/venv/bin/pip-audit`), `GOVULNCHECK_BIN`(기본 `$HOME/go/bin/govulncheck`), cargo-audit는 `$HOME/.cargo/bin`. `toolchain.sh`도 같은 경로를 쓴다(R10).
+    - 스캐너 명령과 경로는 각 언어의 레지스트리 `scanner` 항목이 정한다. EXP-001 언어의 기본 경로는 `PIP_AUDIT_BIN`(기본 `$HOME/.local/share/langbench-tools/venv/bin/pip-audit`), `GOVULNCHECK_BIN`(기본 `$HOME/go/bin/govulncheck`), cargo-audit `$HOME/.cargo/bin`이며 `toolchain.sh`도 같은 경로를 쓴다(R10).
+    - Fargate 병렬 측정: 로컬 순차 측정 대신 `AWS_PROFILE=roboco python3 .claude/skills/langbench/fargate/orchestrate.py $BASE --exp EXP-NNN --config fargate.env`를 쓸 수 있다(설정은 `fargate/fargate.env.example`). 처음 쓰기 전 `tools` 이미지를 다시 빌드해 ECR에 올려야 한다. 자세한 절차는 langbench-add-language 스킬 8단계다.
 11. **runs.csv 행 생성**: 원 run마다 `python3 scripts/runs_row.py $BASE EXP-NNN <run> --append analysis/metrics/runs.csv`. 미측정 값은 빈 칸이다. 빈 칸 규칙은 다음과 같다.
     - `wall_min`과 `followup_min`은 `driver.log`에서 그 run의 모든 재개 구간을 합산한다(R16).
     - `rps`·지연·`error_rate`는 `load-1/2/3.json` 3개가 모두 있어야 계산한다. 하나라도 없으면 빈 칸이다(R16).
