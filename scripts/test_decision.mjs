@@ -29,6 +29,14 @@ const ms=[{key:'rps',better:'higher'},{key:'wall_min',better:'lower'}];
 assert.deepEqual(tradeoffs({go:{rps:10,wall_min:20},rust:{rps:5,wall_min:10}}, 'go', ms, {rps:1,wall_min:1}),
   {strength:'rps',burden:'wall_min'});
 assert.deepEqual(tradeoffs({go:{rps:10},rust:{rps:10}}, 'go', ms, {rps:1}), {strength:null,burden:null});
+// 다수 언어가 함께 가진 최고값은 강점이 아니고, 중간 순위는 부담이 아니다(EXP-001 Sonnet 사례).
+const five={typescript:{fp:1,rps:1269},python:{fp:1,rps:511},go:{fp:1,rps:2240},rust:{fp:1,rps:3283},cpp:{fp:0.67,rps:4469}};
+const fm=[{key:'fp',better:'higher'},{key:'rps',better:'higher'}];
+assert.deepEqual(tradeoffs(five,'go',fm,{fp:1,rps:1}), {strength:null,burden:null});
+assert.deepEqual(tradeoffs(five,'cpp',fm,{fp:1,rps:1}), {strength:'rps',burden:'fp'});
+assert.deepEqual(tradeoffs(five,'python',fm,{fp:1,rps:1}), {strength:null,burden:'rps'});
+// 두 언어가 공동 최고면 다섯 언어 중에서는 여전히 강점이다.
+assert.equal(tradeoffs({...five,rust:{fp:1,rps:4469}},'rust',fm,{fp:1,rps:1}).strength, 'rps');
 // 새 UI가 기존 공개 집계값을 보존하고 실제 증거 파일로 연결하는지 검사한다.
 const context={window:{}};
 runInNewContext(readFileSync(new URL('../dashboard/data.js',import.meta.url),'utf8'),context);

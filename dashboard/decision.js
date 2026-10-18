@@ -31,19 +31,26 @@
       csv:`${base}/blob/main/analysis/metrics/runs.csv` };
   }
   // 현재 목적의 지표에서 다른 언어에 대한 상대적인 강점과 부담을 반환한다.
+  // 강점은 최고값, 부담은 최저값인 지표다. 비교 언어의 절반 넘게 같은 값을 가지면 구별 정보가 없으므로 제외하고,
+  // 중간 순위는 어느 쪽에도 넣지 않는다. 후보가 여럿이면 가중치, 다음 값과의 정규화 간격 순으로 고른다.
   function tradeoffs(cells, language, metrics, weights) {
-    const candidates = [];
+    const strengths = [], burdens = [];
     for (const m of metrics) {
       if (!(weights[m.key] > 0)) continue;
       const vals = Object.values(cells).map(c => number(c[m.key])).filter(v => v !== null);
       const value = number(cells[language]?.[m.key]);
-      if (value === null || vals.length < 2 || Math.max(...vals) === Math.min(...vals)) continue;
-      const normalized = (value - Math.min(...vals)) / (Math.max(...vals)-Math.min(...vals));
-      candidates.push({key:m.key, score:m.better === 'higher' ? normalized : 1-normalized, weight:weights[m.key]});
+      const min = Math.min(...vals), max = Math.max(...vals);
+      if (value === null || vals.length < 2 || max === min) continue;
+      if (vals.filter(v => v === value).length > Math.max(1, Math.floor(vals.length / 2))) continue;
+      const others = vals.filter(v => v !== value);
+      const gap = Math.min(...others.map(v => Math.abs(v - value))) / (max - min);
+      const best = m.better === 'higher' ? max : min, worst = m.better === 'higher' ? min : max;
+      const candidate = {key:m.key, weight:weights[m.key], gap};
+      if (value === best) strengths.push(candidate);
+      else if (value === worst) burdens.push(candidate);
     }
-    candidates.sort((a,b) => b.score-a.score || b.weight-a.weight);
-    return { strength:candidates[0]?.score > 0.5 ? candidates[0].key : null,
-      burden:candidates.at(-1)?.score < 0.5 ? candidates.at(-1).key : null };
+    const pick = list => list.sort((a,b) => b.weight-a.weight || b.gap-a.gap)[0]?.key ?? null;
+    return { strength:pick(strengths), burden:pick(burdens) };
   }
   const api = { summarize, scope, evidenceLinks, tradeoffs };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

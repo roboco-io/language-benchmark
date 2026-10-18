@@ -6,8 +6,8 @@ const DecisionUI = (() => {
       first:'First language', second:'Second language', scope:'Exploratory results', task:'task', experiments:'experiments', passed:'passed',
       limits:'One RealWorld backend task; 3 repetitions per language and model. These observations do not establish a general success rate or a universal winner.',
       overviewNote:'Values are medians of passing runs; min–max and individual observations appear below. Models remain separate. Select a value to inspect its runs.',
-      reasons:'Relative strengths and burdens', reasonNote:'Selected from the active weighted metrics, relative to these five languages. These are observed tradeoffs, not causal claims.',
-      strength:'Strength', burden:'Burden', noDifference:'No differentiating observation',
+      reasons:'Relative strengths and burdens', reasonNote:'A strength is a weighted metric where the language is best among these five; a burden is one where it is worst. Values shared by most languages and middle positions are not listed. These are observed tradeoffs, not causal claims.',
+      strength:'Strength', burden:'Burden', noStrength:'Not best on any metric', noBurden:'Not worst on any metric',
       evidence:'Run evidence', run:'Run', measured:'measured', range:'min–max', observations:'observations',
       costNote:'All observed costs, including failures, divided by passing runs. API-price equivalent, not billed spend.',
       proxy:'LOC, dependency count and vulnerability count are proxies, not direct measures of maintainability or security. Vulnerabilities include OS packages; build speed and follow-up outcomes are shown separately.',
@@ -24,8 +24,8 @@ const DecisionUI = (() => {
       first:'첫 번째 언어', second:'두 번째 언어', scope:'탐색 결과', task:'개 과제', experiments:'개 실험', passed:'합격',
       limits:'RealWorld 백엔드 과제 1개, 언어·모델별 3회 반복이다. 일반적인 성공률이나 보편적인 최상위 언어를 확정하는 근거는 아니다.',
       overviewNote:'합격 run의 중앙값과 최솟값–최댓값, 개별 관측값을 표시한다. 모델은 분리한다. 수치를 선택하면 해당 run을 확인할 수 있다.',
-      reasons:'상대적인 강점과 부담', reasonNote:'현재 가중치가 있는 지표에서 다섯 언어를 비교한 관측이다. 원인이나 보편적인 우열을 뜻하지 않는다.',
-      strength:'강점', burden:'부담', noDifference:'차이를 구별할 관측 없음',
+      reasons:'상대적인 강점과 부담', reasonNote:'강점은 현재 가중치가 있는 지표 중 다섯 언어에서 최고인 지표, 부담은 최저인 지표다. 여러 언어가 같은 값이거나 중간 순위인 지표는 표시하지 않는다. 원인이나 보편적인 우열을 뜻하지 않는다.',
+      strength:'강점', burden:'부담', noStrength:'최고인 지표 없음', noBurden:'최저인 지표 없음',
       evidence:'run 증거', run:'run', measured:'측정', range:'최소–최대', observations:'관측값',
       costNote:'실패를 포함한 전체 관측 비용 ÷ 합격 수. API 정가 환산값이며 실제 청구액은 아니다.',
       proxy:'코드량·의존성 수·취약점 수는 대리지표이며 유지보수성·보안의 직접 평가가 아니다. 취약점에는 OS 패키지가 포함된다. 기능 추가 성공·시간과 구분해 판단한다.',
@@ -42,8 +42,8 @@ const DecisionUI = (() => {
       scope:'探索的結果', task:'課題', experiments:'実験', passed:'合格',
       limits:'RealWorld バックエンド1課題、言語・モデルごとに3回。一般的な成功率や普遍的な最優秀言語を確定するものではない。',
       overviewNote:'合格 run の中央値、最小–最大、個々の観測値。モデルは分けて表示する。数値を選ぶと run を確認できる。',
-      reasons:'相対的な強みと負担', reasonNote:'現在の重み付き指標で5言語を比較した観測。因果関係や普遍的な優劣を示すものではない。',
-      strength:'強み', burden:'負担', noDifference:'区別できる観測なし', evidence:'run の根拠', run:'run', measured:'測定', range:'最小–最大', observations:'観測値',
+      reasons:'相対的な強みと負担', reasonNote:'強みは現在の重み付き指標のうち5言語で最良の指標、負担は最下位の指標。多くの言語が同じ値の指標や中間順位は表示しない。因果関係や普遍的な優劣を示すものではない。',
+      strength:'強み', burden:'負担', noStrength:'最良の指標なし', noBurden:'最下位の指標なし', evidence:'run の根拠', run:'run', measured:'測定', range:'最小–最大', observations:'観測値',
       costNote:'失敗を含む全観測コスト ÷ 合格数。API価格換算であり実際の請求額ではない。',
       proxy:'コード量・依存数・脆弱性数は代理指標であり、保守性・安全性の直接評価ではない。脆弱性にはOSパッケージも含まれる。機能追加の結果と分けて判断する。',
       scoreNote:'スコアは重みと比較言語に依存する。事前登録ルールを維持するが、定数指標を除く表示値は報告書と異なる場合がある。EXP-001の判定は報告書が基準。',
@@ -57,8 +57,8 @@ const DecisionUI = (() => {
       scope:'探索性结果', task:'个任务', experiments:'个实验', passed:'通过',
       limits:'一个 RealWorld 后端任务，每种语言、每个模型重复3次。这不能确定一般成功率或普遍最佳语言。',
       overviewNote:'显示通过 run 的中位数、最小–最大值和各次观测。模型分开展示。选择数值可查看 run。',
-      reasons:'相对优势与代价', reasonNote:'在当前有权重的指标中比较五种语言的观测，不代表因果关系或普遍优劣。',
-      strength:'优势', burden:'代价', noDifference:'没有可区分的观测', evidence:'run 证据', run:'run', measured:'已测量', range:'最小–最大', observations:'观测值',
+      reasons:'相对优势与代价', reasonNote:'优势是当前有权重的指标中在五种语言里最好的指标，代价是最差的指标。多数语言数值相同或处于中间名次的指标不显示。不代表因果关系或普遍优劣。',
+      strength:'优势', burden:'代价', noStrength:'没有最好的指标', noBurden:'没有最差的指标', evidence:'run 证据', run:'run', measured:'已测量', range:'最小–最大', observations:'观测值',
       costNote:'包含失败的全部观测成本 ÷ 通过数。按API价格换算，并非实际账单。',
       proxy:'代码量、依赖数和漏洞数是代理指标，不是可维护性或安全性的直接评价。漏洞包括操作系统包；应与功能追加结果分开判断。',
       scoreNote:'分数取决于权重和比较语言。保留预注册规则；隐藏常量指标后，显示分数可能与报告不同。EXP-001的判定以报告为准。',
@@ -117,8 +117,8 @@ const DecisionUI = (() => {
         `<article class="reason"><h3>${esc(l.name)}</h3><div>${models().map(md => {
           const cells=Object.fromEntries(env.B.languages.map(lang => [lang.key,env.B.cells[lang.key][md.key]]));
           const tr=Decision.tradeoffs(cells,l.key,activeKeys().map(metric).filter(Boolean),env.weights());
-          const statement=(key,prefix) => key ? `${esc(prefix)}: ${esc(env.label(metric(key)))} ${esc(env.fmt(metric(key),cells[l.key][key]))}` : `${esc(prefix)}: ${esc(t.noDifference)}`;
-          return `<p><strong>${esc(md.name)}</strong><br>${statement(tr.strength,t.strength)}<br>${statement(tr.burden,t.burden)}</p>`;
+          const statement=(key,prefix,none) => key ? `${esc(prefix)}: ${esc(env.label(metric(key)))} ${esc(env.fmt(metric(key),cells[l.key][key]))}` : `${esc(prefix)}: ${esc(none)}`;
+          return `<p><strong>${esc(md.name)}</strong><br>${statement(tr.strength,t.strength,t.noStrength)}<br>${statement(tr.burden,t.burden,t.noBurden)}</p>`;
         }).join('')}</div></article>`).join('')+'</div>';
     bindValues(panel);
     document.getElementById('showRepeats').onchange=e => { showRepeats=e.target.checked; renderOverview(); document.getElementById('showRepeats').focus({preventScroll:true}); };
