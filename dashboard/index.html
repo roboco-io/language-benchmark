@@ -48,6 +48,8 @@ header > div { min-width: 0; }
 header h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
 header p { margin: 0; color: var(--ink-2); max-width: 820px; }
 .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 20px 0 12px; }
+.sister-link { margin: 6px 0 0; font-size: 13px; }
+.sister-link a { color: var(--accent); }
 .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--surface); }
 .seg button { border: 0; background: none; color: var(--ink-2); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
@@ -96,6 +98,7 @@ footer a, .note a { color: var(--accent); }
     <div>
       <h1 data-t="title"></h1>
       <p data-t="lead"></p>
+      <p class="sister-link"><a href="https://roboco.io/coding-agent-benchmark/" data-t="sisterDash"></a></p>
     </div>
     <a class="brand" href="https://roboco.io" title="ROBOCO"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296.34 226.83" fill="currentColor" role="img" aria-label="ROBOCO"><g> <g id="Layer_1"> <g> <rect x="72.1" y="154.17" width="152.94" height="8.94"/> <rect x="98.99" y="10.03" width="9.07" height="9.13" transform="translate(207.06 29.2) rotate(-180)"/> <rect x="108.07" y="19.11" width="9.07" height="9.01" transform="translate(225.22 47.24) rotate(-180)"/> <rect x="90.05" y="19.14" width="8.98" height="18.08" transform="translate(189.07 56.36) rotate(-180)"/> <rect x="72.06" y="37.18" width="18" height="9" transform="translate(162.13 83.36) rotate(-180)"/> <rect x="62.96" y="46.15" width="9.14" height="108.07" transform="translate(135.06 200.36) rotate(-180)"/> <path d="M90.02,63.05v72.95h116.26V63.05h-116.26ZM122.21,119.11h-10.44v-31.56h10.44v31.56ZM185.38,118.82h-10.44v-31.56h10.44v31.56Z"/> <rect x="117.03" y="28.08" width="63" height="9.01" transform="translate(297.06 65.18) rotate(-180)"/> <rect x="189.03" y="10.1" width="9" height="9.05"/> <rect x="180.01" y="19.16" width="9.04" height="8.95"/> <rect x="198.02" y="19.14" width="9" height="18.02"/> <rect x="207" y="37.14" width="18.04" height="8.97"/> <rect x="225" y="46.11" width="9.01" height="108.09"/> </g> <g> <path d="M39.32,216.9v-8.86h-6.42v8.86H13.64v-35.42h32.1v4.43h6.42v17.71h-6.42v4.43h6.42v8.86h-12.84ZM39.32,190.33h-6.42v8.86h6.42v-8.86Z"/> <path d="M65.01,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM84.27,190.33h-6.42v17.71h6.42v-17.71Z"/> <path d="M103.54,216.9v-35.42h32.1v4.43h6.42v13.28h6.42v13.28h-6.42v4.43h-38.53ZM129.22,190.33h-6.42v4.43h6.42v-4.43ZM129.22,203.61h-6.42v4.43h6.42v-4.43Z"/> <path d="M161.33,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM180.59,190.33h-6.42v17.71h6.42v-17.71Z"/> <path d="M206.27,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v8.86h-12.84v-4.43h-6.42v17.71h6.42v-4.43h12.84v8.86h-6.42v4.43h-25.68Z"/> <path d="M251.22,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM270.48,190.33h-6.42v17.71h6.42v-17.71Z"/> </g> </g> </g></svg></a>
   </header>
@@ -191,7 +194,7 @@ const T = {
     detailTitle: "Per-run detail", detailEmpty: "No measured runs for this metric yet.", detailHint: "Showing only the model selected above. Choose “Both” to compare models.",
     stackTitle: "Stacks (fixed for all runs)", lang: "Language", fw: "Framework", db: "DB access",
     limits: "Runtime numbers are measured on AWS Fargate Spot (ARM64, Graviton4 only) with the same limits for every language: 2 vCPU and 1 GiB for the app, load generated from a separate task in the same subnet. Read them as relative comparisons, not absolute values. Costs are API-price equivalents; runs used an existing subscription.",
-    updated: "Data generated", sister: "Sister repo: coding-agent-benchmark",
+    updated: "Data generated", sister: "Sister repo: coding-agent-benchmark", sisterDash: "Sister benchmark: which model and agent combination to pick → coding-agent-benchmark",
   },
   ko: {
     title: "Language Benchmark",
@@ -219,7 +222,7 @@ const T = {
     detailTitle: "run별 상세", detailEmpty: "이 지표를 측정한 run이 아직 없다.", detailHint: "위에서 고른 모델의 run만 표시한다. 두 모델을 비교하려면 “두 모델”을 고른다.",
     stackTitle: "언어별 스택(모든 run 고정)", lang: "언어", fw: "웹 프레임워크", db: "DB 접근",
     limits: "런타임 수치는 AWS Fargate Spot(ARM64, Graviton4만 사용)에서 모든 언어에 같은 제한(앱 2 vCPU·메모리 1 GiB)을 걸고, 같은 서브넷의 별도 태스크에서 부하를 걸어 측정했다. 절대값이 아니라 언어 간 상대 비교로 해석한다. 비용은 API 단가 환산값이며 실제 실행은 기존 구독으로 했다.",
-    updated: "데이터 생성", sister: "자매 리포: coding-agent-benchmark",
+    updated: "데이터 생성", sister: "자매 리포: coding-agent-benchmark", sisterDash: "자매 벤치마크: 어떤 모델·에이전트 조합이 좋은가 → coding-agent-benchmark",
   },
   ja: {
     title: "Language Benchmark",
@@ -247,7 +250,7 @@ const T = {
     detailTitle: "run 別詳細", detailEmpty: "この指標を測定した run はまだない。", detailHint: "上で選んだモデルの run のみ表示する。両モデルを比べるには「両モデル」を選ぶ。",
     stackTitle: "言語別スタック(全 run 固定)", lang: "言語", fw: "フレームワーク", db: "DB アクセス",
     limits: "ランタイムの数値は AWS Fargate Spot(ARM64、Graviton4 のみ)で、全言語に同じ制限(アプリ 2 vCPU・メモリ 1 GiB)をかけ、同じサブネットの別タスクから負荷をかけて測定した。絶対値ではなく言語間の相対比較として読む。コストは API 単価換算で、実行は既存のサブスクリプションで行った。",
-    updated: "データ生成", sister: "姉妹リポジトリ: coding-agent-benchmark",
+    updated: "データ生成", sister: "姉妹リポジトリ: coding-agent-benchmark", sisterDash: "姉妹ベンチマーク: どのモデル・エージェントの組み合わせが良いか → coding-agent-benchmark",
   },
   zh: {
     title: "Language Benchmark",
@@ -275,7 +278,7 @@ const T = {
     detailTitle: "各 run 详情", detailEmpty: "尚无测量此指标的 run。", detailHint: "仅显示上方所选模型的 run。要比较两个模型,请选择“两个模型”。",
     stackTitle: "各语言技术栈(所有 run 固定)", lang: "语言", fw: "框架", db: "数据库访问",
     limits: "运行时数据在 AWS Fargate Spot(ARM64,仅 Graviton4)上测量,所有语言使用相同限制(应用 2 vCPU、内存 1 GiB),负载来自同一子网中的独立任务。请作为语言间的相对比较解读,而非绝对值。成本为按 API 单价换算的值,实际运行使用现有订阅。",
-    updated: "数据生成于", sister: "姊妹仓库: coding-agent-benchmark",
+    updated: "数据生成于", sister: "姊妹仓库: coding-agent-benchmark", sisterDash: "姊妹基准测试:哪种模型与智能体组合更好 → coding-agent-benchmark",
   },
 };
 const LANG_UI = [["en", "EN"], ["ko", "KO"], ["ja", "JA"], ["zh", "中文"]];

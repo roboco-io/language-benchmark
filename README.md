@@ -15,7 +15,7 @@ This project **compares how a coding agent (Claude Code) implements the same Rea
 - **Pass condition**: both the server started by `start.sh` and the container built from `Dockerfile` must pass all 154 Hurl requests.
 - Rules and evidence: [design](docs/superpowers/specs/2026-10-17-language-benchmark-design.md), [quality rules](docs/experiment-quality-rules.md) (Korean), [metric schema](analysis/metrics/SCHEMA.md), [roadmap](ROADMAP.md).
 
-The sister repo [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark) fixes the language to TypeScript and compares model–harness combinations. This repo reuses its operating model and swaps the comparison axis to language.
+The sister repo [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark) ([dashboard](https://roboco.io/coding-agent-benchmark/)) fixes the language to TypeScript and compares model–harness combinations. This repo reuses its operating model and swaps the comparison axis to language.
 
 ## Experiment pipeline: no API charges, parallel runtime measurement
 

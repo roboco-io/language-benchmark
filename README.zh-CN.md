@@ -15,7 +15,7 @@
 - **通过条件**: 由 `start.sh` 启动的服务器和由 `Dockerfile` 构建的容器都必须通过全部 154 个 Hurl 请求。
 - 规则与依据: [设计文档](docs/superpowers/specs/2026-10-17-language-benchmark-design.md)、[实验质量规则](docs/experiment-quality-rules.md)(韩语)、[指标定义](analysis/metrics/SCHEMA.md)、[路线图](ROADMAP.md)。
 
-姊妹仓库 [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark) 将语言固定为 TypeScript,比较模型与工具组合。本仓库沿用其运作方式,只把比较维度换成语言。
+姊妹仓库 [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark)([仪表板](https://roboco.io/coding-agent-benchmark/))将语言固定为 TypeScript,比较模型与工具组合。本仓库沿用其运作方式,只把比较维度换成语言。
 
 ## 实验流水线:无 API 计费,运行时测量并行进行
 

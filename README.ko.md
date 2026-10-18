@@ -15,7 +15,7 @@
 - **합격 조건**: `start.sh`로 띄운 서버와 `Dockerfile`로 빌드한 컨테이너가 모두 Hurl 154요청을 통과해야 한다.
 - 규칙과 근거: [설계 문서](docs/superpowers/specs/2026-10-17-language-benchmark-design.md), [실험 품질 규칙](docs/experiment-quality-rules.md), [지표 스키마](analysis/metrics/SCHEMA.md), [로드맵](ROADMAP.md).
 
-자매 리포 [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark)는 언어를 TypeScript로 고정하고 모델·하네스 조합을 비교한다. 이 리포는 그 운영 방식을 그대로 쓰고 비교 축만 언어로 바꿨다.
+자매 리포 [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark)([대시보드](https://roboco.io/coding-agent-benchmark/))는 언어를 TypeScript로 고정하고 모델·하네스 조합을 비교한다. 이 리포는 그 운영 방식을 그대로 쓰고 비교 축만 언어로 바꿨다.
 
 ## 실험 파이프라인: API 과금 없이, 런타임 측정은 병렬로
 

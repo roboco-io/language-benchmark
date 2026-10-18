@@ -15,7 +15,7 @@
 - **合格条件**: `start.sh` で起動したサーバーと `Dockerfile` でビルドしたコンテナの両方が Hurl 154 リクエストをすべて通過すること。
 - ルールと根拠: [設計文書](docs/superpowers/specs/2026-10-17-language-benchmark-design.md)、[実験品質ルール](docs/experiment-quality-rules.md)(韓国語)、[指標スキーマ](analysis/metrics/SCHEMA.md)、[ロードマップ](ROADMAP.md)。
 
-姉妹リポジトリ [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark) は言語を TypeScript に固定してモデル・ハーネスの組み合わせを比較している。このリポジトリはその運用方法をそのまま使い、比較軸だけを言語に変えた。
+姉妹リポジトリ [coding-agent-benchmark](https://github.com/roboco-io/coding-agent-benchmark)([ダッシュボード](https://roboco.io/coding-agent-benchmark/))は言語を TypeScript に固定してモデル・ハーネスの組み合わせを比較している。このリポジトリはその運用方法をそのまま使い、比較軸だけを言語に変えた。
 
 ## 実験パイプライン: API 課金なし、ランタイム計測は並列で
 
