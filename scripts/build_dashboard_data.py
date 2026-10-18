@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from metrics import CSV_COLUMNS, LANGUAGE_NAMES, LANGUAGES, METRICS, MODEL_NAMES, MODELS
+import langreg  # metrics를 import하면 sys.path에 레지스트리 스크립트 경로가 추가된다
 
 ROOT = Path(__file__).resolve().parent.parent
 CSV_PATH = ROOT / "analysis" / "metrics" / "runs.csv"
@@ -46,7 +47,7 @@ def _cell(rows):
     return cell
 
 
-def build(rows: list[dict]) -> dict:
+def build(rows: list[dict], experiments: dict | None = None) -> dict:
     for r in rows:
         if r.get("language") not in LANGUAGES:
             raise ValueError(f"알 수 없는 언어: {r.get('language')!r} (run {r.get('run')})")
@@ -55,13 +56,21 @@ def build(rows: list[dict]) -> dict:
         if r.get("model") not in MODELS:
             raise ValueError(f"알 수 없는 모델: {r.get('model')!r} (run {r.get('run')})")
     cells = {}
+    lang_exp = {}
+    for lang in LANGUAGES:
+        exps = sorted({r.get("exp") for r in rows if r["language"] == lang and r.get("exp")})
+        if len(exps) > 1:
+            raise ValueError(f"{lang}: 실험이 섞임 {', '.join(exps)}")
+        lang_exp[lang] = exps[0] if exps else None
     for lang in LANGUAGES:
         lang_rows = [r for r in rows if r["language"] == lang]
         cells[lang] = {model: _cell([r for r in lang_rows if r["model"] == model]) for model in MODELS}
         cells[lang]["all"] = _cell(lang_rows)
     return {
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "languages": [{"key": k, "name": LANGUAGE_NAMES[k]} for k in LANGUAGES],
+        "experiments": experiments or {},
+        "languages": [{"key": k, "name": LANGUAGE_NAMES[k], "stack": langreg.get(k)["stack"],
+                       "exp": lang_exp[k]} for k in LANGUAGES],
         "models": [{"key": k, "name": MODEL_NAMES[k]} for k in MODELS],
         "metrics": METRICS,
         "cells": cells,
@@ -77,8 +86,17 @@ def read_rows(path: Path = CSV_PATH) -> list[dict]:
         return list(reader)
 
 
+def read_experiments(root: Path = ROOT) -> dict[str, dict]:
+    """experiments/*/experiment.json을 EXP 코드 기준으로 읽는다."""
+    result = {}
+    for path in sorted((root / "experiments").glob("*/experiment.json")):
+        meta = json.loads(path.read_text(encoding="utf-8"))
+        result[meta["exp"]] = meta
+    return result
+
+
 def main() -> int:
-    data = build(read_rows())
+    data = build(read_rows(), read_experiments(ROOT))
     OUT_PATH.write_text(
         "// scripts/build_dashboard_data.py가 analysis/metrics/runs.csv에서 생성한다. 직접 수정 금지.\n"
         f"window.BENCH = {json.dumps(data, ensure_ascii=False, indent=1)};\n",

@@ -1,0 +1,10 @@
+{
+  "exp": "EXP-001",
+  "folder": "001-five-language-realworld",
+  "date": "2026-10-18",
+  "client": "Claude Code 2.1.302",
+  "models": {
+    "sonnet55": "claude-sonnet-5-5",
+    "opus55": "claude-opus-5-5"
+  }
+}

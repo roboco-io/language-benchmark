@@ -1,7 +1,11 @@
 import unittest
 
-from build_dashboard_data import build
+from pathlib import Path
+
+from build_dashboard_data import build, read_experiments
 from metrics import LANGUAGES, METRICS, MODELS
+
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def row(language, model, rep, passed=1, **values):
@@ -12,6 +16,26 @@ def row(language, model, rep, passed=1, **values):
 
 
 class BuildTests(unittest.TestCase):
+    def test_languages_carry_stack_and_exp(self):
+        data = build([row("go", "sonnet55", 1)], {"EXP-001": {"exp": "EXP-001"}})
+        go = next(l for l in data["languages"] if l["key"] == "go")
+        self.assertEqual(go["exp"], "EXP-001")
+        self.assertEqual(go["stack"]["framework"], "Gin")
+        rust = next(l for l in data["languages"] if l["key"] == "rust")
+        self.assertIsNone(rust["exp"])
+
+    def test_mixed_experiments_raise(self):
+        r2 = dict(row("go", "opus55", 1), exp="EXP-002")
+        with self.assertRaisesRegex(ValueError, "go"):
+            build([row("go", "sonnet55", 1), r2])
+
+    def test_unknown_language_row_raises(self):
+        with self.assertRaises(ValueError):
+            build([row("zig", "sonnet55", 1)])
+
+    def test_experiments_exported(self):
+        self.assertIn("EXP-001", build([], read_experiments(ROOT))["experiments"])
+
     def test_empty_rows(self):
         cells = build([])["cells"]
         self.assertEqual(list(cells), LANGUAGES)

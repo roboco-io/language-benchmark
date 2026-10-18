@@ -1,26 +1,63 @@
 // scripts/build_dashboard_data.py가 analysis/metrics/runs.csv에서 생성한다. 직접 수정 금지.
 window.BENCH = {
- "generated": "2026-10-18T12:39:01+00:00",
+ "generated": "2026-10-18T12:40:48+00:00",
+ "experiments": {
+  "EXP-001": {
+   "exp": "EXP-001",
+   "folder": "001-five-language-realworld",
+   "date": "2026-10-18",
+   "client": "Claude Code 2.1.302",
+   "models": {
+    "sonnet55": "claude-sonnet-5-5",
+    "opus55": "claude-opus-5-5"
+   }
+  }
+ },
  "languages": [
   {
    "key": "typescript",
-   "name": "TypeScript"
+   "name": "TypeScript",
+   "stack": {
+    "framework": "Fastify",
+    "db": "Prisma"
+   },
+   "exp": "EXP-001"
   },
   {
    "key": "python",
-   "name": "Python"
+   "name": "Python",
+   "stack": {
+    "framework": "FastAPI (uvicorn)",
+    "db": "SQLAlchemy"
+   },
+   "exp": "EXP-001"
   },
   {
    "key": "go",
-   "name": "Go"
+   "name": "Go",
+   "stack": {
+    "framework": "Gin",
+    "db": "GORM (modernc SQLite)"
+   },
+   "exp": "EXP-001"
   },
   {
    "key": "rust",
-   "name": "Rust"
+   "name": "Rust",
+   "stack": {
+    "framework": "Axum (tokio)",
+    "db": "SQLx"
+   },
+   "exp": "EXP-001"
   },
   {
    "key": "cpp",
-   "name": "C++"
+   "name": "C++",
+   "stack": {
+    "framework": "Drogon (C++20)",
+    "db": "Drogon ORM"
+   },
+   "exp": "EXP-001"
   }
  ],
  "models": [
