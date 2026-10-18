@@ -28,12 +28,16 @@ class RegistryRegression(unittest.TestCase):
 
     def test_scanners_unchanged(self):
         self.assertEqual(runs_row.SCANNERS,
-                         {"typescript": "npm", "python": "pip", "go": "go", "rust": "cargo", "cpp": None})
+                         {"typescript": "npm", "python": "pip", "go": "go", "rust": "cargo", "cpp": None,
+                          "java": "osv", "php": "composer", "csharp": "dotnet"})
+        self.assertEqual({k: runs_row.SCAN_REPORTS[k] for k in ("java", "php", "csharp")},
+                         {"java": "osv.json", "php": "composer-audit.json", "csharp": "dotnet.json"})
 
     def test_languages_unchanged(self):
-        self.assertEqual(metrics.LANGUAGES, ["typescript", "python", "go", "rust", "cpp"])
+        self.assertEqual(metrics.LANGUAGES, ["typescript", "python", "go", "rust", "cpp", "java", "php", "csharp"])
         self.assertEqual(metrics.LANGUAGE_NAMES,
-                         {"typescript": "TypeScript", "python": "Python", "go": "Go", "rust": "Rust", "cpp": "C++"})
+                         {"typescript": "TypeScript", "python": "Python", "go": "Go", "rust": "Rust", "cpp": "C++",
+                          "java": "Java", "php": "PHP", "csharp": "C#"})
 
     def test_unknown_language_raises(self):
         with self.assertRaises(ValueError):
@@ -46,7 +50,7 @@ class RegistryRegression(unittest.TestCase):
             for p in REAL_LANG_DIR.glob("*.json"):
                 shutil.copy(p, tmp)
             (Path(tmp) / "zig.json").write_text(
-                '{"key": "zig", "name": "Zig", "order": 6, "deps": {"kind": "go-mod"},'
+                '{"key": "zig", "name": "Zig", "order": 9, "deps": {"kind": "go-mod"},'
                 ' "scanner": {"format": "none"}, "loc": {"scc_names": ["Zig"]}}')
             os.environ["LB_LANG_DIR"] = tmp
             importlib.reload(metrics)

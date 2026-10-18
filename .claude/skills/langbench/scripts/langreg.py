@@ -12,8 +12,9 @@ import shlex
 import sys
 from pathlib import Path
 
-DEPS_KINDS = {"package-json", "pyproject-or-requirements", "go-mod", "cargo-toml", "cmake"}
-SCANNER_FORMATS = {"npm", "pip", "go", "cargo", "none"}
+DEPS_KINDS = {"package-json", "pyproject-or-requirements", "go-mod", "cargo-toml", "cmake",
+              "maven-pom", "composer-json", "csproj"}
+SCANNER_FORMATS = {"npm", "pip", "go", "cargo", "osv", "composer", "dotnet", "none"}
 
 _HERE = Path(__file__).resolve().parent
 

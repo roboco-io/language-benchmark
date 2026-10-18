@@ -1,0 +1,60 @@
+{
+  "key": "csharp",
+  "name": "C#",
+  "order": 8,
+  "prompt": {
+    "STACK": "C# (.NET 10) + ASP.NET Core + Entity Framework Core + SQLite",
+    "WORKERS": "Kestrel with the default .NET thread pool (scales with the core count)"
+  },
+  "stack": {
+    "framework": "ASP.NET Core",
+    "db": "Entity Framework Core (SQLite)"
+  },
+  "toolchain": [
+    {
+      "name": "dotnet",
+      "bin": "dotnet",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "dotnet",
+    "name": "dotnet",
+    "report": "dotnet.json",
+    "required_key": "projects",
+    "argv": [
+      "dotnet",
+      "list",
+      "package",
+      "--vulnerable",
+      "--include-transitive",
+      "--format",
+      "json"
+    ]
+  },
+  "deps": {
+    "kind": "csproj"
+  },
+  "loc": {
+    "scc_names": [
+      "C#"
+    ],
+    "test_pattern": "Tests?\\.cs",
+    "exclude_dirs": [
+      "bin",
+      "obj"
+    ]
+  },
+  "hints": [
+    "ThreadPool",
+    "Kestrel",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "bin",
+    "obj"
+  ]
+}

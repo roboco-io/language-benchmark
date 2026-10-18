@@ -77,6 +77,79 @@ class RuntimeParse(unittest.TestCase):
                            "find_package(SQLite3 REQUIRED)\nfind_package(Drogon)\n"})
         self.assertEqual(runtime_parse.deps(cpp, "cpp"), 2)
 
+    def test_deps_java_php_csharp(self):
+        pom = ('<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion>'
+               '<dependencyManagement><dependencies><dependency><artifactId>bom1</artifactId></dependency>'
+               '<dependency><artifactId>bom2</artifactId></dependency></dependencies></dependencyManagement>'
+               '<dependencies>'
+               '<dependency><artifactId>a</artifactId></dependency>'
+               '<dependency><artifactId>b</artifactId><scope>runtime</scope></dependency>'
+               '<dependency><artifactId>c</artifactId><scope>compile</scope></dependency>'
+               '<dependency><artifactId>t</artifactId><scope>test</scope></dependency>'
+               '<dependency><artifactId>p</artifactId><scope>provided</scope></dependency>'
+               '</dependencies>'
+               '<profiles><profile><dependencies><dependency><artifactId>pp</artifactId></dependency></dependencies></profile></profiles>'
+               '</project>')
+        self.assertEqual(runtime_parse.deps(self.mkrepo({"pom.xml": pom}), "java"), 3)
+        self.assertEqual(runtime_parse.deps(self.mkrepo({"pom.xml": "<project/>"}), "java"), 0)
+        self.assertIsNone(runtime_parse.deps(self.mkrepo({}), "java"))
+        php = self.mkrepo({"composer.json": json.dumps({
+            "require": {"php": "^8.5", "ext-pdo": "*", "laravel/framework": "^12", "laravel/octane": "^2", "x/y": "1"},
+            "require-dev": {"phpunit/phpunit": "^11"}})})
+        self.assertEqual(runtime_parse.deps(php, "php"), 3)
+        self.assertEqual(runtime_parse.deps(self.mkrepo({"composer.json": "{}"}), "php"), 0)
+        self.assertIsNone(runtime_parse.deps(self.mkrepo({}), "php"))
+
+    def test_deps_csproj_unique_across_projects(self):
+        def proj(*refs):
+            return "<Project Sdk=\"Microsoft.NET.Sdk.Web\">" + "".join(refs) + "</Project>"
+        ref = lambda n, extra="": '<PackageReference Include="%s" Version="1"%s />' % (n, extra)
+        d = pathlib.Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        (d / "src" / "Api").mkdir(parents=True)
+        (d / "src" / "Core").mkdir()
+        (d / "tests" / "Api.Tests").mkdir(parents=True)
+        (d / "src" / "Api" / "Api.csproj").write_text(proj(
+            ref("Microsoft.EntityFrameworkCore.Sqlite"), ref("Serilog"), ref("Analyzer.X", ' PrivateAssets="all"'),
+            '<PackageReference Include="Child.Priv" Version="1"><PrivateAssets>all</PrivateAssets></PackageReference>'))
+        (d / "src" / "Core" / "Core.csproj").write_text(proj(ref("Serilog"), ref("Newtonsoft.Json")))
+        (d / "tests" / "Api.Tests" / "Api.Tests.csproj").write_text(proj(ref("xunit"), ref("Moq")))
+        self.assertEqual(runtime_parse.deps(d, "csharp"), 3)
+        self.assertEqual(runtime_parse.deps(self.mkrepo({}), "csharp"), None)
+
+    def test_vulns_osv_composer_dotnet(self):
+        osv = {"results": [{"packages": [{"package": {"name": "g:a"}, "vulnerabilities": [
+            {"id": "GHSA-aaaa-bbbb-cccc", "aliases": ["CVE-1"]}, {"id": "GHSA-dddd-eeee-ffff", "aliases": []}]}]}]}
+        self.assertEqual(runtime_parse.vulns({"osv": osv}), 2)
+        self.assertEqual(runtime_parse.vulns({"osv": {"results": []}}), 0)
+        comp = {"advisories": {"guzzlehttp/guzzle": [
+            {"advisoryId": "PKSA-1", "cve": "CVE-1", "sources": [{"name": "GitHub", "remoteId": "GHSA-2c3f-4g5h-6j7m"}]},
+            {"advisoryId": "PKSA-2", "cve": None, "sources": []}]}, "abandoned": []}
+        self.assertEqual(runtime_parse.vulns({"composer": comp}), 2)
+        self.assertEqual(runtime_parse.vulns({"composer": {"advisories": [], "abandoned": []}}), 0)
+        net = {"projects": [{"path": "p", "frameworks": [{"framework": "net10.0",
+            "topLevelPackages": [{"id": "A", "vulnerabilities": [
+                {"severity": "High", "advisoryurl": "https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"}]}],
+            "transitivePackages": [{"id": "B", "vulnerabilities": [
+                {"severity": "Low", "advisoryurl": "https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"},
+                {"severity": "Low", "advisoryurl": "https://github.com/advisories/GHSA-rrrr-vvvv-wwww"}]}]}]}]}
+        # 같은 GHSA는 한 번만 센다. 형식이 맞지 않는 ID(rrrr는 GHSA 알파벳 밖)는 URL 꼬리를 그대로 ID로 쓴다.
+        self.assertEqual(runtime_parse.vulns({"dotnet": net}), 2)
+        self.assertEqual(runtime_parse.vulns({"dotnet": {"projects": [{"path": "p"}]}}), 0)
+        # trivy의 GHSA 참조와 닿으면 한 묶음이다.
+        trivy = {"Results": [{"Vulnerabilities": [{"VulnerabilityID": "CVE-9",
+                 "References": ["https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"]}]}]}
+        self.assertEqual(runtime_parse.vulns({"dotnet": net, "trivy": trivy}), 2)
+        self.assertEqual(runtime_parse.vulns({"composer": comp, "trivy": trivy}), 2)
+
+    def test_registry_kinds_and_formats_match_parsers(self):
+        import langreg
+        self.assertEqual(langreg.DEPS_KINDS, set(runtime_parse.DEPS_BY_KIND))
+        formats = {f for f in langreg.SCANNER_FORMATS if f != "none"}
+        self.assertTrue(formats <= set(runtime_parse._EXTRACT), formats - set(runtime_parse._EXTRACT))
+        # trivy는 레지스트리 형식이 아니라 공통 보고서이므로 _EXTRACT에만 있다.
+        self.assertEqual(set(runtime_parse._EXTRACT) - formats, {"trivy"})
+
     def test_deps_python_requirements_fallback(self):
         py = self.mkrepo({"requirements.txt": "# c\n\nfastapi\n-r base.txt\nuvicorn==1\n"})
         self.assertEqual(runtime_parse.deps(py, "python"), 2)

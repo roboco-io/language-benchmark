@@ -84,6 +84,9 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 | go | `go.mod` `require` 중 `// indirect`가 아닌 모듈 수 |
 | rust | `Cargo.toml`의 `[dependencies]` 키 수 |
 | cpp | `CMakeLists.txt`의 `find_package(X`, `FetchContent_Declare(X`, `pkg_check_modules(… X`에서 고유 이름 수. `Threads`는 뺀다 |
+| java | `pom.xml`의 `<dependencies>` 바로 아래 `<dependency>` 중 `<scope>`가 `test`·`provided`가 아닌 수(`<dependencyManagement>`·`<profiles>` 안은 제외) |
+| php | `composer.json`의 `require` 키 중 `php`와 `ext-*`를 뺀 수(`require-dev` 제외) |
+| csharp | 저장소 안 모든 `*.csproj`(이름에 `Test`가 든 테스트 프로젝트 제외)의 `<PackageReference>` 중 `PrivateAssets="all"`이 아닌 것의 Include 이름 고유 수 |
 
 **`vulns`.** 필요한 보고서가 모두 있을 때만 값을 낸다. 하나라도 없으면 빈 칸이다. 필요한 보고서는 Trivy 이미지 스캔과 언어별 스캐너이며, 스캐너 명령과 리포트 형식은 레지스트리의 `scanner` 항목이 정하고 새 형식의 ID 추출은 `runtime_parse._EXTRACT`에 구현한다. EXP-001 언어는 typescript는 `npm audit`, python은 `pip-audit`, go는 `govulncheck`, rust는 `cargo audit`이다. cpp는 Trivy만 쓴다. 각 보고서에서 ID와 alias를 뽑고, alias로 서로 연결되는 ID를 한 묶음으로 보아 묶음 수를 센다(`runtime_parse.vulns`). 추출 위치는 다음과 같다.
 
@@ -92,5 +95,8 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 - pip-audit: `dependencies[].vulns[].id`와 `aliases`
 - govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다. 종료 코드가 0·3이 아니거나 스트림에 `config` 메시지가 없으면 보고서가 없는 것으로 본다(빈 칸)
 - cargo audit: `vulnerabilities.list[].advisory.id`와 `aliases`
+- osv-scanner(java, `osv.json`): `results[].packages[].vulnerabilities[]`의 `id`와 `aliases`. 종료 코드 0·1만 보고서로 인정한다
+- composer audit(php, `composer-audit.json`): `advisories`의 각 항목 `advisoryId`, `cve`, 출처 `sources[].remoteId`의 GHSA. 취약점이 없으면 `advisories`가 빈 배열이다. 종료 코드 0·1만 인정한다
+- dotnet list package(csharp, `dotnet.json`): `projects[].frameworks[]`의 `topLevelPackages`·`transitivePackages`에 있는 `vulnerabilities[].advisoryurl` 끝의 GHSA ID
 
 **`wall_min`.** `driver.log`의 run 구간(`=== RUN <run> (…) start:`부터 `=== RUN <run> finished:`까지)을 모두 합친 시간이다(분, 소수 첫째 자리). 재개된 run은 구간마다 더하고 마지막 구간은 `pass` 행 종료 시각까지 센다. 앞 구간에 finished 줄이 없으면 빈 칸이다. 구독 한도로 보류된 시도(`=== RUN <run> held:` 줄 앞의 구간)는 처음부터 다시 돌리므로 버린다. 불합격 run은 빈 칸이다. `followup_min`도 `<run>-fu` 구간에 같은 규칙을 쓴다.

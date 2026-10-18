@@ -16,7 +16,7 @@ SCRIPT = os.path.join(SKILL, "scripts", "langreg.py")
 
 class LangregTest(unittest.TestCase):
     def test_keys_order(self):
-        self.assertEqual(langreg.keys(), ["typescript", "python", "go", "rust", "cpp"])
+        self.assertEqual(langreg.keys(), ["typescript", "python", "go", "rust", "cpp", "java", "php", "csharp"])
 
     def test_all_entries_valid(self):
         for e in langreg.load_all():
@@ -56,7 +56,7 @@ class LangregTest(unittest.TestCase):
 
     def test_cli_keys_and_validate(self):
         out = subprocess.run(["python3", SCRIPT, "keys"], capture_output=True, text=True, check=True).stdout
-        self.assertEqual(out.strip(), "typescript python go rust cpp")
+        self.assertEqual(out.strip(), "typescript python go rust cpp java php csharp")
         self.assertEqual(subprocess.run(["python3", SCRIPT, "validate"], capture_output=True).returncode, 0)
 
     def test_cli_get(self):
@@ -82,9 +82,9 @@ class LangregTest(unittest.TestCase):
         out = self.run_cli("shell", "go", "/tmp/src")
         v = dict(l.split("=", 1) for l in out.splitlines() if l.startswith(("LR_LOC_EXCLUDE", "LR_HINTS")))
         self.assertEqual(set(v["LR_LOC_EXCLUDE"].split(",")),
-                         {"test", "tests", "__tests__", "hurl", "node_modules", "target", "build", ".venv", "vendor"})
+                         {"test", "tests", "__tests__", "hurl", "node_modules", "target", "build", ".venv", "vendor", "bin", "obj", ".mvn", "storage", "bootstrap/cache"})
         self.assertEqual(set(v["LR_HINTS"].strip("'").split("|")),
-                         set("--release|CMAKE_BUILD_TYPE|--workers|cluster|GOMAXPROCS|worker_threads|setThreadNum|journal_mode|busy_timeout".split("|")))
+                         set("--release|CMAKE_BUILD_TYPE|--workers|cluster|GOMAXPROCS|worker_threads|setThreadNum|journal_mode|busy_timeout|server.tomcat|hibernate|octane|ThreadPool|Kestrel".split("|")))
 
     def test_shell_quotes_paths(self):
         r = subprocess.run(["bash", "-c", f'eval "$(python3 {SCRIPT} shell python /tmp)"; printf %s "${{LR_SCAN_ARGV[0]}}"'],
@@ -98,7 +98,7 @@ class LangregTest(unittest.TestCase):
         self.assertTrue(any(l.startswith("drogon\tbrew-or-pkgconfig") for l in lines))
 
     def test_cleanup_dirs(self):
-        self.assertEqual(set(self.run_cli("cleanup-dirs").split()), {"target", ".venv", "build"})
+        self.assertEqual(set(self.run_cli("cleanup-dirs").split()), {"target", ".venv", "build", "vendor", "bin", "obj"})
 
     def run_toolchain(self, **env):
         return subprocess.run(["bash", os.path.join(SKILL, "scripts", "toolchain.sh")], capture_output=True, text=True,

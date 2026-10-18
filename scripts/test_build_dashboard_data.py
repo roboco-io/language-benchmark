@@ -87,7 +87,7 @@ class BuildTests(unittest.TestCase):
 
     def test_unknown_language_rejected(self):
         with self.assertRaises(ValueError):
-            build([row("java", "opus55", 1)])
+            build([row("zig", "opus55", 1)])
 
 
 if __name__ == "__main__":

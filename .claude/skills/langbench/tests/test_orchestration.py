@@ -155,7 +155,7 @@ PRICE_TIERS=""
 class RunOrderTest(unittest.TestCase):
     SCRIPT = os.path.join(SKILL, "scripts", "run_order.py")
     CONDS = "sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5"
-    LANGS = " ".join(langreg.keys())
+    LANGS = "typescript python go rust cpp"  # EXP-001의 다섯 언어(30 run)로 고정한다
 
     def order(self, seed):
         return subprocess.run(["python3", self.SCRIPT, str(seed), self.CONDS, self.LANGS, "3"],
@@ -175,6 +175,14 @@ class RunOrderTest(unittest.TestCase):
             block = a[(rep - 1) * 10:rep * 10]
             self.assertEqual({r.rsplit("-", 1)[1] for r in block}, {str(rep)})
             self.assertEqual(len(set(block)), 10)
+
+    def test_all_registered_languages_order(self):
+        # EXP-002 등 새 언어를 넣어도 run 이름이 겹치지 않고 언어 수 × 6개다.
+        keys = langreg.keys()
+        a = subprocess.run(["python3", self.SCRIPT, "20261018", self.CONDS, " ".join(keys), "3"],
+                           capture_output=True, text=True, check=True).stdout.split()
+        self.assertEqual(len(a), len(keys) * 6)
+        self.assertEqual(len(set(a)), len(a))
 
     def test_default_seed_puts_both_models_early_in_block_1(self):
         self.assertEqual({r.split("-")[0] for r in self.order(20261018)[:5]}, {"sonnet55", "opus55"})

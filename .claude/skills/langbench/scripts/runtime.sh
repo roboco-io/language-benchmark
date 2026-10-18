@@ -7,7 +7,7 @@
 #   peak_mem.txt(MiB, 측정 3회 동안 1초 샘플 최대), soak.json, soak_mem_start.txt·soak_mem_end.txt(MiB), error.txt(실패 시)
 # 실패하면 1부의 이후 단계를 건너뛰고 실패 단계 이름을 error.txt에 쓴다(뒤 단계 파일은 없다 = 빈 칸). 2부는 그래도 실행한다.
 # 2부 산출물: scc.json, hints.txt, trivy.json(빌드된 이미지 lb/<run>:rt를 trivy image로 스캔),
-#   언어 스캐너 보고서(typescript npm.json, python pip.json, go go.json, rust cargo.json, cpp는 trivy만).
+#   언어 스캐너 보고서(typescript npm.json, python pip.json, go go.json, rust cargo.json, java osv.json, php composer-audit.json, csharp dotnet.json, cpp는 trivy만).
 #   2부는 내보낸 작업 트리에서 정적으로 돌므로 컨테이너가 실패해도 코드량·의존성·스캐너는 의미가 있다.
 #   스캐너 하나가 실패(실행 불가·유효 JSON 없음)해도 다른 스캐너는 계속한다. 실패한 스캐너는 보고서를 만들지 않고
 #   error.txt에 "scan:<이름>: <사유>" 줄을 덧붙인다. 취약점을 찾으면 비0으로 끝나는 스캐너(npm audit, cargo audit,

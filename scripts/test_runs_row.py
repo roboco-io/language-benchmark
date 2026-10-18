@@ -124,6 +124,41 @@ class RunsRowTests(unittest.TestCase):
             self.assertEqual(r[key], "", key)
         self.assertEqual(r["idle_rss_mb"], "12.5")
 
+    def test_new_language_reports_flow_through(self):
+        # 보고서 이름이 형식 이름과 다른 언어(php composer-audit.json, csharp dotnet.json, java osv.json)도 vulns로 이어진다.
+        base = self.base()
+        specs = {
+            "java": ("osv.json", {"results": [{"packages": [{"vulnerabilities": [
+                {"id": "GHSA-2c3f-4g5h-6j7m", "aliases": ["CVE-1"]}]}]}]},
+                {"pom.xml": '<project><dependencies><dependency><artifactId>a</artifactId></dependency></dependencies></project>'}, "1"),
+            "php": ("composer-audit.json", {"advisories": {"p/q": [{"advisoryId": "PKSA-1", "cve": "CVE-2", "sources": []},
+                                                                   {"advisoryId": "PKSA-2", "cve": None, "sources": []}]}},
+                    {"composer.json": '{"require": {"php": "^8", "a/b": "1", "c/d": "1"}}'}, "2"),
+            "csharp": ("dotnet.json", {"projects": [{"frameworks": [{"topLevelPackages": [{"vulnerabilities": [
+                {"advisoryurl": "https://github.com/advisories/GHSA-2c3f-4g5h-6j7m"}]}]}]}]},
+                {"App.csproj": '<Project><PackageReference Include="X" Version="1"/></Project>'}, "1"),
+        }
+        for lang, (report, data, files, vulns) in specs.items():
+            run = "opus55-%s-1" % lang
+            shutil.copy(base / "metrics-opus55-go-1.csv", base / ("metrics-%s.csv" % run))
+            shutil.copytree(base / "sessions-opus55-go-1", base / ("sessions-%s" % run))
+            shutil.copytree(base / "runtime-opus55-go-1", base / ("runtime-%s" % run))
+            (base / ("runtime-%s" % run) / "go.json").unlink()
+            (base / ("runtime-%s" % run) / report).write_text(json.dumps(data))
+            app = base / ("app-%s" % run)
+            app.mkdir()
+            for name, text in files.items():
+                (app / name).write_text(text)
+            with open(base / "driver.log", "a") as f:
+                f.write("=== RUN %s (claude-native claude-opus-5-5, PROMPT-%s.md, PORT=1) start: 2026-10-17 10:00:00 ===\n"
+                        "=== RUN %s finished: 2026-10-17 10:12:30 | 2,x ===\n" % (run, lang, run))
+            r = self.row(run, base)
+            self.assertEqual((r["language"], r["vulns"]), (lang, vulns), lang)
+            self.assertEqual(r["deps"], {"java": "1", "php": "2", "csharp": "1"}[lang], lang)
+            # 보고서가 빠지면 부분 합계 없이 빈 칸이다.
+            (base / ("runtime-%s" % run) / report).unlink()
+            self.assertEqual(self.row(run, base)["vulns"], "", lang)
+
     def test_missing_scanner_report_blanks_vulns(self):
         base = self.base()
         (base / "runtime-opus55-go-1" / "go.json").unlink()

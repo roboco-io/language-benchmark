@@ -64,7 +64,7 @@ class PromptTests(unittest.TestCase):
             self.assertIn(name, entries)
             with open(os.path.join(ASSETS, name), "rb") as f:
                 self.assertEqual(hashlib.md5(f.read()).hexdigest(), entries[name], name)
-        self.assertEqual(sum(1 for n in entries if n.startswith("PROMPT-")), 6)
+        self.assertEqual(sum(1 for n in entries if n.startswith("PROMPT-")), len(LANGS) + 1)
 
     def test_followup_prompt_contract(self):
         text = read(os.path.join(ASSETS, "PROMPT-followup.md"))

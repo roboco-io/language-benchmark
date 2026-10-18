@@ -2,6 +2,7 @@
 import json
 import re
 import tomllib
+import xml.etree.ElementTree as ET
 
 import metrics  # noqa: F401  (langreg 경로를 sys.path에 올린다)
 import langreg
@@ -106,6 +107,56 @@ def _deps_cmake(repo):
     return None if text is None else _deps_cpp(text)
 
 
+def _local(tag):
+    """XML 태그에서 {네임스페이스}를 떼어 낸다(pom.xml은 네임스페이스가 있고 csproj는 보통 없다)."""
+    return tag.rsplit("}", 1)[-1]
+
+
+def _kids(el, name):
+    return [c for c in el if _local(c.tag) == name]
+
+
+def _deps_maven_pom(repo):
+    """<project><dependencies> 바로 아래 <dependency> 중 scope가 test·provided가 아닌 것.
+    <dependencyManagement>·<profiles> 안의 dependencies는 project의 직계 자식이 아니므로 세지 않는다."""
+    text = _read(repo / "pom.xml")
+    if text is None:
+        return None
+    n = 0
+    for block in _kids(ET.fromstring(text), "dependencies"):
+        for dep in _kids(block, "dependency"):
+            scope = "".join((c.text or "").strip() for c in _kids(dep, "scope"))
+            if scope not in ("test", "provided"):
+                n += 1
+    return n
+
+
+def _deps_composer_json(repo):
+    text = _read(repo / "composer.json")
+    if text is None:
+        return None
+    req = json.loads(text).get("require", {})
+    return sum(1 for k in req if k != "php" and not k.startswith("ext-"))
+
+
+def _deps_csproj(repo):
+    """저장소 안 모든 *.csproj(테스트 프로젝트 *Test*.csproj와 bin·obj 아래는 제외)의 PackageReference Include 이름 고유 수.
+    PrivateAssets="all"(속성 또는 자식 요소)은 개발 전용이라 뺀다. csproj가 하나도 없으면 None."""
+    files = [p for p in sorted(repo.rglob("*.csproj"))
+             if "Test" not in p.name and not {"bin", "obj"} & set(p.relative_to(repo).parts)]
+    if not files:
+        return None
+    names = set()
+    for p in files:
+        for el in ET.fromstring(p.read_text(encoding="utf-8-sig")).iter():
+            if _local(el.tag) != "PackageReference" or not el.get("Include"):
+                continue
+            private = el.get("PrivateAssets") or "".join((c.text or "").strip() for c in _kids(el, "PrivateAssets"))
+            if private.lower() != "all":
+                names.add(el.get("Include"))
+    return len(names)
+
+
 # 레지스트리의 deps.kind -> 의존성 수 함수
 DEPS_BY_KIND = {
     "package-json": _deps_package_json,
@@ -113,6 +164,9 @@ DEPS_BY_KIND = {
     "go-mod": _deps_go_mod,
     "cargo-toml": _deps_cargo_toml,
     "cmake": _deps_cmake,
+    "maven-pom": _deps_maven_pom,
+    "composer-json": _deps_composer_json,
+    "csproj": _deps_csproj,
 }
 
 
@@ -192,11 +246,38 @@ def _ids_cargo(r):
         yield [a["id"]] + list(a.get("aliases") or [])
 
 
-_EXTRACT = {"trivy": _ids_trivy, "npm": _ids_npm, "pip": _ids_pip, "go": _ids_go, "cargo": _ids_cargo}
+def _ids_osv(r):
+    for res in r.get("results") or []:
+        for pkg in res.get("packages") or []:
+            for v in pkg.get("vulnerabilities") or []:
+                yield [v["id"]] + list(v.get("aliases") or [])
+
+
+def _ids_composer(r):
+    # 취약점이 없으면 PHP가 빈 배열([])로 내보내므로 dict일 때만 읽는다.
+    adv = r.get("advisories")
+    for items in (adv.values() if isinstance(adv, dict) else []):
+        for a in items:
+            # 같은 취약점을 trivy 등과 묶으려고 cve와 출처(GitHub 등)의 GHSA remoteId도 alias로 단다.
+            ghsa = [g for s in a.get("sources") or [] for g in _ghsa(s.get("remoteId"))]
+            yield [a["advisoryId"]] + ([a["cve"]] if a.get("cve") else []) + ghsa
+
+
+def _ids_dotnet(r):
+    for proj in r.get("projects") or []:
+        for fw in proj.get("frameworks") or []:
+            for pkg in (fw.get("topLevelPackages") or []) + (fw.get("transitivePackages") or []):
+                for v in pkg.get("vulnerabilities") or []:
+                    tail = (v.get("advisoryurl") or "").rstrip("/").rsplit("/", 1)[-1]
+                    yield _ghsa(tail) or [tail]
+
+
+_EXTRACT = {"trivy": _ids_trivy, "npm": _ids_npm, "pip": _ids_pip, "go": _ids_go, "cargo": _ids_cargo,
+            "osv": _ids_osv, "composer": _ids_composer, "dotnet": _ids_dotnet}
 
 
 def vulns(reports):
-    """보고서(키 trivy·npm·pip·go·cargo)의 취약점을 alias로 묶어 서로 다른 묶음 수를 센다.
+    """보고서(키 trivy·npm·pip·go·cargo·osv·composer·dotnet)의 취약점을 alias로 묶어 서로 다른 묶음 수를 센다.
     넘겨받은 보고서만 센다. 필요한 보고서가 빠졌는지는 호출자가 판단한다. go는 스트림 목록도 받는다."""
     parent = {}
 

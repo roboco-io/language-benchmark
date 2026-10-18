@@ -25,6 +25,8 @@ PRODUCT_COLUMNS = CSV_COLUMNS[CSV_COLUMNS.index("rps"):CSV_COLUMNS.index("vulns"
 # R4: 취약점 수에 필요한 보고서. 하나라도 없으면 부분 합계를 내지 않고 빈 칸으로 둔다.
 SCANNERS = {e["key"]: (None if e["scanner"]["format"] == "none" else e["scanner"]["format"])
             for e in langreg.load_all()}
+# 언어 스캐너 보고서 파일 이름은 형식 이름과 다를 수 있다(php는 매니페스트 composer.json과 겹치지 않게 composer-audit.json).
+SCAN_REPORTS = {e["key"]: e["scanner"].get("report") for e in langreg.load_all()}
 
 
 def parse_run(run):
@@ -180,7 +182,8 @@ def product_metrics(base, run, language):
         out["loc"] = runtime_parse.loc(scc, language)
     out["deps"] = runtime_parse.deps(Path(base) / ("app-%s" % run), language)
     reports = {}
-    for key, name in (("trivy", "trivy.json"), (SCANNERS[language], "%s.json" % SCANNERS[language])):
+    # 보고서 파일 이름은 레지스트리의 scanner.report다(형식 이름과 다를 수 있다: composer-audit.json).
+    for key, name in (("trivy", "trivy.json"), (SCANNERS[language], SCAN_REPORTS[language])):
         if key is None:
             continue
         if not (rt / name).is_file():
