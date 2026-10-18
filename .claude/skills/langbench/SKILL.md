@@ -87,3 +87,4 @@ description: Use when running or re-running the language-benchmark experiment (�
 | 키가 에이전트 세션 로그·아카이브에 남음 | API 키 커밋 | 보관 전 `redact_keys.py`로 마스킹한다. pre-commit 훅을 `--no-verify`로 우회하지 않는다 |
 | 에이전트 run 안에서 툴체인 설치 | 언어 간 환경 차이 | 툴체인은 실험자가 미리 설치하고 `toolchain.sh`로 점검한다. 도구가 없으면 setup이 중단된다 |
 | "3/3 완주 = 재현성 확정" 서술 | 관측 범위 초과 | 표본 수와 조건을 함께 적는다. 언어 우위는 확정하지 않는다 |
+| 스킬을 고쳐 커밋한 뒤 setup을 다시 돌리지 않음 | `$BASE` 사본이 스킬 리포와 달라 모든 게이트가 `tampered`, 남은 run이 건너뛰어짐 | 스킬 변경 후에는 `setup.sh`를 다시 실행하고, 그 사이 생긴 `tampered-*` 파일과 해당 run 산출물을 지운다 |
