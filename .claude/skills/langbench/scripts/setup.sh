@@ -26,6 +26,9 @@ if [ "${LB_SKIP_TOOLCHAIN:-}" != 1 ]; then
     || { echo "툴체인 점검 실패 — 위 '없음' 도구를 설치한 뒤 다시 실행 (설치는 사용자 승인 후)" >&2; exit 1; }
 fi
 cp "$CFG" "$BASE/bench.env"
+# 실행 중 무결성 검사의 기준(R28): $BASE 사본이 아니라 이 스킬 디렉터리(git 추적)의 assets/checksums.md5·assets·scripts다.
+# driver.sh·measure.sh·measure_docker.sh가 이 경로를 읽어 대조하고, run-all.sh·run_followups.sh가 이 디렉터리의 git 변경을 막는다.
+echo "LB_SKILL_DIR=\"$SKILL\"" >> "$BASE/bench.env"
 cp "$MODEL_SPECS" "$BASE/model-specs.json"
 cp "$SKILL/assets/reference-profile.json" "$BASE/"
 rm -f "$BASE/preflight-approved"   # 설정을 다시 만들면 승인도 다시 받는다
@@ -45,10 +48,6 @@ for l in $LANGS; do
     || { echo "PROMPT-$l.md 없음 또는 checksums.md5에 미등록" >&2; exit 1; }
 done
 cp "$SKILL"/scripts/* "$BASE/"
-# 실행 중 무결성 검사용 해시 목록(R24): 검증을 통과한 정본과 동결한 스크립트를 $BASE/checksums.md5에 고정한다.
-# driver.sh는 매 게이트 전에, measure.sh·measure_docker.sh는 재검증 때 이 목록과 대조한다.
-# shellcheck source=common.sh
-source "$BASE/common.sh"; write_manifest
 
 command -v /opt/homebrew/bin/hurl >/dev/null || { echo "hurl 없음 (/opt/homebrew/bin/hurl)" >&2; exit 1; }
 echo "OK: $BASE ($HARNESS)"

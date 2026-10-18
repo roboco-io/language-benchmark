@@ -16,6 +16,8 @@ run_one(){
   [ -f "$BASE/budget-stop" ] && { log "skip $1 (budget-stop)"; return; }
   # 채점 정본·하네스 변조가 감지되면(tampered-<run>) 남은 run도 같은 하네스를 쓰므로 시작하지 않는다(R24)
   ls "$BASE"/tampered-* >/dev/null 2>&1 && { log "skip $1 (tampered: $(cd "$BASE" && ls tampered-* | tr '\n' ' '))"; return; }
+  # 스킬 디렉터리(정본·스크립트의 기준)에 커밋되지 않은 변경이 있으면 이 run을 시작하지 않고 배치를 멈춘다(R28)
+  skill_clean || { log "거부: 스킬 디렉터리 변경 또는 git 리포 아님 — git -C $(skill_dir) status --porcelain -- . ($1 미시작)"; exit 1; }
   # 구독 한도로 보류된 run은 부분 산출물을 held/로 옮기고 iteration 1부터 다시 시작한다(R18, CLAUDE.md 서비스 장애 보류)
   held=$(restart_held "$1") && log "restart $1 from iteration 1 (보류 시도 보관: $held)"
   log "start $1"

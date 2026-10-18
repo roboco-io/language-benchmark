@@ -8,7 +8,7 @@ import tempfile
 import time
 import unittest
 
-from test_measure import DOCKER, FAKES, HURL, SKILL, write_manifest
+from test_measure import DOCKER, FAKES, HURL, SKILL, link_skill
 
 
 class HarnessCase(unittest.TestCase):
@@ -51,7 +51,7 @@ PRICE_TIERS=""
         self.fakebin = os.path.join(self.tmp, "bin")
         os.makedirs(self.fakebin)
         shutil.copy(os.path.join(FAKES, "claude"), self.fakebin)
-        write_manifest(self.base)
+        link_skill(self.base)
 
     def set_env(self, **kv):
         """bench.env의 KEY=값 줄을 바꾼다."""
@@ -138,7 +138,7 @@ class DriverGateTest(HarnessCase):
             d = os.path.join(self.base, name)
             os.makedirs(d)
             shutil.copy(os.path.join(HURL, "ping.hurl"), os.path.join(d, src))
-        write_manifest(self.base)
+        link_skill(self.base)
         return app
 
     def tree_hash(self, root):
@@ -241,13 +241,15 @@ class DriverHoldTest(HarnessCase):
         self.assertFalse(os.path.exists(os.path.join(self.base, "hold-" + self.RUN)))
 
     def test_tampered_grading_assets_end_run_without_pass(self):
-        # R24: iteration 중 에이전트가 $BASE의 채점 정본을 고치면 게이트가 tampered이고 run은 pass 없이 끝난다.
+        # R24·R28: iteration 중 에이전트가 $BASE의 채점 정본(과 해시 목록)을 고치면 게이트가 tampered이고 run은 pass 없이 끝난다.
         self.set_env(MAX_ITER="3")
         hurl = os.path.join(self.base, "harness-hurl")
         os.makedirs(hurl)
         shutil.copy(os.path.join(HURL, "ping.hurl"), hurl)
-        write_manifest(self.base)
-        r = self.drive(FAKE_CLAUDE_TAMPER=os.path.join(hurl, "ping.hurl"))
+        link_skill(self.base)
+        # $BASE의 Hurl과 함께 $BASE/checksums.md5를 맞춰 고쳐도 기준은 스킬 원본이므로 잡힌다(R28).
+        r = self.drive(FAKE_CLAUDE_RUN='echo "# x" >> "%s/ping.hurl" && cd "%s" && md5 -r harness-hurl/ping.hurl > checksums.md5'
+                       % (hurl, self.base))
         self.assertEqual(r.returncode, 0, r.stderr)
         rows = self.read("metrics-%s.csv" % self.RUN).splitlines()
         self.assertEqual([l.split(",")[-1] for l in rows], ["tampered"])

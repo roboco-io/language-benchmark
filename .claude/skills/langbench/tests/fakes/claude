@@ -3,10 +3,10 @@
 # - 인자를 FAKE_CLAUDE_LOG(없으면 무시)에 남긴다.
 # - FAKE_CLAUDE_COPY가 가리키는 앱 디렉터리를 cwd로 복사하고 .ralph-done을 만든다.
 # - FAKE_CLAUDE_LIMIT=stdout이면 구독 한도 메시지를 출력하고 1로 끝난다. =session이면 세션 jsonl에 API 오류 기록만 남기고 0으로 끝난다.
-# - FAKE_CLAUDE_TAMPER가 가리키는 파일 끝에 한 줄을 덧붙인다(채점 정본 변조 흉내).
+# - FAKE_CLAUDE_RUN의 셸 명령을 실행한다(채점 정본 변조 흉내).
 # - 둘 다 없으면 smoke용 SMOKE-OK만 돌려준다.
 [ -n "$FAKE_CLAUDE_LOG" ] && printf '%s\n' "$*" >> "$FAKE_CLAUDE_LOG"
-[ -n "$FAKE_CLAUDE_TAMPER" ] && echo "# tampered" >> "$FAKE_CLAUDE_TAMPER"
+[ -n "$FAKE_CLAUDE_RUN" ] && ( eval "$FAKE_CLAUDE_RUN" )
 case "$FAKE_CLAUDE_LIMIT" in
   stdout) echo "Claude AI usage limit reached|1760000000"; exit 1 ;;
   session)

@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 import unittest
 
-from test_measure import FAKES, HURL, SKILL, write_manifest
+from test_measure import FAKES, HURL, SKILL, link_skill
 
 
 def count_files(root):
@@ -73,6 +73,7 @@ PRICE_OUT=0
 PRICE_CACHE_READ=0
 PRICE_TIERS=""
 ''')
+        self.skill = link_skill(self.base)  # bench.env에 LB_SKILL_DIR를 쓰므로 승인 해시보다 먼저
         with open(os.path.join(self.base, "preflight-report.md"), "w") as f:
             f.write("report\n")
         blob = b""
@@ -84,7 +85,6 @@ PRICE_TIERS=""
         self.fakebin = os.path.join(self.tmp, "bin")
         os.makedirs(self.fakebin)
         shutil.copy(os.path.join(FAKES, "claude"), self.fakebin)
-        write_manifest(self.base)
 
     def run_all(self, **extra):
         env = dict(os.environ, HOME=self.home, PATH=self.fakebin + os.pathsep + os.environ["PATH"], **extra)
@@ -123,6 +123,17 @@ PRICE_TIERS=""
                 self.assertEqual(f.readline().split(",")[0], "1", run)
         self.assertTrue(os.path.exists(self.path("done-all")))
 
+
+    def test_dirty_skill_dir_blocks_run_all(self):
+        # R28: 기준인 스킬 디렉터리에 커밋되지 않은 변경이 있으면 run을 시작하지 않는다.
+        with open(os.path.join(self.skill, "scripts", "note.txt"), "w") as f:
+            f.write("dirty\n")
+        r = self.run_all()
+        self.assertEqual(r.returncode, 1, r.stderr)
+        self.assertEqual(glob.glob(self.path("app-*")), [])
+        self.assertFalse(os.path.exists(self.path("done-all")))
+        with open(self.path("orchestrator.log")) as f:
+            self.assertIn("거부: 스킬 디렉터리 변경", f.read())
 
     def test_existing_run_order_is_reused(self):
         # R26: 재실행은 seed를 다시 쓰지 않고 run-order.txt를 그대로 쓴다.

@@ -31,7 +31,7 @@ REPO="$BASE/app-$RUN"; MET="$BASE/metrics-$RUN.csv"; LOG="$BASE/ralph-run-$RUN.l
 # 구독 한도 보류 run은 이어서 돌리지 않는다. run-all.sh·run_followups.sh가 부분 산출물을 held/로 옮기고 처음부터 다시 시작한다(R18).
 [ -f "$BASE/hold-$RUN" ] && { echo "hold-$RUN 있음 — 오케스트레이터가 처음부터 다시 시작해야 함 ($RUN)" >> "$BASE/driver.log"; exit 75; }
 # 채점 정본·하네스 스크립트가 setup 때와 다르면 시작하지 않는다(R24)
-harness_intact || { touch "$BASE/tampered-$RUN"; echo "=== RUN $RUN 거부: 채점 정본·하네스 해시 불일치($BASE/checksums.md5): $(date '+%F %T') ===" >> "$BASE/driver.log"; exit 1; }
+harness_intact || { touch "$BASE/tampered-$RUN"; echo "=== RUN $RUN 거부: 채점 정본·하네스가 스킬 원본(LB_SKILL_DIR)과 다름: $(date '+%F %T') ===" >> "$BASE/driver.log"; exit 1; }
 
 # 빈 포트 선택: 3000번대 고정 포트가 외부 프로세스(VS Code Live Preview 등)와 충돌하지 않도록 (EXP-029 D-1, EXP-031)
 free_port() {
@@ -185,7 +185,7 @@ for i in $(seq $((DONE_ITER + 1)) "$MAX_ITER"); do
   if ! harness_intact; then
     GATE=tampered
     rm -f "$REPO/.ralph-done"; touch "$BASE/tampered-$RUN"
-    echo "=== [$RUN] GATE tampered: 채점 정본·하네스 해시 불일치 iter $i ===" >> "$LOG"
+    echo "=== [$RUN] GATE tampered: 채점 정본·하네스가 스킬 원본과 다름 iter $i ===" >> "$LOG"
   elif [ "$CLAIM" = 1 ]; then
     if [ "${RESULT%%,*}" = "$EXPECT_FILES" ] && [ "${DRES%%,*}" = "$EXPECT_FILES" ]; then
       GATE=pass

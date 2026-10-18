@@ -20,9 +20,38 @@ def docker_up():
 DOCKER = docker_up()
 
 
-def write_manifest(base):
-    """setup.sh처럼 base의 PROMPT·Hurl·k6·스크립트 해시 목록(checksums.md5)을 만든다(R24)."""
-    subprocess.run(["bash", "-c", 'BASE="$1"; source "$BASE/common.sh"; write_manifest', "-", base], check=True)
+def link_skill(base):
+    """setup.sh처럼 base가 가리킬 스킬 기준 디렉터리(R28)를 만든다. base의 PROMPT·Hurl·k6와 실제 스킬 scripts를 담은
+    git 리포 <base 부모>/skill-ref와 그 assets/checksums.md5를 만들고, base/bench.env의 LB_SKILL_DIR을 그곳으로 둔다."""
+    skill = os.path.join(os.path.dirname(base), "skill-ref")
+    shutil.rmtree(skill, ignore_errors=True)
+    assets = os.path.join(skill, "assets")
+    shutil.copytree(os.path.join(SKILL, "scripts"), os.path.join(skill, "scripts"))
+    os.makedirs(assets)
+    listed = []
+    for n in sorted(os.listdir(base)):
+        if n.startswith("PROMPT-") and n.endswith(".md"):
+            shutil.copy(os.path.join(base, n), assets)
+            listed.append(n)
+    for d in ("harness-hurl", "followup-hurl", "k6"):
+        if os.path.isdir(os.path.join(base, d)):
+            shutil.copytree(os.path.join(base, d), os.path.join(assets, d))
+            listed += ["%s/%s" % (d, n) for n in sorted(os.listdir(os.path.join(base, d))) if n.endswith(".hurl")]
+    sums = subprocess.run(["md5", "-r", *listed], cwd=assets, capture_output=True, text=True, check=True).stdout
+    with open(os.path.join(assets, "checksums.md5"), "w") as f:
+        f.write(sums)
+    git = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-C", skill]
+    subprocess.run(git + ["init", "-q"], check=True)
+    subprocess.run(git + ["add", "-A"], check=True)
+    subprocess.run(git + ["commit", "-qm", "ref"], check=True)
+    env = os.path.join(base, "bench.env")
+    lines = []
+    if os.path.exists(env):
+        with open(env) as f:
+            lines = [l for l in f.read().splitlines() if not l.startswith("LB_SKILL_DIR=")]
+    with open(env, "w") as f:
+        f.write("\n".join(lines + ['LB_SKILL_DIR="%s"' % skill]) + "\n")
+    return skill
 
 
 class MeasureBase(unittest.TestCase):
@@ -143,7 +172,7 @@ class IntegrityTest(MeasureBase):
         self.hurl = os.path.join(self.base, "harness-hurl")
         os.makedirs(self.hurl)
         shutil.copy(os.path.join(HURL, "ping.hurl"), self.hurl)
-        write_manifest(self.base)
+        link_skill(self.base)
 
     def test_intact_harness_grades(self):
         r = self.run_script("measure.sh", self.app("ok"), self.hurl)

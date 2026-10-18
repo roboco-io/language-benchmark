@@ -30,20 +30,35 @@ hold_stop(){ # $1 run — driver가 75(구독 한도 보류)로 끝났을 때 �
   exit 75
 }
 
-# 채점 정본·하네스 무결성(R24). 에이전트는 $BASE/app-<run>에서 권한 확인 없이 돌므로 바로 위의 채점 정본과 스크립트에 쓸 수 있다.
-# write_manifest: setup.sh가 정본 해시 검증을 통과한 직후 PROMPT·Hurl·k6·스크립트의 md5를 $BASE/checksums.md5에 쓴다.
-write_manifest(){
-  ( cd "$BASE" || exit 1
-    # shellcheck disable=SC2046,SC2012  # 파일 이름에 공백이 없다(정본·스크립트 이름 고정)
-    md5 -r $(ls PROMPT-*.md ./*.sh ./*.py 2>/dev/null | sed 's|^\./||') $(find harness-hurl followup-hurl k6 -type f 2>/dev/null | sort) > checksums.md5 )
-}
-# harness_intact: checksums.md5와 대조해 같으면 0. 목록 파일이 없거나 해시가 다르거나 채점 디렉터리에 목록에 없는 파일이 생기면 1.
-# driver.sh는 매 게이트 전에, measure.sh·measure_docker.sh는 $BASE 안의 Hurl로 채점할 때(독립 재검증 포함) 호출한다.
+# 채점 정본·하네스 무결성(R24, R28). 에이전트는 $BASE/app-<run>에서 권한 확인 없이 돌므로 $BASE 안의 정본·스크립트·해시 목록을 모두 고칠 수 있다.
+# 그래서 기준은 $BASE 사본이 아니라 스킬 리포(git 추적)다. setup.sh가 스킬 경로를 $BASE/bench.env의 LB_SKILL_DIR에 기록한다.
+# 스킬 디렉터리 자체의 변경은 run-all.sh·run_followups.sh가 매 run 시작 전에 skill_clean(git status)으로 막는다.
+skill_dir(){ sed -n 's/^LB_SKILL_DIR="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p' "$BASE/bench.env" 2>/dev/null | tail -1; }
+# harness_intact: 0이면 무결. 다음을 모두 확인한다.
+#   (1) 스킬 assets/checksums.md5가 스킬 assets와 일치  (2) $BASE의 같은 경로(PROMPT·Hurl)가 그 해시와 일치
+#   (3) $BASE의 harness-hurl/·followup-hurl/·k6/가 스킬 assets와 파일 구성·내용까지 같음(목록 밖 파일 추가 검출)
+#   (4) $BASE의 하네스 스크립트가 스킬 scripts/와 같음
+# driver.sh는 시작 시와 매 게이트 전에, measure.sh·measure_docker.sh는 $BASE 안의 Hurl로 채점할 때(독립 재검증 포함) 호출한다.
 harness_intact(){
-  ( cd "$BASE" && [ -s checksums.md5 ] || exit 1
-    # shellcheck disable=SC2046
-    md5 -r $(cut -d' ' -f2 checksums.md5) 2>/dev/null | diff -q - checksums.md5 >/dev/null || exit 1
-    [ "$(find harness-hurl followup-hurl -type f 2>/dev/null | sort)" = "$(cut -d' ' -f2 checksums.md5 | grep -E '^(harness|followup)-hurl/' | sort)" ] )
+  local skill f d sums; skill=$(skill_dir)
+  [ -n "$skill" ] && sums="$skill/assets/checksums.md5" && [ -s "$sums" ] || return 1
+  # shellcheck disable=SC2046  # 정본 파일 이름에 공백이 없다
+  ( cd "$skill/assets" && md5 -r $(cut -d' ' -f2 checksums.md5) 2>/dev/null | diff -q - checksums.md5 >/dev/null ) || return 1
+  # shellcheck disable=SC2046
+  ( cd "$BASE" && md5 -r $(cut -d' ' -f2 "$sums") 2>/dev/null | diff -q - "$sums" >/dev/null ) || return 1
+  for d in harness-hurl followup-hurl k6; do
+    if [ -d "$skill/assets/$d" ] || [ -e "$BASE/$d" ]; then diff -rq "$skill/assets/$d" "$BASE/$d" >/dev/null 2>&1 || return 1; fi
+  done
+  for f in "$skill"/scripts/*; do
+    [ -f "$f" ] || continue
+    cmp -s "$f" "$BASE/$(basename "$f")" || return 1
+  done
+}
+# skill_clean: 스킬 디렉터리가 git 리포 안에 있고 커밋되지 않은 변경(미추적 포함)이 없으면 0.
+skill_clean(){
+  local skill; skill=$(skill_dir)
+  [ -n "$skill" ] && git -C "$skill" rev-parse --git-dir >/dev/null 2>&1 || return 1
+  [ -z "$(git -C "$skill" status --porcelain -- . 2>/dev/null)" ]
 }
 # grades_from_base <hurl 디렉터리...>: 채점 디렉터리 중 하나라도 $BASE 안이면 0(하네스 채점이므로 무결성 검사 대상).
 grades_from_base(){

@@ -17,6 +17,8 @@ run_fu(){
   [ -f "$BASE/done-$run-fu" ] && { log "skip $run-fu"; return; }
   [ -f "$BASE/budget-stop" ] && { log "skip $run-fu (budget-stop)"; return; }
   ls "$BASE"/tampered-* >/dev/null 2>&1 && { log "skip $run-fu (tampered: $(cd "$BASE" && ls tampered-* | tr '\n' ' '))"; return; }
+  # 스킬 디렉터리(정본·스크립트의 기준)에 커밋되지 않은 변경이 있으면 이 run을 시작하지 않고 배치를 멈춘다(R28)
+  skill_clean || { log "거부: 스킬 디렉터리 변경 또는 git 리포 아님 — git -C $(skill_dir) status --porcelain -- . ($run-fu 미시작)"; exit 1; }
   # 구독 한도 보류 run은 app-<run>-fu까지 held/로 옮겨 원 run 앱에서 다시 복사해 시작한다(R18)
   held=$(restart_held "$run-fu") && log "restart $run-fu from iteration 1 (보류 시도 보관: $held)"
   log "start $run-fu"

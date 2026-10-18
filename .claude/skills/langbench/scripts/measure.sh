@@ -12,11 +12,11 @@ START_SEC="${START_SEC:-600}"
 HURL_FILES=()
 for d in "$@"; do for f in "$d"/*.hurl; do [ -f "$f" ] && HURL_FILES+=("$f"); done; done
 HURL_BIN="/opt/homebrew/bin/hurl"
-# 하네스 안의 Hurl로 채점하면(driver·독립 재검증) 먼저 정본·스크립트 해시를 대조한다(R24). 다르면 "tampered,0", 종료 코드 3.
+# 하네스 안의 Hurl로 채점하면(driver·독립 재검증) 먼저 정본·스크립트를 스킬 원본과 대조한다(R24·R28). 다르면 "tampered,0", 종료 코드 3.
 # shellcheck source=common.sh
 source "$BASE/common.sh"
 if grades_from_base "$@" && ! harness_intact; then
-  echo "채점 정본·하네스 해시 불일치($BASE/checksums.md5) — 채점하지 않음" >&2; echo "tampered,0"; exit 3
+  echo "채점 정본·하네스가 스킬 원본($(skill_dir))과 다름 — 채점하지 않음" >&2; echo "tampered,0"; exit 3
 fi
 
 # 프로세스가 리포 소속인지: command에 리포 경로 포함 OR CWD가 리포 안
