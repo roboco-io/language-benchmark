@@ -25,10 +25,10 @@ while IFS= read -r -d '' nm; do
     echo "keep node_modules (lockfile 없음): ${app#$BASE/}" >> "$LOG"
   fi
 done < <(find "$BASE" -type d -name node_modules -prune -print0)
-# 빌드 산출물: 각 app의 target/(Rust) .venv/(Python) build/(C++ CMake). 소스에서 재생성 가능하다.
+# 빌드 산출물: 각 app의 레지스트리 cleanup 디렉터리(target/ .venv/ build/ 등). 소스에서 재생성 가능하다.
 for app in "$BASE"/app-*; do
   [ -d "$app" ] || continue
-  for d in target .venv build; do
+  for d in $(python3 "$(dirname "$0")/langreg.py" cleanup-dirs); do
     [ -d "$app/$d" ] && { echo "rm build: ${app#$BASE/}/$d ($(du -sk "$app/$d" | cut -f1)KB)" >> "$LOG"; rm -rf "${app:?}/$d"; }
   done
 done

@@ -17,6 +17,7 @@ class RuntimeStaticTest(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
         self.base = os.path.join(self.tmp, "base")
         shutil.copytree(os.path.join(SKILL, "scripts"), self.base)
+        shutil.copytree(os.path.join(SKILL, "languages"), os.path.join(self.base, "languages"))   # setup.sh와 같다
         self.repo = os.path.join(self.tmp, "app")
         os.makedirs(self.repo)
 

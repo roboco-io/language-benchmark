@@ -26,9 +26,7 @@ REPO="$1"; RUN="$2"; LANG_KEY="$3"
 [ -n "$REPO" ] && [ -n "$RUN" ] || { echo "사용: runtime.sh <repo> <run> [언어]" >&2; exit 2; }
 export PATH="$HOME/.cargo/bin:$PATH"
 if [ -z "$LANG_KEY" ]; then
-  for l in typescript python go rust cpp; do
-    case "-$RUN-" in *"-$l-"*) LANG_KEY="$l" ;; esac
-  done
+  LANG_KEY="$(python3 "$BASE/langreg.py" detect "$RUN" 2>/dev/null)" || LANG_KEY=""   # 못 정하면 빈 값 → 스캔 단계에서 scan_fail lang
 fi
 REPO="$(cd "$REPO" && pwd)" || exit 2
 OUT="$BASE/runtime-$RUN"
@@ -247,37 +245,9 @@ run_scan() {
   fi
 }
 
-# scc: 주 언어 코드량. 테스트·산출물 디렉터리와 테스트 파일은 뺀다.
-run_scan scc scc.json - "$SRC" scc --format json \
-  --exclude-dir test,tests,__tests__,hurl,node_modules,target,build,.venv,vendor \
-  --not-match '(_test\.go|test_.*\.py|.*_test\.py|\.(test|spec)\.[jt]s|_test\.(cc|cpp))$' .
-
-# hints.txt: 빌드 모드·워커 설정 단서. 최종 판정은 실험자가 이 파일을 보고 report에 적는다(반자동).
-( cd "$SRC" && grep -rnE --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=target --exclude-dir=.venv --exclude-dir=vendor \
-    -e '--release|CMAKE_BUILD_TYPE|--workers|cluster|GOMAXPROCS|worker_threads|setThreadNum|journal_mode|busy_timeout' . ) \
-  > "$OUT/hints.txt" 2>/dev/null < /dev/null  # 일치가 없으면 grep이 1을 돌려주지만 빈 파일이 맞다
-
-# 언어 스캐너 (R4): 보고서 이름은 typescript npm.json, python pip.json, go go.json, rust cargo.json. cpp는 없다.
-case "$LANG_KEY" in
-  typescript) run_scan npm npm.json vulnerabilities "$SRC" npm audit --json ;;
-  python)
-    if [ -f "$SRC/requirements.txt" ]; then
-      run_scan pip pip.json dependencies "$SRC" "$PIP_AUDIT_BIN" -f json -r requirements.txt
-    else
-      run_scan pip pip.json dependencies "$SRC" "$PIP_AUDIT_BIN" -f json .
-    fi ;;
-  # govulncheck는 패키지 로드·빌드 실패에도 config·progress 메시지만 담긴 유효 JSON을 낸다. 종료 코드 0(취약점 없음)·3(취약점 있음)이고
-  # 스트림에 config 메시지가 있을 때만 보고서로 인정한다. 그 밖은 실패로 보아 go.json을 만들지 않는다(빈 칸, R22).
-  go) SCAN_OK_RC="0 3" run_scan go go.json stream:config "$SRC" "$GOVULNCHECK_BIN" -json ./... ;;
-  rust) run_scan cargo-audit cargo.json vulnerabilities "$SRC" cargo audit --json ;;
-  cpp) ;;
-  *) scan_fail lang "언어를 알 수 없음: run=$RUN 언어=$LANG_KEY" ;;
-esac
-
-# trivy: 빌드된 이미지를 스캔한다. 이미지가 없으면(1부 build 실패) 보고서도 없다. 정리는 trap(cleanup)이 한다.
-if docker image inspect "$IMAGE" >/dev/null 2>&1; then
-  run_scan trivy trivy.json SchemaVersion "$TMP" trivy image --quiet --format json --scanners vuln "$IMAGE"
-fi
+# scc 코드량·hints.txt·언어 스캐너·trivy는 scan_lib.sh가 레지스트리(langreg.py) 값으로 수행한다.
+source "$BASE/scan_lib.sh"
+lb_static_scans "$SRC" "$OUT" "$LANG_KEY" "$IMAGE"
 
 [ -f "$OUT/error.txt" ] && exit 1
 exit 0

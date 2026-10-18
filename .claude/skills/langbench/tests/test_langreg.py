@@ -63,6 +63,43 @@ class LangregTest(unittest.TestCase):
         out = subprocess.run(["python3", SCRIPT, "get", "go", "name"], capture_output=True, text=True, check=True).stdout
         self.assertEqual(out.strip(), "Go")
 
+    def run_cli(self, *args, env=None):
+        e = dict(os.environ, **(env or {}))
+        return subprocess.run(["python3", SCRIPT, *args], capture_output=True, text=True, check=True, env=e).stdout
+
+    def test_shell_go(self):
+        out = self.run_cli("shell", "go", "/tmp/src")
+        self.assertIn("LR_SCAN_OK_RC='0 3'", out)
+        self.assertIn("LR_SCAN_KEY=stream:config", out)
+
+    def test_shell_python_alt(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertIn("LR_SCAN_ARGV=('' -f json .)", self.run_cli("shell", "python", d))
+            open(os.path.join(d, "requirements.txt"), "w").close()
+            self.assertIn("-r requirements.txt", self.run_cli("shell", "python", d))
+
+    def test_shell_union_matches_legacy(self):
+        out = self.run_cli("shell", "go", "/tmp/src")
+        v = dict(l.split("=", 1) for l in out.splitlines() if l.startswith(("LR_LOC_EXCLUDE", "LR_HINTS")))
+        self.assertEqual(set(v["LR_LOC_EXCLUDE"].split(",")),
+                         {"test", "tests", "__tests__", "hurl", "node_modules", "target", "build", ".venv", "vendor"})
+        self.assertEqual(set(v["LR_HINTS"].strip("'").split("|")),
+                         set("--release|CMAKE_BUILD_TYPE|--workers|cluster|GOMAXPROCS|worker_threads|setThreadNum|journal_mode|busy_timeout".split("|")))
+
+    def test_shell_quotes_paths(self):
+        r = subprocess.run(["bash", "-c", f'eval "$(python3 {SCRIPT} shell python /tmp)"; printf %s "${{LR_SCAN_ARGV[0]}}"'],
+                           capture_output=True, text=True, env=dict(os.environ, PIP_AUDIT_BIN="/tmp/a b/pip-audit"))
+        self.assertEqual(r.stdout, "/tmp/a b/pip-audit")
+
+    def test_toolchain_lines(self):
+        lines = self.run_cli("toolchain").splitlines()
+        self.assertTrue(any(l.startswith("go\t") for l in lines))
+        self.assertIn("govulncheck\t-\t-\tGOVULNCHECK_BIN\t2\t-version", lines)
+        self.assertTrue(any(l.startswith("drogon\tbrew-or-pkgconfig") for l in lines))
+
+    def test_cleanup_dirs(self):
+        self.assertEqual(set(self.run_cli("cleanup-dirs").split()), {"target", ".venv", "build"})
+
     def test_prompts_unchanged(self):
         with open(os.path.join(SKILL, "assets", "checksums.md5")) as f:
             entries = {l.split()[1]: l.split()[0] for l in f if l.strip()}

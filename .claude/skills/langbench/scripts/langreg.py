@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """언어 레지스트리 로더. languages/<key>.json 한 파일이 언어 하나의 설정 전부를 담는다.
 
-import해서 쓰거나(`langreg.keys()`) CLI로 쓴다: keys | validate [key...] | detect <run> | get <key> <dotted.path>.
+import해서 쓰거나(`langreg.keys()`) CLI로 쓴다: keys | validate [key...] | detect <run> | get <key> <dotted.path> |
+shell <key> <src> | toolchain [key...] | cleanup-dirs.
 표준 라이브러리만 쓴다.
 """
 import json
 import os
+import re
+import shlex
 import sys
 from pathlib import Path
 
@@ -89,6 +92,62 @@ def detect(run):
         raise ValueError(f"run 이름에서 언어를 하나로 정할 수 없음: {run} (일치: {found})")
     return found[0]
 
+COMMON_EXCLUDE_DIRS = ["test", "tests", "__tests__", "hurl"]
+
+
+def _uniq(items):
+    seen = []
+    for x in items:
+        if x not in seen:
+            seen.append(x)
+    return seen
+
+
+def shell_vars(key, src):
+    """runtime.sh·local_prep.sh가 eval하는 bash 대입문. 모든 값은 shlex.quote한다.
+
+    LOC_EXCLUDE·LOC_NOTMATCH·HINTS는 등록된 모든 언어의 합집합이다(scc·grep을 언어 구분 없이 한 번에 돌리던 기존 동작 유지).
+    """
+    entry = get(key)
+    sc = entry["scanner"]
+    argv = sc.get("argv", [])
+    for alt in sc.get("alt", []):
+        if os.path.isfile(os.path.join(src, alt["if_file"])):
+            argv = alt["argv"]
+            break
+    argv = [re.sub(r"\$\{(\w+)\}", lambda m: os.environ.get(m.group(1), ""), a) for a in argv]
+    entries = load_all()
+    excl = COMMON_EXCLUDE_DIRS + [d for e in entries for d in e["loc"]["exclude_dirs"]]
+    pats = [e["loc"]["test_pattern"] for e in entries if e["loc"]["test_pattern"]]
+    hints = [h for e in entries for h in e["hints"]]
+    q = shlex.quote
+    lines = [
+        f"LR_SCAN_FORMAT={q(sc['format'])}",
+        f"LR_SCAN_NAME={q(sc.get('name', ''))}",
+        f"LR_SCAN_REPORT={q(sc.get('report', ''))}",
+        f"LR_SCAN_KEY={q(sc.get('required_key', ''))}",
+        f"LR_SCAN_OK_RC={q(sc.get('ok_rc', ''))}",
+        "LR_SCAN_ARGV=(" + " ".join(q(a) for a in argv) + ")",
+        f"LR_LOC_EXCLUDE={q(','.join(_uniq(excl)))}",
+        f"LR_LOC_NOTMATCH={q('(' + '|'.join(_uniq(pats)) + ')$')}",
+        f"LR_HINTS={q('|'.join(_uniq(hints)))}",
+    ]
+    return "\n".join(lines)
+
+
+def toolchain_lines(keys_=None):
+    """줄마다 name<TAB>probe<TAB>bin<TAB>bin_env<TAB>ver_lines<TAB>args... 빈 필드는 '-'(read가 연속 탭을 합치지 않게)."""
+    out = []
+    for e in (load_all() if not keys_ else [get(k) for k in keys_]):
+        for t in e["toolchain"]:
+            out.append("\t".join([t["name"], t.get("probe") or "-", t.get("bin") or "-", t.get("bin_env") or "-",
+                                  str(t.get("ver_lines", 1))] + list(t["args"])))
+    return out
+
+
+def cleanup_dirs():
+    return _uniq(d for e in load_all() for d in e["cleanup"])
+
 
 def main(argv):
     if not argv:
@@ -112,6 +171,12 @@ def main(argv):
             for part in args[1].split("."):
                 cur = cur[int(part)] if isinstance(cur, list) else cur[part]
             print(cur if isinstance(cur, str) else json.dumps(cur, ensure_ascii=False))
+        elif cmd == "shell":
+            print(shell_vars(args[0], args[1]))
+        elif cmd == "toolchain":
+            print("\n".join(toolchain_lines(args)))
+        elif cmd == "cleanup-dirs":
+            print(" ".join(cleanup_dirs()))
         else:
             print(f"알 수 없는 명령: {cmd}", file=sys.stderr)
             return 2

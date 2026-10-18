@@ -42,12 +42,16 @@ cp -r "$SKILL/assets/harness-hurl" "$BASE/"
 # 해시 검증은 checksums.md5에 적힌 파일 목록 기준이다
 (cd "$SKILL/assets" && md5 -r $(cut -d' ' -f2 checksums.md5) | diff - checksums.md5) \
   || { echo "정본 해시 불일치 — assets 변경 여부 확인" >&2; exit 1; }
+# 레지스트리 항목이 유효해야 한다(필드 누락·허용되지 않는 값이면 여기서 중단)
+python3 "$SKILL/scripts/langreg.py" validate $LANGS || { echo "언어 레지스트리 검증 실패 — languages/*.json 확인" >&2; exit 1; }
 # 각 언어의 PROMPT가 있고 checksums.md5에 고정돼 있어야 한다
 for l in $LANGS; do
   [ -f "$SKILL/assets/PROMPT-$l.md" ] && grep -q " PROMPT-$l.md\$" "$SKILL/assets/checksums.md5" \
     || { echo "PROMPT-$l.md 없음 또는 checksums.md5에 미등록" >&2; exit 1; }
 done
 cp "$SKILL"/scripts/* "$BASE/"
+# 하네스 사본의 langreg.py·scan_lib.sh가 <스크립트 디렉터리>/languages에서 레지스트리를 찾는다
+rm -rf "$BASE/languages"; cp -r "$SKILL/languages" "$BASE/languages"
 
 command -v /opt/homebrew/bin/hurl >/dev/null || { echo "hurl 없음 (/opt/homebrew/bin/hurl)" >&2; exit 1; }
 echo "OK: $BASE ($HARNESS)"
