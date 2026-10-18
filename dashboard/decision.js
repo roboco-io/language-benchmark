@@ -72,7 +72,21 @@
       return [k, better === 'higher' ? t : 1 - t];
     }));
   }
-  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars };
+  // 두 언어 대결: 중앙값이 나은 쪽이 승자이고, 배수는 큰 값÷작은 값이다. 값이 없거나 0 이하이면 배수를 구하지 않는다.
+  // 3회 반복 범위가 서로 겹치면 overlap이다(겹침은 동등하다는 증명이 아니라 주의 표시다).
+  function duel(a, b, better, rangeA, rangeB) {
+    const x = number(a), y = number(b);
+    if (x === null || y === null) return { winner:null, ratio:null, overlap:false };
+    const ratio = x > 0 && y > 0 ? Math.max(x, y) / Math.min(x, y) : null;
+    const overlap = !!(rangeA && rangeB) && Math.max(rangeA[0], rangeB[0]) <= Math.min(rangeA[1], rangeB[1]);
+    const winner = x === y ? null : (better === 'higher' ? x > y : x < y) ? 'a' : 'b';
+    return { winner, ratio, overlap };
+  }
+  // 대결 막대 길이(0-1). 4배에서 가득 찬다.
+  function duelBar(ratio) {
+    return ratio === null || ratio === undefined ? 0 : Math.min(1, Math.log2(ratio) / 2);
+  }
+  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars, duel, duelBar };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Decision = api;
 })(typeof window !== 'undefined' ? window : globalThis);

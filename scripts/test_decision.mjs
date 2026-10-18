@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp } =createRequire(import.meta.url)('../dashboard/decision.js');
+const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp, duel, duelBar } =createRequire(import.meta.url)('../dashboard/decision.js');
 const rows = [
   { exp: 'EXP-001', run: 'sonnet55-go-1', language: 'go', model: 'sonnet55', pass: '1', rps: '0', cost_usd: '2' },
   { exp: 'EXP-001', run: 'sonnet55-go-2', language: 'go', model: 'sonnet55', pass: '1', rps: '10', cost_usd: '3' },
@@ -46,6 +46,13 @@ assert.deepEqual(bars({a:4469,b:511,c:null}, 'higher'), {a:1,b:511/4469,c:null})
 assert.deepEqual(bars({a:3.4,b:13.6}, 'lower'), {a:1,b:3.4/13.6});
 assert.deepEqual(bars({a:0,b:3.4,c:134.4}, 'lower'), {a:1,b:1-3.4/134.4,c:0});
 assert.deepEqual(bars({a:5,b:5}, 'lower'), {a:1,b:1});
+// 대결형 비교: 승자·배수·범위 겹침과 막대 길이
+assert.deepEqual(duel(2240, 3283, 'higher', [2000,2500], [3000,3600]), {winner:'b', ratio:3283/2240, overlap:false});
+assert.deepEqual(duel(4.3, 5.1, 'lower', [3.8,5.2], [5.1,5.2]), {winner:'a', ratio:5.1/4.3, overlap:true});
+assert.deepEqual(duel(1, 1, 'higher', null, null), {winner:null, ratio:1, overlap:false});
+assert.deepEqual(duel(null, 3, 'higher', null, null), {winner:null, ratio:null, overlap:false});
+assert.equal(duel(0, 3, 'lower', null, null).ratio, null);
+assert.equal(duelBar(4), 1); assert.equal(duelBar(1), 0); assert.equal(duelBar(null), 0);
 // 새 UI가 기존 공개 집계값을 보존하고 실제 증거 파일로 연결하는지 검사한다.
 const context={window:{}};
 runInNewContext(readFileSync(new URL('../dashboard/data.js',import.meta.url),'utf8'),context);

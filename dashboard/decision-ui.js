@@ -18,7 +18,7 @@ const DecisionUI = (() => {
       evidenceNote:'Recorded pass/fail and missing values are preserved. Run values below are observations, not aggregate scores.',
       noRuns:'No runs for this selection.', pass:'Pass', fail:'Fail', status:'Main task', followup:'Follow-up task',
       empty:'No measurements yet.', comparisonNote:'Same metrics, separate models. Read the observed ranges before choosing; overlap is not proof of equivalence.',
-      notMeasured:'Not measured', followupCost:'Follow-up time is conditional on recorded successful runs.',
+      notMeasured:'Not measured', wins:'{name} {n} wins', times:'{name} {r}x', overlap:' · range overlap', same:'Same', duelNote:'Bar length is how many times better the winner is; it is full at 4x.', followupCost:'Follow-up time is conditional on recorded successful runs.',
     },
     ko: {
       expNotice:'다른 시점에 실행한 언어가 포함된 순위는 탐색적이다. Claude Code·모델 버전은 실험 README를 참조한다.',
@@ -37,7 +37,7 @@ const DecisionUI = (() => {
       evidenceNote:'기록된 합격·실패·미측정을 유지한다. 아래 값은 개별 run 관측이며 종합 점수가 아니다.',
       noRuns:'선택한 조건의 run이 없다.', pass:'합격', fail:'실패', status:'본 과제', followup:'후속 과제',
       empty:'아직 측정값이 없다.', comparisonNote:'같은 지표를 모델별로 분리해 비교한다. 관측 범위를 함께 확인한다. 범위가 겹친다고 동등성이 입증되는 것은 아니다.',
-      notMeasured:'미측정', followupCost:'기능 추가 시간은 성공 기록이 있는 run의 조건부 값이다.',
+      notMeasured:'미측정', wins:'{name} {n}승', times:'{name} {r}배', overlap:' · 범위 겹침', same:'동일', duelNote:'막대 길이는 승자가 몇 배 나은지 나타내며 4배에서 가득 찬다.', followupCost:'기능 추가 시간은 성공 기록이 있는 run의 조건부 값이다.',
     },
     ja: {
       expNotice:'別の時点で実行した言語を含む順位は探索的なものである。Claude Code とモデルのバージョンは実験 README を参照すること。',
@@ -53,7 +53,7 @@ const DecisionUI = (() => {
       issue:'既知の逸脱: Sonnet C++ の後続 run 1件はコピーされた CMake ビルドファイルのパス不一致で失敗した。失敗記録は維持し、言語の保守性だけに帰属させない。',
       report:'実験報告', source:'アプリソース', raw:'生データ', csv:'測定CSV', deviations:'設計逸脱', evidenceNote:'合否と未測定をそのまま表示。以下は個々の観測値であり総合スコアではない。',
       noRuns:'この条件の run はない。', pass:'合格', fail:'不合格', status:'本課題', followup:'後続課題', empty:'測定値なし。',
-      comparisonNote:'同じ指標をモデル別に比較する。観測範囲の重なりは同等性の証明ではない。', notMeasured:'未測定', followupCost:'機能追加時間は成功記録のある run に限る。',
+      comparisonNote:'同じ指標をモデル別に比較する。観測範囲の重なりは同等性の証明ではない。', notMeasured:'未測定', wins:'{name} {n}勝', times:'{name} {r}倍', overlap:' · 範囲が重なる', same:'同じ', duelNote:'棒の長さは勝者が何倍優れているかを表し、4倍で満ちる。', followupCost:'機能追加時間は成功記録のある run に限る。',
     },
     zh: {
       expNotice:'包含在不同时间运行的语言的排名属于探索性结果。Claude Code 与模型版本请参阅实验 README。',
@@ -69,7 +69,7 @@ const DecisionUI = (() => {
       issue:'已知偏差：Sonnet C++ 的一次后续 run 因复制的 CMake 构建文件路径不匹配而失败。保留失败记录，不能仅归因于语言的可维护性。',
       report:'实验报告', source:'应用源码', raw:'原始记录', csv:'测量CSV', deviations:'设计偏差', evidenceNote:'保留通过、失败和未测量记录。以下是单次观测，不是综合分数。',
       noRuns:'所选条件没有 run。', pass:'通过', fail:'失败', status:'主任务', followup:'后续任务', empty:'暂无测量值。',
-      comparisonNote:'按模型分别比较相同指标。观测范围重叠不代表已证明等效。', notMeasured:'未测量', followupCost:'功能追加时间仅包含有成功记录的 run。',
+      comparisonNote:'按模型分别比较相同指标。观测范围重叠不代表已证明等效。', notMeasured:'未测量', wins:'{name} {n}胜', times:'{name} {r}倍', overlap:' · 范围重叠', same:'相同', duelNote:'条形长度表示胜者好多少倍，4倍时占满。', followupCost:'功能追加时间仅包含有成功记录的 run。',
     },
   };
   const keys = {
@@ -80,7 +80,7 @@ const DecisionUI = (() => {
     maintain:['followup_pass','followup_min','vulns','deps','loc','build_sec'],
   };
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  let env, selectedRun, showRepeats=false, selectedLanguage = 'go', pair = ['go','rust'], overviewModel;
+  let env, selectedRun, showRepeats=false, selectedLanguage = 'go', pair = ['go','rust'], overviewModel, pairModel, pairRepeats=false;
   const models = () => env.state.model === 'compare' ? env.B.models : env.B.models.filter(m => m.key === env.state.model);
   const activeKeys = () => env.state.preset === 'custom' ? Object.entries(env.weights()).filter(([,w]) => w>0).sort((a,b) => b[1]-a[1]).slice(0,6).map(([key]) => key) : keys[env.state.preset] || keys.balanced;
   const metric = key => env.B.metrics.find(m => m.key === key);
@@ -100,11 +100,6 @@ const DecisionUI = (() => {
     return `<td class="metric-cell"><button class="metric-value" aria-label="${esc(name(language))} · ${esc(model)} · ${esc(env.label(m))}: ${esc(env.fmt(m,s.median))}" data-evidence-language="${language}" data-evidence-model="${model}" data-metric="${key}">${esc(env.fmt(m,s.median))}${key === 'followup_pass' && language === 'cpp' && model === 'sonnet55' && issue() ? ' †' : ''}</button>${bar === null || bar === undefined ? '' : `<span class="value-bar" aria-hidden="true"><i style="width:${Math.max(2, Math.round(bar*100))}%"></i></span>`}` +
       (aggregate ? `<span class="observation">${key === 'cost_per_pass' ? `${s.passed}/${s.total} ${t.passed}` : `${key === 'pass_rate' ? s.passed : s.values.filter(v => v === 1).length}/${key === 'pass_rate' ? s.total : s.measured} ${t.passed}`}</span>` :
         `<span class="observation">${esc(t.range)}: ${esc(env.fmt(m,s.min))}–${esc(env.fmt(m,s.max))}<br>${s.measured}/${s.total} ${esc(t.measured)}</span><span class="observations" aria-hidden="true">${s.values.map(() => `<i class="observation-dot ${model}"></i>`).join('')}</span><span class="observation">${esc(t.observations)}: ${s.values.length ? s.values.map(v => esc(env.fmt(m,v))).join(' · ') : '—'}</span>`) + '</td>';
-  }
-  function table(languages) {
-    const ms = activeKeys().map(metric).filter(Boolean);
-    return `<div class="scroll"><table class="decision-table show-repeats"><thead><tr><th>${esc(env.t.lang)}</th>${ms.map(m => `<th>${esc(env.label(m))} ${m.better === 'higher' ? '↑' : '↓'}</th>`).join('')}</tr></thead><tbody>` +
-      languages.flatMap(l => models().map(md => `<tr><th scope="row">${esc(l.name)}${badge(l.key)}<span class="model-label">${esc(md.name)}</span></th>${ms.map(m => statCell(l.key,md.key,m.key)).join('')}</tr>`)).join('') + '</tbody></table></div>';
   }
   // 목적별 관측 표: 종합 점수 순으로 정렬하고, 칸마다 1위 대비 막대를 붙인다. 한 번에 한 모델만 보여 준다.
   function overviewTable(model) {
@@ -149,16 +144,55 @@ const DecisionUI = (() => {
     if (segEl) seg(segEl, models().map(m => [m.key,m.name]), model, k => { overviewModel=k; renderOverview(); });
     document.getElementById('showRepeats').onchange=e => { showRepeats=e.target.checked; renderOverview(); document.getElementById('showRepeats').focus({preventScroll:true}); };
   }
+  // 대결형 한 행: 지표 하나, 왼쪽 A 값, 가운데 축에서 나은 쪽으로 뻗는 막대, 오른쪽 B 값.
+  function duelValue(language, model, m, s, side) {
+    const dagger = m.key === 'followup_pass' && language === 'cpp' && model === 'sonnet55' && issue() ? ' †' : '';
+    const range = s.min === null || ['pass_rate','cost_per_pass','followup_pass'].includes(m.key) ? '' :
+      `<span class="observation duel-range">${esc(env.fmt(m,s.min))}–${esc(env.fmt(m,s.max))}</span>`;
+    return `<div class="duel-value duel-${side}"><button class="metric-value" aria-label="${esc(name(language))} · ${esc(model)} · ${esc(env.label(m))}: ${esc(env.fmt(m,s.median))}" data-evidence-language="${language}" data-evidence-model="${model}" data-metric="${m.key}">${esc(env.fmt(m,s.median))}${dagger}</button>${range}</div>`;
+  }
+  function duelPanel(model) {
+    const t=text(), fill=(tpl,vars) => Object.entries(vars).reduce((x,[k,v]) => x.replaceAll(`{${k}}`,v), tpl);
+    const [la,lb]=pair, ms=activeKeys().map(metric).filter(Boolean);
+    const rows=ms.map(m => {
+      const sa=Decision.summarize(env.B.runs,la,model,m.key), sb=Decision.summarize(env.B.runs,lb,model,m.key);
+      const range=s => s.min === null ? null : [s.min,s.max];
+      const d=Decision.duel(sa.median,sb.median,m.better,range(sa),range(sb));
+      return {m,sa,sb,d};
+    });
+    const wins={a:rows.filter(r => r.d.winner === 'a').length, b:rows.filter(r => r.d.winner === 'b').length};
+    const note=d => {
+      if (d.ratio === null && d.winner === null) return t.notMeasured;
+      if (d.winner === null) return t.same;
+      const who=name(d.winner === 'a' ? la : lb);
+      return (d.ratio === null ? who : fill(t.times,{name:who,r:d.ratio.toFixed(1)})) + (d.overlap ? t.overlap : '');
+    };
+    return `<p class="duel-summary"><strong>${esc(fill(t.wins,{name:name(la),n:wins.a}))}</strong> · <strong>${esc(fill(t.wins,{name:name(lb),n:wins.b}))}</strong></p>` +
+      `<div class="duel${pairRepeats ? ' show-repeats' : ''}"><div class="duel-head"><span>${esc(name(la))}${badge(la)}</span><span></span><span>${esc(name(lb))}${badge(lb)}</span></div>` +
+      rows.map(({m,sa,sb,d}) => {
+        const len=Math.round(Decision.duelBar(d.ratio)*100), cls=d.winner ? ` duel-win-${d.winner}` : '';
+        return `<div class="duel-row${cls}"><div class="duel-label">${esc(env.label(m))} ${m.better === 'higher' ? '↑' : '↓'}</div>` +
+          duelValue(la,model,m,sa,'a') +
+          `<div class="duel-axis" aria-hidden="true"><span class="duel-half duel-half-a"><i style="width:${d.winner === 'a' ? len : 0}%"></i></span><span class="duel-half duel-half-b"><i style="width:${d.winner === 'b' ? len : 0}%"></i></span></div>` +
+          duelValue(lb,model,m,sb,'b') + `<div class="duel-note">${esc(note(d))}</div></div>`;
+      }).join('') + '</div>';
+  }
   function renderPair() {
     const t=text(), panel=document.getElementById('pairPanel');
+    if (!models().some(m => m.key === pairModel)) pairModel=models()[0]?.key;
     const options=selected => env.B.languages.map(l => `<option value="${l.key}"${l.key === selected ? ' selected' : ''}>${esc(l.name)}</option>`).join('');
-    panel.innerHTML=`<h2>${esc(t.pair)}</h2><div class="pair-controls"><label>${esc(t.first)}<select id="pairA">${options(pair[0])}</select></label><label>${esc(t.second)}<select id="pairB">${options(pair[1])}</select></label></div><p class="note">${esc(t.comparisonNote)}</p>${table(pair.map(key => ({key,name:name(key)})))}`;
+    panel.innerHTML=`<h2>${esc(t.pair)}</h2><div class="pair-controls"><label>${esc(t.first)}<select id="pairA">${options(pair[0])}</select></label><label>${esc(t.second)}<select id="pairB">${options(pair[1])}</select></label>${models().length > 1 ? '<div class="seg pair-model" id="pairModelSeg"></div>' : ''}</div>` +
+      `<label class="repeat-toggle"><input type="checkbox" id="pairRepeats" ${pairRepeats ? 'checked' : ''}> ${esc(t.repeat)}</label><p class="note">${esc(t.comparisonNote)} ${esc(t.duelNote)}</p>${duelPanel(pairModel)}` +
+      (issue() && pairModel === 'sonnet55' && activeKeys().includes('followup_pass') && pair.includes('cpp') ? `<p class="issue-note">† ${esc(t.issue)}</p>` : '');
     ['pairA','pairB'].forEach((id,i) => document.getElementById(id).onchange = e => {
       const other=pair[i]; pair[i]=e.target.value;
       if (pair[0] === pair[1]) pair[1-i]=other;
       renderPair();
       document.getElementById(id).focus({preventScroll:true});
     });
+    const segEl=document.getElementById('pairModelSeg');
+    if (segEl) seg(segEl, models().map(m => [m.key,m.name]), pairModel, k => { pairModel=k; renderPair(); });
+    document.getElementById('pairRepeats').onchange=e => { pairRepeats=e.target.checked; renderPair(); document.getElementById('pairRepeats').focus({preventScroll:true}); };
     bindValues(panel);
   }
   function renderEvidence() {

@@ -32,6 +32,27 @@
 .reason strong { font-weight:600; }
 .pair-controls { display:flex; flex-wrap:wrap; gap:12px; margin:12px 0; }
 .pair-controls label { display:flex; gap:8px; align-items:center; font-size:13px; }
+/* 대결형 비교: 가운데 축에서 나은 쪽으로 막대가 뻗는다. */
+.duel-summary { font-size:16px; margin:10px 0; }
+.duel-head, .duel-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(84px,1.3fr) minmax(0,1fr); column-gap:10px; align-items:center; }
+.duel-head { font-weight:600; font-size:13px; padding-bottom:6px; border-bottom:1px solid var(--axis); }
+.duel-head span:first-child, .duel-value.duel-a { text-align:right; }
+.duel-head span:last-child { text-align:right; }
+.duel-row { padding:10px 0; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+.duel-label { grid-column:1 / -1; font-size:12px; color:var(--ink-2); text-align:center; margin-bottom:4px; overflow-wrap:anywhere; }
+.duel-value { min-width:0; overflow-wrap:anywhere; }
+.duel-value.duel-a .metric-value { margin-left:auto; text-align:right; }
+.duel-value.duel-b { text-align:right; }
+.duel-value.duel-b .metric-value { margin-left:auto; }
+.duel-axis { display:grid; grid-template-columns:1fr 1fr; height:10px; }
+.duel-half { background:var(--border); display:flex; overflow:hidden; }
+.duel-half-a { justify-content:flex-end; border-radius:5px 0 0 5px; border-right:1px solid var(--axis); }
+.duel-half-b { border-radius:0 5px 5px 0; }
+.duel-half i { display:block; height:100%; background:var(--accent); }
+.duel-note { grid-column:1 / -1; text-align:center; font-size:12px; color:var(--ink-2); margin-top:4px; }
+.duel:not(.show-repeats) .duel-range { display:none; }
+.pair-model { align-self:center; }
+
 .issue-note { padding:10px 12px; border-left:3px solid var(--accent); background:var(--warn-bg); font-size:13px; }
 .evidence-links { display:flex; gap:8px 18px; flex-wrap:wrap; margin:12px 0; }
 .run-values { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px 16px; margin-top:12px; }
