@@ -76,6 +76,28 @@ PRICE_TIERS=""
         ok = subprocess.run(["bash", "-c", 'BASE="$1"; source "$BASE/common.sh"; harness_intact', "-", base])
         self.assertEqual(ok.returncode, 0)
 
+    def test_setup_ignores_scripts_pycache(self):
+        # langreg를 import하면 scripts/__pycache__/가 생긴다. setup.sh는 그 디렉터리가 있어도 끝까지 돌아야 한다(EXP-002 언어 셋).
+        cache = os.path.join(self.skill, "scripts", "__pycache__")
+        os.makedirs(cache)
+        with open(os.path.join(cache, "langreg.cpython-314.pyc"), "wb") as f:
+            f.write(b"\0")
+        assets = os.path.join(self.skill, "assets")
+        for l in ("java", "php", "csharp"):
+            with open(os.path.join(assets, f"PROMPT-{l}.md"), "w") as f:
+                f.write(f"test prompt {l}\n")
+            md5 = subprocess.run(["md5", "-r", f"PROMPT-{l}.md"], cwd=assets,
+                                 capture_output=True, text=True, check=True).stdout
+            with open(os.path.join(assets, "checksums.md5"), "a") as f:
+                f.write(md5)
+        r = self.run_setup(langs="java php csharp")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("OK:", r.stdout)
+        base = os.path.join(self.home, "experiments", "langbench-exp901")
+        self.assertTrue(os.path.isfile(os.path.join(base, "langreg.py")))
+        self.assertTrue(os.path.isfile(os.path.join(base, "languages", "java.json")))
+        self.assertFalse(os.path.exists(os.path.join(base, "__pycache__")))
+
     def test_setup_rejects_tampered_hurl(self):
         path = os.path.join(self.skill, "assets", "harness-hurl", "auth.hurl")
         with open(path, "a") as f:

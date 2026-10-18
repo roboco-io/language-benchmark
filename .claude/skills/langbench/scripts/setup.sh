@@ -49,7 +49,8 @@ for l in $LANGS; do
   [ -f "$SKILL/assets/PROMPT-$l.md" ] && grep -q " PROMPT-$l.md\$" "$SKILL/assets/checksums.md5" \
     || { echo "PROMPT-$l.md 없음 또는 checksums.md5에 미등록" >&2; exit 1; }
 done
-cp "$SKILL"/scripts/* "$BASE/"
+# 일반 파일만 복사한다. langreg를 import하면 scripts/__pycache__/가 생기는데, 디렉터리를 cp하면 set -e에서 중단된다.
+find "$SKILL/scripts" -maxdepth 1 -type f -exec cp {} "$BASE/" \;
 # 하네스 사본의 langreg.py·scan_lib.sh가 <스크립트 디렉터리>/languages에서 레지스트리를 찾는다
 rm -rf "$BASE/languages"; cp -r "$SKILL/languages" "$BASE/languages"
 
