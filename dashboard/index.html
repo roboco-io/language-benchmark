@@ -157,7 +157,7 @@ const T = {
     advanced: "Advanced: set weights by hand",
     presets: { prereg: "Pre-registered (24 equal)", balanced: "Balanced", speed: "Build speed", perf: "Performance & infra cost", maintain: "Maintenance & security", custom: "Custom" },
     presetDesc: {
-      prereg: "All 24 metrics weighted equally. This is the rule fixed before EXP-001 and the basis of its verdict. Most metrics describe the output, so it favours languages that are strong at runtime.",
+      prereg: "All 24 metrics weighted equally. This is the rule fixed before EXP-001 and the basis of its verdict. Metrics hidden as constant are left out here, so score values differ from the report while the ranking is the same. Most metrics describe the output, so it favours languages that are strong at runtime.",
       balanced: "Build speed, performance & infra cost, and maintenance & security each contribute one third.",
       speed: "Which language gets the feature built fastest and cheapest? Build time 3, cost per pass 2, follow-up time 2, tokens 1, follow-up tokens 1.",
       perf: "Which language serves the same traffic with fewer servers? Throughput 3, p95 2, peak memory 2, p99, idle memory, cold start, image size, soak memory growth, error rates 1 each.",
@@ -185,7 +185,7 @@ const T = {
     advanced: "고급: 가중치 직접 조정",
     presets: { prereg: "사전 등록(24개 균등)", balanced: "균형", speed: "구현 속도", perf: "성능·인프라 비용", maintain: "유지보수·보안", custom: "직접 조정" },
     presetDesc: {
-      prereg: "24개 지표를 모두 같은 무게로 더한다. EXP-001 실행 전에 고정한 판정 기준이다. 지표 대부분이 결과물 지표라 런타임 성능이 좋은 언어에 유리하다.",
+      prereg: "24개 지표를 모두 같은 무게로 더한다. EXP-001 실행 전에 고정한 판정 기준이다. 화면에서는 상수라 숨긴 지표를 빼고 계산하므로 점수 값은 보고서와 다르지만 순위는 같다. 지표 대부분이 결과물 지표라 런타임 성능이 좋은 언어에 유리하다.",
       balanced: "구현 속도, 성능·인프라 비용, 유지보수·보안 세 묶음이 각각 1/3씩 기여한다.",
       speed: "어떤 언어가 기능을 가장 빠르고 싸게 만드는가. 구현 시간 3, 합격당 비용 2, 기능 추가 시간 2, 토큰 1, 기능 추가 토큰 1.",
       perf: "어떤 언어가 같은 트래픽을 더 적은 서버로 처리하는가. 처리량 3, p95 2, 최대 메모리 2, p99·유휴 메모리·콜드 스타트·이미지 크기·장시간 메모리 증가·에러율 각 1.",
@@ -213,7 +213,7 @@ const T = {
     advanced: "詳細: 重みを手動で設定",
     presets: { prereg: "事前登録(24指標均等)", balanced: "バランス", speed: "実装スピード", perf: "性能・インフラコスト", maintain: "保守・セキュリティ", custom: "手動" },
     presetDesc: {
-      prereg: "24指標をすべて同じ重みで合算する。EXP-001 実行前に固定した判定基準である。指標の多くが成果物指標なので、ランタイム性能の高い言語に有利になる。",
+      prereg: "24指標をすべて同じ重みで合算する。EXP-001 実行前に固定した判定基準である。画面では定数として隠した指標を除いて計算するため、スコア値はレポートと異なるが順位は同じである。指標の多くが成果物指標なので、ランタイム性能の高い言語に有利になる。",
       balanced: "実装スピード、性能・インフラコスト、保守・セキュリティの3グループがそれぞれ1/3ずつ寄与する。",
       speed: "どの言語が機能を最も速く安く作れるか。実装時間 3、合格あたりコスト 2、機能追加時間 2、トークン 1、機能追加トークン 1。",
       perf: "どの言語が同じトラフィックを少ないサーバーで処理できるか。スループット 3、p95 2、最大メモリ 2、p99・アイドルメモリ・コールドスタート・イメージサイズ・長時間メモリ増加・エラー率 各 1。",
@@ -241,7 +241,7 @@ const T = {
     advanced: "高级:手动设置权重",
     presets: { prereg: "预注册(24 项等权)", balanced: "均衡", speed: "实现速度", perf: "性能与基础设施成本", maintain: "维护与安全", custom: "自定义" },
     presetDesc: {
-      prereg: "24 项指标等权相加。这是 EXP-001 运行前固定的判定标准。多数指标属于产出物指标,因此对运行时性能好的语言有利。",
+      prereg: "24 项指标等权相加。这是 EXP-001 运行前固定的判定标准。页面计算时会排除因数值相同而隐藏的指标,因此得分数值与报告不同,但排名相同。多数指标属于产出物指标,因此对运行时性能好的语言有利。",
       balanced: "实现速度、性能与基础设施成本、维护与安全三组各占 1/3。",
       speed: "哪种语言能最快、最便宜地完成功能?实现时间 3、每次通过成本 2、新增功能时间 2、token 1、新增功能 token 1。",
       perf: "哪种语言能用更少的服务器承载同样的流量?吞吐量 3、p95 2、峰值内存 2,p99、空闲内存、冷启动、镜像大小、长时间内存增长、错误率各 1。",
@@ -317,8 +317,9 @@ function seg(el, items, current, onPick) {
 const cellsOf = (model) => Object.fromEntries(B.languages.map((l) => [l.key, B.cells[l.key][model]]));
 const cellsFor = () => cellsOf(state.model);
 const [MA, MB] = B.models.map((m) => m.key); // 비교 모드의 a(Sonnet), b(Opus)
-// 현재 보기에서 모든 언어가 같은 값인 지표(표·run별 상세에서 숨김). 종합 점수 계산에는 가중치대로 그대로 쓴다.
+// 현재 보기에서 모든 언어가 같은 값인 지표. 표·run별 상세에서 숨기고 종합 점수에서도 뺀다(순위 정보가 없고 점수 차만 줄인다).
 const hiddenKeys = () => Score.constantMetrics(compare() ? [cellsOf(MA), cellsOf(MB)] : [cellsFor()], metrics);
+const effWeights = () => { const h = hiddenKeys(); return Object.fromEntries(Object.entries(state.weights).map(([k, w]) => [k, h.includes(k) ? 0 : w])); };
 
 function renderText() {
   document.documentElement.lang = state.ui === "zh" ? "zh-CN" : state.ui;
@@ -338,7 +339,7 @@ function renderMatrix() {
   if (compare()) return renderCompare(shown, hiddenNote);
   const cells = cellsFor();
   const langs = B.languages;
-  const score = Score.composite(cells, metrics, state.weights);
+  const score = Score.composite(cells, metrics, effWeights());
   const groups = ["process", "product", "maintain"].filter((g) => shown.some((m) => m.group === g));
   let h = '<thead><tr class="grp"><th class="lang"></th><th></th>';
   for (const g of groups) h += `<th colspan="${shown.filter((m) => m.group === g).length}">${t().grp[g]}</th>`;
@@ -388,7 +389,7 @@ function renderMatrix() {
 function renderCompare(shown, hiddenNote) {
   const A = cellsOf(MA), Bc = cellsOf(MB);
   const langs = B.languages;
-  const sa = Score.composite(A, metrics, state.weights), sb = Score.composite(Bc, metrics, state.weights);
+  const sa = Score.composite(A, metrics, effWeights()), sb = Score.composite(Bc, metrics, effWeights());
   const ra = Score.ranks(sa), rb = Score.ranks(sb);
   const nameA = B.models[0].name, nameB = B.models[1].name;
   const groups = ["process", "product", "maintain"].filter((g) => shown.some((m) => m.group === g));
@@ -437,7 +438,7 @@ function renderRank() {
   card.hidden = !compare();
   if (!compare()) return;
   const svg = document.getElementById("rank");
-  const sa = Score.composite(cellsOf(MA), metrics, state.weights), sb = Score.composite(cellsOf(MB), metrics, state.weights);
+  const sa = Score.composite(cellsOf(MA), metrics, effWeights()), sb = Score.composite(cellsOf(MB), metrics, effWeights());
   const ra = Score.ranks(sa), rb = Score.ranks(sb);
   const n = B.languages.length, rowH = 36, top = 34;
   const W = Math.max(svg.clientWidth || 600, 320), H = top + rowH * n;
