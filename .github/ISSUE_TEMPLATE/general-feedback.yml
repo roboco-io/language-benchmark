@@ -1,0 +1,35 @@
+name: "의견·질문 / Feedback or question"
+description: "실험 방법, 결과 해석, 활용 사례에 대한 의견이나 질문 / Thoughts or questions about the method, the interpretation, or how you use the results"
+title: "[의견] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        이 벤치마크를 어떻게 읽고 쓰셨는지 듣고 싶습니다. 실험 설계에 대한 의견, 결과 해석에 대한 질문, 실제로 언어를 고를 때 도움이 됐는지 등 무엇이든 좋습니다.
+        We would like to hear how you read and use this benchmark: comments on the design, questions about the results, or whether it helped you pick a language.
+
+        **API 키·토큰 등 비밀값은 붙이지 마세요. / Do not paste API keys or other secrets.**
+  - type: dropdown
+    id: topic
+    attributes:
+      label: "주제 / Topic"
+      options:
+        - "실험 설계·지표 / Experiment design and metrics"
+        - "결과 해석 / Interpreting the results"
+        - "활용 사례·도움이 됐는지 / How you used it"
+        - "다음 실험 아이디어 / Ideas for next experiments"
+        - "기타 / Other"
+    validations:
+      required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: "내용 / Details"
+    validations:
+      required: true
+  - type: input
+    id: context
+    attributes:
+      label: "관련 실험·화면 (선택) / Related experiment or page (optional)"
+      placeholder: "EXP-001 · 두 언어 비교"

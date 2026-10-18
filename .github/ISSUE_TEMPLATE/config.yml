@@ -1,5 +1,8 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: "라이브 대시보드 / Live dashboard"
     url: https://roboco.io/language-benchmark/
     about: "최신 결과를 먼저 확인해 주세요 / Check the latest results first"
+  - name: "자매 벤치마크: 모델·에이전트 비교 / Sister benchmark: models and agents"
+    url: https://roboco.io/coding-agent-benchmark/
+    about: "어떤 모델·에이전트 조합이 좋은지에 대한 피드백은 자매 리포로 / Feedback on model and agent choice goes to the sister repo"

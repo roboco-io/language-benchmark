@@ -29,7 +29,7 @@ body:
         - "구현 시간·iteration 등 과정 측정값 / Build-process measurements"
         - "런타임 속도·메모리·안정성·이미지 등 결과물 측정값 / Runtime and product measurements"
         - "토큰·환산 비용 / Tokens or estimated cost"
-        - "실험 조건(스택, 워커 설정, Docker 리소스 제한, 부하 시나리오 등) / Setup"
+        - "실험 조건(스택, 워커 설정, 런타임 측정 환경(Fargate Spot·Graviton4·2 vCPU·1 GiB), 부하 시나리오 등) / Setup"
         - "채점 방식(Hurl 정본·게이트) / Grading"
         - "기타 / Other"
     validations:

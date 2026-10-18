@@ -1,0 +1,50 @@
+name: "대시보드 버그·사용성 / Dashboard bug or usability"
+description: "대시보드가 잘못 표시되거나 읽기 어려운 부분 / Something on the dashboard is broken or hard to read"
+title: "[대시보드] "
+labels: ["dashboard"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        https://roboco.io/language-benchmark/ 에서 겪은 문제나 알아보기 어려운 부분을 알려 주세요. 측정값 자체가 틀렸다고 보면 "결과 이의 제기" 템플릿을 써 주세요.
+        Tell us what broke or what was hard to read on the dashboard. If you think a measured value itself is wrong, use the "Result dispute" template instead.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: "유형 / Type"
+      options:
+        - "표시 오류(깨짐·누락·잘못된 숫자 표시) / Rendering bug"
+        - "알아보기 어려움(용어·배치·차트) / Hard to read or understand"
+        - "기능 제안 / Feature idea"
+        - "기타 / Other"
+    validations:
+      required: true
+  - type: dropdown
+    id: section
+    attributes:
+      label: "위치 / Section"
+      multiple: true
+      options:
+        - "목적 선택·가중치 / Purpose and weights"
+        - "목적에 따른 핵심 관측 / Key observations"
+        - "상대적인 강점과 부담 / Strengths and burdens"
+        - "두 언어 비교 / Two-language comparison"
+        - "언어 × 지표 표 / Language × metric matrix"
+        - "모델별 순위 / Ranking by model"
+        - "run 증거·run별 상세 / Run evidence and details"
+        - "기타 / Other"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: "무엇이 문제인가요 / What happened"
+      description: "본 것과 기대한 것을 함께 적어 주세요. 스크린샷이 있으면 붙여 주세요 / What you saw and what you expected; screenshots help"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: "환경 (선택) / Environment (optional)"
+      description: "브라우저, 화면 크기(모바일/데스크톱), 대시보드 표시 언어, 라이트·다크 모드 / Browser, screen size, UI language, light or dark mode"
+      placeholder: "Safari iOS · 모바일 · 한국어 · 다크"

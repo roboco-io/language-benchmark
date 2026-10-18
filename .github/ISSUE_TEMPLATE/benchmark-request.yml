@@ -14,7 +14,8 @@ body:
     id: language
     attributes:
       label: "언어 / Language"
-      placeholder: "Kotlin, Java, C#, Elixir ..."
+      description: "Java·PHP·C#은 다음 실험(EXP-002)으로 준비 중입니다 / Java, PHP and C# are already planned for EXP-002"
+      placeholder: "Kotlin, Elixir, Ruby, Swift ..."
     validations:
       required: true
   - type: textarea
