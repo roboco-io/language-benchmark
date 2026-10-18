@@ -13,7 +13,7 @@
   "toolchain": [
     {
       "name": "java",
-      "bin": "/opt/homebrew/opt/openjdk@25/bin/java",
+      "bin": "java",
       "args": [
         "-version"
       ]
@@ -40,13 +40,9 @@
     "required_key": "results",
     "ok_rc": "0 1",
     "argv": [
-      "osv-scanner",
-      "scan",
-      "source",
-      "--format",
-      "json",
-      "-L",
-      "pom.xml"
+      "bash",
+      "-c",
+      "mvn -q -B -DoutputFormat=json -DoutputName=bom org.cyclonedx:cyclonedx-maven-plugin:2.9.1:makeBom 1>&2 && osv-scanner scan source --format json --allow-no-lockfiles -L target/bom.json"
     ]
   },
   "deps": {

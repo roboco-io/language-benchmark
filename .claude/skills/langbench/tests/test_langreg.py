@@ -78,6 +78,36 @@ class LangregTest(unittest.TestCase):
             open(os.path.join(d, "requirements.txt"), "w").close()
             self.assertIn("-r requirements.txt", self.run_cli("shell", "python", d))
 
+    def test_shell_java_scans_maven_sbom(self):
+        # java 스캐너: Maven(CycloneDX)이 부모 BOM·전이 의존성까지 해석한 target/bom.json을 osv-scanner가 읽는다.
+        # mvn 출력은 표준 오류로 가야 한다(표준 출력은 보고서 파일이 된다). 가짜 mvn·osv-scanner로 순서와 인자만 확인한다.
+        with tempfile.TemporaryDirectory() as d:
+            src, fbin = os.path.join(d, "src"), os.path.join(d, "bin")
+            os.makedirs(src); os.makedirs(fbin)
+            with open(os.path.join(fbin, "mvn"), "w") as f:
+                f.write('#!/bin/bash\necho "mvn $*"\nmkdir -p target && echo "{}" > target/bom.json\n')
+            with open(os.path.join(fbin, "osv-scanner"), "w") as f:
+                f.write('#!/bin/bash\n[ -f target/bom.json ] || exit 9\necho "{\\"args\\": \\"$*\\"}"\n')
+            for n in ("mvn", "osv-scanner"):
+                os.chmod(os.path.join(fbin, n), 0o755)
+            r = subprocess.run(["bash", "-c", f'eval "$(python3 {SCRIPT} shell java "$1")"; cd "$1" && "${{LR_SCAN_ARGV[@]}}"', "-", src],
+                               capture_output=True, text=True, env=dict(os.environ, PATH=fbin + ":" + os.environ["PATH"]))
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertIn("org.cyclonedx:cyclonedx-maven-plugin:2.9.1:makeBom", r.stderr)
+            args = json.loads(r.stdout)["args"]
+            self.assertIn("-L target/bom.json", args)
+            self.assertIn("--allow-no-lockfiles", args)
+
+    def test_shell_php_reports_abandoned_without_failing(self):
+        # Composer 기본값(audit.abandoned=fail)이면 버려진 패키지만 있어도 0이 아닌 코드로 끝나 보고서가 버려진다.
+        out = self.run_cli("shell", "php", "/tmp/src")
+        self.assertIn("LR_SCAN_ARGV=(composer audit --format=json --locked --abandoned=report)", out)
+        self.assertIn("LR_SCAN_OK_RC='0 1'", out)
+
+    def test_java_toolchain_uses_path_java(self):
+        # 기록되는 JDK는 bench.env가 PATH에 올린 java여야 한다(절대 경로면 PATH 설정 누락을 못 잡는다).
+        self.assertEqual(langreg.get("java")["toolchain"][0]["bin"], "java")
+
     def test_shell_union_matches_legacy(self):
         out = self.run_cli("shell", "go", "/tmp/src")
         v = dict(l.split("=", 1) for l in out.splitlines() if l.startswith(("LR_LOC_EXCLUDE", "LR_HINTS")))

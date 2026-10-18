@@ -142,6 +142,18 @@ class RuntimeParse(unittest.TestCase):
         self.assertEqual(runtime_parse.vulns({"dotnet": net, "trivy": trivy}), 2)
         self.assertEqual(runtime_parse.vulns({"composer": comp, "trivy": trivy}), 2)
 
+    def test_vulns_osv_spring_boot_sbom_fixture(self):
+        # 실제 보고서를 줄인 고정물: Spring Boot 3.2.0 + jackson-databind 2.9.8 pom을 CycloneDX(Maven 해석)로 SBOM을 만든 뒤
+        # osv-scanner 2.7.0으로 스캔한 결과(2026-10-18). 부모 BOM이 정한 버전(tomcat·logback)도 잡혀야 한다.
+        path = pathlib.Path(__file__).resolve().parent / "fixtures" / "scanners" / "osv-spring-boot.json"
+        osv = json.loads(path.read_text())
+        names = {p["package"]["name"] for r in osv["results"] for p in r["packages"]}
+        self.assertIn("org.apache.tomcat.embed:tomcat-embed-core", names)
+        self.assertEqual(runtime_parse.vulns({"osv": osv}), 6)
+        # trivy가 같은 CVE를 보고하면 한 묶음으로 센다.
+        trivy = {"Results": [{"Vulnerabilities": [{"VulnerabilityID": "CVE-2020-8840", "References": []}]}]}
+        self.assertEqual(runtime_parse.vulns({"osv": osv, "trivy": trivy}), 6)
+
     def test_registry_kinds_and_formats_match_parsers(self):
         import langreg
         self.assertEqual(langreg.DEPS_KINDS, set(runtime_parse.DEPS_BY_KIND))

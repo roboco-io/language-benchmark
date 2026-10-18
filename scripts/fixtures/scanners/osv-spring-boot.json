@@ -1,0 +1,77 @@
+{
+  "results": [
+    {
+      "source": {
+        "path": "target/bom.json",
+        "type": "sbom"
+      },
+      "packages": [
+        {
+          "package": {
+            "name": "com.fasterxml.jackson.core:jackson-databind",
+            "version": "2.9.8",
+            "ecosystem": "Maven"
+          },
+          "vulnerabilities": [
+            {
+              "id": "GHSA-27xj-rqx5-2255",
+              "aliases": [
+                "CVE-2020-11619"
+              ]
+            },
+            {
+              "id": "GHSA-288c-cq4h-88gq",
+              "aliases": [
+                "CVE-2020-25649"
+              ]
+            },
+            {
+              "id": "GHSA-4w82-r329-3q67",
+              "aliases": [
+                "CVE-2020-8840"
+              ]
+            }
+          ]
+        },
+        {
+          "package": {
+            "name": "ch.qos.logback:logback-core",
+            "version": "1.4.11",
+            "ecosystem": "Maven"
+          },
+          "vulnerabilities": [
+            {
+              "id": "GHSA-25qh-j22f-pwp8",
+              "aliases": [
+                "CVE-2025-11226"
+              ]
+            }
+          ]
+        },
+        {
+          "package": {
+            "name": "org.apache.tomcat.embed:tomcat-embed-core",
+            "version": "10.1.16",
+            "ecosystem": "Maven"
+          },
+          "vulnerabilities": [
+            {
+              "id": "GHSA-23hv-mwm6-g8jf",
+              "aliases": [
+                "BIT-tomcat-2025-55668",
+                "CVE-2025-55668"
+              ]
+            },
+            {
+              "id": "GHSA-25xr-qj8w-c4vf",
+              "aliases": [
+                "BIT-tomcat-2025-53506",
+                "CVE-2025-53506"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

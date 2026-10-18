@@ -36,7 +36,8 @@
       "composer",
       "audit",
       "--format=json",
-      "--locked"
+      "--locked",
+      "--abandoned=report"
     ]
   },
   "deps": {

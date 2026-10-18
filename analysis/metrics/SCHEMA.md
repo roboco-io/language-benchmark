@@ -95,8 +95,8 @@ EXP-001 실행을 시작한 뒤에는 이 기본값을 바꾸지 않는다. 결�
 - pip-audit: `dependencies[].vulns[].id`와 `aliases`
 - govulncheck: JSON 스트림의 `osv.id`와 `osv.aliases`. 호출 경로가 있는 `finding`의 osv만 센다. 종료 코드가 0·3이 아니거나 스트림에 `config` 메시지가 없으면 보고서가 없는 것으로 본다(빈 칸)
 - cargo audit: `vulnerabilities.list[].advisory.id`와 `aliases`
-- osv-scanner(java, `osv.json`): `results[].packages[].vulnerabilities[]`의 `id`와 `aliases`. 종료 코드 0·1만 보고서로 인정한다
-- composer audit(php, `composer-audit.json`): `advisories`의 각 항목 `advisoryId`, `cve`, 출처 `sources[].remoteId`의 GHSA. 취약점이 없으면 `advisories`가 빈 배열이다. 종료 코드 0·1만 인정한다
+- osv-scanner(java, `osv.json`): `results[].packages[].vulnerabilities[]`의 `id`와 `aliases`. `pom.xml`을 osv-scanner가 직접 읽으면 부모 POM(`spring-boot-starter-parent`)이 정한 버전을 해석하지 못해 결과가 비는 경우가 있다(`<relativePath/>`가 없는 pom에서 2026-10-18 확인). 그래서 먼저 Maven이 CycloneDX 플러그인(`cyclonedx-maven-plugin` 2.9.1 `makeBom`)으로 부모 BOM과 전이 의존성까지 해석한 `target/bom.json`을 만들고, osv-scanner가 그 SBOM을 스캔한다. 테스트 범위(`test` scope) 의존성은 SBOM에 들어가지 않는다. Maven이 실패하면 보고서가 없는 것으로 본다(빈 칸). 종료 코드 0·1만 보고서로 인정한다
+- composer audit(php, `composer-audit.json`): `advisories`의 각 항목 `advisoryId`, `cve`, 출처 `sources[].remoteId`의 GHSA. 취약점이 없으면 `advisories`가 빈 배열이다. 버려진(abandoned) 패키지는 `--abandoned=report`로 보고서의 `abandoned`에만 적고 종료 코드에는 반영하지 않는다(Composer 기본값 `audit.abandoned=fail`에서는 버려진 패키지만 있어도 0이 아닌 코드로 끝난다). 따라서 종료 코드 1은 취약점이 있다는 뜻이며 0·1만 인정한다. `abandoned` 목록은 `vulns`에 세지 않는다
 - dotnet list package(csharp, `dotnet.json`): `projects[].frameworks[]`의 `topLevelPackages`·`transitivePackages`에 있는 `vulnerabilities[].advisoryurl` 끝의 GHSA ID
 
 **`wall_min`.** `driver.log`의 run 구간(`=== RUN <run> (…) start:`부터 `=== RUN <run> finished:`까지)을 모두 합친 시간이다(분, 소수 첫째 자리). 재개된 run은 구간마다 더하고 마지막 구간은 `pass` 행 종료 시각까지 센다. 앞 구간에 finished 줄이 없으면 빈 칸이다. 구독 한도로 보류된 시도(`=== RUN <run> held:` 줄 앞의 구간)는 처음부터 다시 돌리므로 버린다. 불합격 run은 빈 칸이다. `followup_min`도 `<run>-fu` 구간에 같은 규칙을 쓴다.
