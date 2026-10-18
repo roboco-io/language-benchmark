@@ -20,9 +20,21 @@
 ## 실험 결과
 
 <!-- RESULTS:BEGIN -->
-아직 완료된 실험이 없다. 첫 실험 EXP-001(5개 언어 × 2개 모델 × 3회)은 [로드맵](ROADMAP.md)을 참조한다.
+<!-- 이 블록은 scripts/update_readme_results.py가 experiments/*/report.md에서 자동 생성한다. 직접 수정 금지. -->
+
+| 실험 | 가설 | 판정 | 클라이언트 |
+|------|------|------|------|
+| [EXP-001](experiments/001-five-language-realworld/report.md) 5개 언어 RealWorld 백엔드 Ralph 루프 | L-01: 같은 RealWorld 백엔드 과제에서 바이브 코딩 적합성(만드는 과정 지표와 결과물 지표의 종합 점수)은 구현 언어(TypeScript, Python, Go, Rust, C++) 사이에 차이가 있으며, 그 순위는 Sonnet 5.5와 Opus 5.5에서 같다. | **부분 검증** | Claude Code 2.1.302 |
+
+**EXP-001 — 5개 언어 RealWorld 백엔드 Ralph 루프** (부분 검증)  
+언어 간 종합 점수 차이는 관측됐지만(Go는 두 모델 모두 상위 2위, Python은 두 모델 모두 최하위) 1위가 모델마다 달라(Sonnet 5.5 Rust, Opus 5.5 Go) 순위가 같다는 부분은 지지되지 않았고, 30 run 모두 합격해 합격률로는 언어를 구별하지 못했다. → [보고서](experiments/001-five-language-realworld/report.md)
+
 <!-- RESULTS:END -->
 
 ### 종합 인사이트
 
-아직 결과가 없다.
+EXP-001(2026-10-18, 5 언어 × Sonnet 5.5·Opus 5.5 × 3회)에서 RealWorld 백엔드는 다섯 언어 모두 두 모델에서 30/30 합격했고 29건이 첫 iteration에 끝났다. 따라서 이 과제 수준에서는 언어가 완주 가능성을 가르지 않았고, 차이는 구현 비용·시간과 결과물의 런타임 특성에서 나타났다.
+
+24개 지표 균등 가중 종합 점수에서 Go는 두 모델 모두 상위 2위 안(Sonnet 2위, Opus 1위)이었고 Python은 두 모델 모두 최하위였다. 1위는 모델마다 달랐다(Sonnet Rust, Opus Go). C++은 구현 시간과 비용이 가장 컸지만 메모리 사용이 가장 작았고, Python·TypeScript는 구현은 빠르고 싸지만 처리량·이미지 크기·취약점 수에서 뒤졌다. Opus 5.5는 Sonnet 5.5보다 추정 비용이 약 2배, 구현 시간이 약 1.8배였고 본 과제 합격률 이득은 없었다.
+
+한계: 과제 하나, 셀당 3회이며 종합 점수는 가중치 선택에 민감하다. 런타임 지표는 AWS Fargate Spot(Graviton4, 2 vCPU)에서 측정했다. 자세한 근거는 [EXP-001 보고](experiments/001-five-language-realworld/report.md)에 있다.

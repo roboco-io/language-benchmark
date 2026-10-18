@@ -20,9 +20,21 @@
 ## 実験結果
 
 <!-- RESULTS:BEGIN -->
-完了した実験はまだない。最初の実験 EXP-001(5言語 × 2モデル × 3回)は[ロードマップ](ROADMAP.md)を参照。
+<!-- このブロックは scripts/update_readme_results.py が experiments/*/report.md から自動生成する（翻訳は scripts/readme_i18n.json）。直接編集禁止。 -->
+
+| 実験 | 仮説 | 判定 | クライアント |
+|------|------|------|------|
+| [EXP-001](experiments/001-five-language-realworld/report.md) 5言語 RealWorld バックエンド Ralph ループ | L-01: 同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は実装言語（TypeScript、Python、Go、Rust、C++）の間で差があり、その順位は Sonnet 5.5 と Opus 5.5 で同じである。 | **部分検証** | Claude Code 2.1.302 |
+
+**EXP-001 — 5言語 RealWorld バックエンド Ralph ループ** (部分検証)  
+言語間の総合スコア差は観測された（Go は両モデルで上位2位以内、Python は両モデルで最下位）が、1位がモデルごとに異なり（Sonnet 5.5 は Rust、Opus 5.5 は Go）順位が同じという部分は支持されず、30 run すべて合格したため合格率では言語を区別できなかった。 → [レポート](experiments/001-five-language-realworld/report.md)
+
 <!-- RESULTS:END -->
 
 ### 総合インサイト
 
-まだ結果はない。
+EXP-001（2026-10-18、5言語 × Sonnet 5.5・Opus 5.5 × 3回）では、RealWorld バックエンドは5言語すべてが両モデルで 30/30 合格し、29件が最初の iteration で完了した。この課題の難度では言語が完走の可否を分けず、差は実装コスト・時間と成果物のランタイム特性に現れた。
+
+24指標均等加重の総合スコアでは、Go は両モデルで上位2位以内（Sonnet 2位、Opus 1位）、Python は両モデルで最下位だった。1位はモデルごとに異なった（Sonnet は Rust、Opus は Go）。C++ は実装時間とコストが最大だがメモリ使用は最小で、Python・TypeScript は実装が速く安い一方、スループット・イメージサイズ・脆弱性数で劣った。Opus 5.5 は Sonnet 5.5 より推定コストが約2倍、実装時間が約1.8倍で、本課題の合格率の上積みはなかった。
+
+限界：課題は1つ、セルあたり3回で、総合スコアは重みの選び方に敏感である。ランタイム指標は AWS Fargate Spot（Graviton4、2 vCPU）で測定した。根拠は [EXP-001 レポート](experiments/001-five-language-realworld/report.md) を参照。

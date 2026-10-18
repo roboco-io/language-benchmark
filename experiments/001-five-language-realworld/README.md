@@ -74,5 +74,7 @@
 - [x] 프롬프트·채점 정본 해시 확인(setup) — `runs/preflight-report.md`
 - [x] 채점기 경로·버전(`/opt/homebrew/bin/hurl` 8.0.1) — `runs/phase0.md`
 - [x] TS 기준선 재현 run(`sonnet55-typescript-0`): iteration 1 pass, 약 4.1분 — `runs/phase0.md`
-- [ ] 구독 한도 메시지 실제 문구 — 한도를 만나면 기록, 만나지 않으면 "미관측"
+- [x] 구독 한도 메시지 실제 문구 — 미관측(Phase 0·본 30 run·후속 30 run 모두 한도에 닿지 않음)
 - 증거: `runs/phase0.md`
+
+> 실행 후 추가(2026-10-18): 런타임 측정 환경은 실험자 결정으로 로컬 Docker에서 AWS Fargate Spot(Graviton4)으로 바뀌었다. 위 설계는 실행 전 고정본 그대로 두고, 변경 내용과 이유는 [report.md](report.md)와 [runs/deviations.md](runs/deviations.md)에 적었다. 측정 스크립트는 [fargate/](fargate/)에 있다.

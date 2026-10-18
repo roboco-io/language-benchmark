@@ -40,5 +40,26 @@
       }
     }
   },
-  "experiments": {}
+  "experiments": {
+    "EXP-001": {
+      "en": {
+        "name": "Five-language RealWorld backend Ralph loop",
+        "hypothesis": "On the same RealWorld backend task, vibe-coding suitability (a composite of process and output metrics) differs across implementation languages (TypeScript, Python, Go, Rust, C++), and the ranking is the same for Sonnet 5.5 and Opus 5.5.",
+        "verdict": "Partially supported",
+        "summary": "Composite scores differed by language (Go placed top two and Python last under both models), but the top language differed by model (Sonnet 5.5: Rust, Opus 5.5: Go), so the same-ranking part was not supported; all 30 runs passed, so pass rate did not separate languages."
+      },
+      "ja": {
+        "name": "5言語 RealWorld バックエンド Ralph ループ",
+        "hypothesis": "同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は実装言語（TypeScript、Python、Go、Rust、C++）の間で差があり、その順位は Sonnet 5.5 と Opus 5.5 で同じである。",
+        "verdict": "部分検証",
+        "summary": "言語間の総合スコア差は観測された（Go は両モデルで上位2位以内、Python は両モデルで最下位）が、1位がモデルごとに異なり（Sonnet 5.5 は Rust、Opus 5.5 は Go）順位が同じという部分は支持されず、30 run すべて合格したため合格率では言語を区別できなかった。"
+      },
+      "zh-CN": {
+        "name": "五种语言 RealWorld 后端 Ralph 循环",
+        "hypothesis": "在同一个 RealWorld 后端任务中，氛围编程适用性（构建过程指标与产出物指标的综合得分）在实现语言（TypeScript、Python、Go、Rust、C++）之间存在差异，且该排名在 Sonnet 5.5 与 Opus 5.5 中相同。",
+        "verdict": "部分验证",
+        "summary": "观察到语言间综合得分差异（Go 在两个模型中均进入前两名，Python 在两个模型中均为最后），但第一名因模型而异（Sonnet 5.5 为 Rust，Opus 5.5 为 Go），因此“排名相同”部分未获支持；30 个 run 全部通过，合格率无法区分语言。"
+      }
+    }
+  }
 }

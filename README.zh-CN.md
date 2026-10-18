@@ -20,9 +20,21 @@
 ## 实验结果
 
 <!-- RESULTS:BEGIN -->
-尚无已完成的实验。第一个实验 EXP-001(5 种语言 × 2 个模型 × 3 次)见[路线图](ROADMAP.md)。
+<!-- 此区块由 scripts/update_readme_results.py 根据 experiments/*/report.md 自动生成（翻译来自 scripts/readme_i18n.json）。请勿手动编辑。 -->
+
+| 实验 | 假设 | 判定 | 客户端 |
+|------|------|------|------|
+| [EXP-001](experiments/001-five-language-realworld/report.md) 五种语言 RealWorld 后端 Ralph 循环 | L-01: 在同一个 RealWorld 后端任务中，氛围编程适用性（构建过程指标与产出物指标的综合得分）在实现语言（TypeScript、Python、Go、Rust、C++）之间存在差异，且该排名在 Sonnet 5.5 与 Opus 5.5 中相同。 | **部分验证** | Claude Code 2.1.302 |
+
+**EXP-001 — 五种语言 RealWorld 后端 Ralph 循环** (部分验证)  
+观察到语言间综合得分差异（Go 在两个模型中均进入前两名，Python 在两个模型中均为最后），但第一名因模型而异（Sonnet 5.5 为 Rust，Opus 5.5 为 Go），因此“排名相同”部分未获支持；30 个 run 全部通过，合格率无法区分语言。 → [报告](experiments/001-five-language-realworld/report.md)
+
 <!-- RESULTS:END -->
 
 ### 综合洞察
 
-暂无结果。
+在 EXP-001（2026-10-18，5 种语言 × Sonnet 5.5、Opus 5.5 × 3 次）中，RealWorld 后端任务在两个模型下五种语言全部通过（30/30），其中 29 个 run 在第一次 iteration 完成。在这一任务难度下，语言并未决定能否完成，差异体现在实现成本、时间以及产出物的运行时特性上。
+
+在 24 项指标等权的综合得分中，Go 在两个模型下都进入前两名（Sonnet 第 2，Opus 第 1），Python 在两个模型下都是最后一名。第一名因模型而异（Sonnet 为 Rust，Opus 为 Go）。C++ 实现时间和成本最高，但内存占用最小；Python、TypeScript 实现快且便宜，但在吞吐量、镜像大小和漏洞数上落后。Opus 5.5 的估算成本约为 Sonnet 5.5 的 2 倍，实现时间约 1.8 倍，在本任务上没有合格率收益。
+
+局限：只有一个任务，每格 3 次，综合得分对权重选择敏感。运行时指标在 AWS Fargate Spot（Graviton4，2 vCPU）上测得。依据见 [EXP-001 报告](experiments/001-five-language-realworld/report.md)。
