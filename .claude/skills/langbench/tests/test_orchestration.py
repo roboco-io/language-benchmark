@@ -4,10 +4,14 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 
 from test_measure import FAKES, HURL, SKILL, link_skill
+
+sys.path.insert(0, os.path.join(SKILL, "scripts"))
+import langreg  # noqa: E402
 
 
 def count_files(root):
@@ -47,6 +51,8 @@ class RunAllHoldTest(unittest.TestCase):
         self.base = os.path.join(self.home, "experiments", "langbench-exp902")
         os.makedirs(self.base)
         for f in os.listdir(os.path.join(SKILL, "scripts")):
+            if f == "__pycache__":
+                continue
             shutil.copy(os.path.join(SKILL, "scripts", f), self.base)
         with open(os.path.join(self.base, "PROMPT-typescript.md"), "w") as f:
             f.write("test prompt\n")
@@ -149,7 +155,7 @@ PRICE_TIERS=""
 class RunOrderTest(unittest.TestCase):
     SCRIPT = os.path.join(SKILL, "scripts", "run_order.py")
     CONDS = "sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5"
-    LANGS = "typescript python go rust cpp"
+    LANGS = " ".join(langreg.keys())
 
     def order(self, seed):
         return subprocess.run(["python3", self.SCRIPT, str(seed), self.CONDS, self.LANGS, "3"],

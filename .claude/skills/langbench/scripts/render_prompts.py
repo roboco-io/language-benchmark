@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""template.md의 {{STACK}}·{{WORKERS}}를 stacks.json 값으로 치환해 PROMPT-<lang>.md를 만든다.
+"""template.md의 {{STACK}}·{{WORKERS}}를 언어 레지스트리(languages/<key>.json)의 prompt 값으로 치환해 PROMPT-<lang>.md를 만든다.
 
 인자 없음: 5개 파일을 쓴다. --check: 디스크 파일이 렌더 결과와 다르면 종료 코드 1.
 바이트 그대로 다룬다(newline 변환 없음, 원문은 끝 개행이 없다).
 """
-import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import langreg  # noqa: E402
 
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets")
 
@@ -14,10 +16,8 @@ ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets"
 def render():
     with open(os.path.join(ASSETS, "prompt", "template.md"), newline="") as f:
         template = f.read()
-    with open(os.path.join(ASSETS, "prompt", "stacks.json")) as f:
-        stacks = json.load(f)
-    return {lang: template.replace("{{STACK}}", v["STACK"]).replace("{{WORKERS}}", v["WORKERS"])
-            for lang, v in stacks.items()}
+    return {e["key"]: template.replace("{{STACK}}", e["prompt"]["STACK"]).replace("{{WORKERS}}", e["prompt"]["WORKERS"])
+            for e in langreg.load_all()}
 
 
 def main():

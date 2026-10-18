@@ -7,7 +7,10 @@ import unittest
 
 SKILL = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 ASSETS = os.path.join(SKILL, "assets")
-LANGS = ["typescript", "python", "go", "rust", "cpp"]
+sys.path.insert(0, os.path.join(SKILL, "scripts"))
+import langreg  # noqa: E402
+
+LANGS = langreg.keys()
 
 
 def read(path):
@@ -23,8 +26,7 @@ class PromptTests(unittest.TestCase):
 
     def test_variants_differ_only_in_slots(self):
         template = read(os.path.join(ASSETS, "prompt", "template.md"))
-        with open(os.path.join(ASSETS, "prompt", "stacks.json")) as f:
-            stacks = json.load(f)
+        stacks = {e["key"]: e["prompt"] for e in langreg.load_all()}
         for lang in LANGS:
             text = read(os.path.join(ASSETS, f"PROMPT-{lang}.md"))
             for slot in ("STACK", "WORKERS"):
