@@ -52,7 +52,21 @@
     const pick = list => list.sort((a,b) => b.weight-a.weight || b.gap-a.gap)[0]?.key ?? null;
     return { strength:pick(strengths), burden:pick(burdens) };
   }
-  const api = { summarize, scope, evidenceLinks, tradeoffs };
+  // 언어별 막대 길이(0-1, 1이 좋음). 1위 값에 대한 비율이라 격차 크기가 그대로 보인다.
+  // 1위 값이 0 이하이면 비율이 성립하지 않으므로 최솟값–최댓값 정규화로 대신한다.
+  function bars(values, better) {
+    const vals = Object.values(values).map(number).filter(v => v !== null);
+    const min = Math.min(...vals), max = Math.max(...vals), best = better === 'higher' ? max : min;
+    return Object.fromEntries(Object.entries(values).map(([k, raw]) => {
+      const v = number(raw);
+      if (v === null) return [k, null];
+      if (max === min) return [k, 1];
+      if (best > 0) return [k, better === 'higher' ? v / best : best / v];
+      const t = (v - min) / (max - min);
+      return [k, better === 'higher' ? t : 1 - t];
+    }));
+  }
+  const api = { summarize, scope, evidenceLinks, tradeoffs, bars };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Decision = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-const { summarize, evidenceLinks, scope, tradeoffs } = createRequire(import.meta.url)('../dashboard/decision.js');
+const { summarize, evidenceLinks, scope, tradeoffs, bars } =createRequire(import.meta.url)('../dashboard/decision.js');
 const rows = [
   { exp: 'EXP-001', run: 'sonnet55-go-1', language: 'go', model: 'sonnet55', pass: '1', rps: '0', cost_usd: '2' },
   { exp: 'EXP-001', run: 'sonnet55-go-2', language: 'go', model: 'sonnet55', pass: '1', rps: '10', cost_usd: '3' },
@@ -37,6 +37,11 @@ assert.deepEqual(tradeoffs(five,'cpp',fm,{fp:1,rps:1}), {strength:'rps',burden:'
 assert.deepEqual(tradeoffs(five,'python',fm,{fp:1,rps:1}), {strength:null,burden:'rps'});
 // 두 언어가 공동 최고면 다섯 언어 중에서는 여전히 강점이다.
 assert.equal(tradeoffs({...five,rust:{fp:1,rps:4469}},'rust',fm,{fp:1,rps:1}).strength, 'rps');
+// 막대 길이는 1위 대비 비율이다. 1위 값이 0 이하이면 비율이 성립하지 않아 최솟값–최댓값으로 대신한다.
+assert.deepEqual(bars({a:4469,b:511,c:null}, 'higher'), {a:1,b:511/4469,c:null});
+assert.deepEqual(bars({a:3.4,b:13.6}, 'lower'), {a:1,b:3.4/13.6});
+assert.deepEqual(bars({a:0,b:3.4,c:134.4}, 'lower'), {a:1,b:1-3.4/134.4,c:0});
+assert.deepEqual(bars({a:5,b:5}, 'lower'), {a:1,b:1});
 // 새 UI가 기존 공개 집계값을 보존하고 실제 증거 파일로 연결하는지 검사한다.
 const context={window:{}};
 runInNewContext(readFileSync(new URL('../dashboard/data.js',import.meta.url),'utf8'),context);

@@ -10,10 +10,14 @@
 .decision-table th:first-child { position:sticky; left:0; background:var(--surface); z-index:1; }
 .decision-table .metric-cell { min-width:130px; }
 .compact-table .metric-cell { min-width:100px; }
-.compact-table .metric-cell + .metric-cell { margin-top:6px; }
 .compact-table:not(.show-repeats) .observation, .compact-table:not(.show-repeats) .observations { display:none; }
-.compact-table .model-label { display:inline; margin-right:6px; }
-.compact-table .metric-value { display:inline; }
+.value-bar { display:block; height:6px; margin-top:5px; border-radius:3px; background:var(--border); overflow:hidden; }
+.value-bar i { display:block; height:100%; background:var(--accent); border-radius:3px; }
+.score-bar i { background:var(--ink-2); }
+.overview-table .score-cell { min-width:72px; }
+.overview-table .rank { display:inline-block; min-width:1.4em; color:var(--ink-2); font-weight:600; }
+.overview-table tbody tr:first-child th, .overview-table tbody tr:first-child .score-cell strong { color:var(--accent); }
+.overview-model { margin:10px 12px 0 0; vertical-align:middle; }
 .repeat-toggle { display:block; margin:10px 0; font-size:13px; color:var(--ink-2); }
 .metric-value { display:block; border:0; background:none; padding:0; color:var(--ink); font:inherit; font-weight:600; text-align:left; cursor:pointer; text-decoration:underline; text-decoration-color:var(--axis); text-underline-offset:3px; }
 .observation { display:block; color:var(--ink-2); font-size:11px; margin-top:4px; }
