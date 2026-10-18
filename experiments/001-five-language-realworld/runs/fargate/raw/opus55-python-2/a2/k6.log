@@ -1,0 +1,162 @@
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 10519  675.893911/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 1      0.064255/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=10.93ms p(95)=83.58ms p(99)=1.14s
+      { expected_response:true }............................................: p(50)=10.93ms p(95)=83.49ms p(99)=1.14s
+    http_req_failed.........................................................: 0.00%  1 out of 10520
+    http_reqs...............................................................: 10520  675.958166/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=10.67ms p(95)=91.54ms p(99)=1.26s
+    iterations..............................................................: 9580   615.558862/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 30 MB  1.9 MB/s
+    data_sent...............................................................: 1.7 MB 110 kB/s
+
+
+
+time="2026-10-18T08:23:58Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb41-article-5/favorite\": read tcp 172.31.22.14:51290->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:24:09Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb27-article-6/favorite\": read tcp 172.31.22.14:51156->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:24:14Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles/lb35-article-0/comments\": read tcp 172.31.22.14:51262->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:24:18Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb43-article-9/favorite\": read tcp 172.31.22.14:44946->172.31.16.193:44856: read: connection reset by peer"
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 21277  696.965787/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 7      0.229297/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=10.3ms  p(95)=77.39ms p(99)=1.05s
+      { expected_response:true }............................................: p(50)=10.29ms p(95)=76.3ms  p(99)=1.04s
+    http_req_failed.........................................................: 0.05%  11 out of 21288
+    http_reqs...............................................................: 21288  697.326112/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=10.15ms p(95)=87.08ms p(99)=1.25s
+    iterations..............................................................: 19354  633.974519/s
+    vus.....................................................................: 32     min=32          max=32
+    vus_max.................................................................: 32     min=32          max=32
+
+    NETWORK
+    data_received...........................................................: 59 MB  1.9 MB/s
+    data_sent...............................................................: 3.5 MB 114 kB/s
+
+
+
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 21227  699.21942/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 2      0.06588/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=10.46ms p(95)=84.25ms p(99)=1.07s
+      { expected_response:true }............................................: p(50)=10.46ms p(95)=83.89ms p(99)=1.06s
+    http_req_failed.........................................................: 0.00%  2 out of 21229
+    http_reqs...............................................................: 21229  699.2853/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=10.39ms p(95)=93.53ms p(99)=1.24s
+    iterations..............................................................: 19372  638.115541/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 60 MB  2.0 MB/s
+    data_sent...............................................................: 3.4 MB 113 kB/s
+
+
+
+time="2026-10-18T08:25:17Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles\": read tcp 172.31.22.14:38206->172.31.16.193:44856: read: connection reset by peer"
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 21123  691.234615/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 6      0.196346/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=10.26ms p(95)=85.14ms p(99)=1.04s
+      { expected_response:true }............................................: p(50)=10.26ms p(95)=84.69ms p(99)=1.02s
+    http_req_failed.........................................................: 0.03%  7 out of 21130
+    http_reqs...............................................................: 21130  691.463685/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=10.15ms p(95)=92.34ms p(99)=1.18s
+    iterations..............................................................: 19221  628.993066/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 59 MB  1.9 MB/s
+    data_sent...............................................................: 3.4 MB 113 kB/s
+
+
+
+time="2026-10-18T08:25:53Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles/lb21-article-5/favorite\": read tcp 172.31.22.14:33750->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:26:04Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb25-article-2/favorite\": read tcp 172.31.22.14:33712->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:26:07Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb10-article-1/favorite\": read tcp 172.31.22.14:33706->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:26:28Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles\": read tcp 172.31.22.14:33728->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:26:28Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles/lb40-article-3/comments\": read tcp 172.31.22.14:33876->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:26:33Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb2-article-9/favorite\": read tcp 172.31.22.14:33844->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:27:00Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb5-article-7/favorite\": read tcp 172.31.22.14:33882->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:28:34Z" level=warning msg="The test has generated metrics with 100035 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T08:29:48Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles\": read tcp 172.31.22.14:33682->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:29:50Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles\": read tcp 172.31.22.14:33788->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:30:55Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb9-article-7/favorite\": read tcp 172.31.22.14:51668->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:31:17Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb49-article-9/favorite\": read tcp 172.31.22.14:50252->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:32:09Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb40-article-7/favorite\": read tcp 172.31.22.14:49272->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:32:49Z" level=warning msg="The test has generated metrics with 200025 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T08:33:33Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb32-article-4/favorite\": read tcp 172.31.22.14:35314->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:33:39Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb45-article-6/favorite\": read tcp 172.31.22.14:57328->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:33:49Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb40-article-0/favorite\": read tcp 172.31.22.14:33702->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:33:50Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb34-article-9/favorite\": read tcp 172.31.22.14:49252->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:34:03Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb11-article-7/favorite\": read tcp 172.31.22.14:57372->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:34:53Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles/lb27-article-5/comments\": read tcp 172.31.22.14:59420->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:34:58Z" level=warning msg="Request Failed" error="Post \"http://172.31.16.193:44856/api/articles\": read tcp 172.31.22.14:35402->172.31.16.193:44856: read: connection reset by peer"
+time="2026-10-18T08:35:12Z" level=warning msg="Request Failed" error="Delete \"http://172.31.16.193:44856/api/articles/lb10-article-0/favorite\": read tcp 172.31.22.14:42386->172.31.16.193:44856: read: connection reset by peer"
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 424329 706.696619/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 76     0.126574/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=10.03ms p(95)=82.87ms p(99)=1.06s
+      { expected_response:true }............................................: p(50)=10.03ms p(95)=82.26ms p(99)=1.05s
+    http_req_failed.........................................................: 0.02%  96 out of 424425
+    http_reqs...............................................................: 424425 706.856502/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=9.92ms  p(95)=89.15ms p(99)=1.24s
+    iterations..............................................................: 386107 643.039979/s
+    vus.....................................................................: 32     min=32           max=32
+    vus_max.................................................................: 32     min=32           max=32
+
+    NETWORK
+    data_received...........................................................: 1.2 GB 2.0 MB/s
+    data_sent...............................................................: 69 MB  115 kB/s
+
+
+

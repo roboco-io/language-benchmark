@@ -1,0 +1,2 @@
+Verified 2026-10-18: PUT /api/articles/:slug/comments/:id implemented.
+Local (start.sh) and Docker image: api/hurl (13 files, 154 requests) + tests/hurl/comments_update.hurl (13 requests) all pass.

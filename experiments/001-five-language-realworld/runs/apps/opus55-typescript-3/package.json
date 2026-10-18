@@ -1,0 +1,23 @@
+{
+  "name": "realworld-fastify-prisma",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RealWorld backend API built with Fastify, Prisma and SQLite",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "start": "prisma migrate deploy && node dist/index.js",
+    "test:api": "bash api/run-api-tests-hurl.sh"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3",
+    "fastify": "^5.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "6.19.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}

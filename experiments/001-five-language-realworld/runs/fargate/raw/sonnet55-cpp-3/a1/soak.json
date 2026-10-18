@@ -1,0 +1,99 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {}
+    },
+    "metrics": {
+        "iteration_duration": {
+            "p(50)": 5.378379499999999,
+            "p(95)": 18.0777824,
+            "p(99)": 27.08885695999999
+        },
+        "http_req_connecting": {
+            "p(50)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 3113203,
+            "value": 0
+        },
+        "status_2xx": {
+            "count": 3113203,
+            "rate": 5188.548859880879
+        },
+        "http_req_waiting": {
+            "p(95)": 14.422357399999997,
+            "p(99)": 20.862209659999998,
+            "p(50)": 5.480132
+        },
+        "iterations": {
+            "rate": 4716.778359461337,
+            "count": 2830134
+        },
+        "status_4xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "vus_max": {
+            "value": 32,
+            "min": 32,
+            "max": 32
+        },
+        "http_reqs": {
+            "count": 3113203,
+            "rate": 5188.548859880879
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(50)": 5.500496,
+            "p(95)": 14.4436086,
+            "p(99)": 20.88299278
+        },
+        "http_req_duration": {
+            "p(50)": 5.500496,
+            "p(95)": 14.4436086,
+            "p(99)": 20.88299278
+        },
+        "http_req_receiving": {
+            "p(99)": 0.027285,
+            "p(50)": 0.015487,
+            "p(95)": 0.022063
+        },
+        "status_5xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "data_received": {
+            "count": 8784149991,
+            "rate": 14639903.475881811
+        },
+        "vus": {
+            "value": 32,
+            "min": 32,
+            "max": 32
+        },
+        "http_req_sending": {
+            "p(50)": 0.003156,
+            "p(95)": 0.006966,
+            "p(99)": 0.009747
+        },
+        "http_req_tls_handshaking": {
+            "p(95)": 0,
+            "p(99)": 0,
+            "p(50)": 0
+        },
+        "http_req_blocked": {
+            "p(50)": 0.001131,
+            "p(95)": 0.001995,
+            "p(99)": 0.003399
+        },
+        "data_sent": {
+            "count": 504545955,
+            "rate": 840890.0221324338
+        }
+    }
+}

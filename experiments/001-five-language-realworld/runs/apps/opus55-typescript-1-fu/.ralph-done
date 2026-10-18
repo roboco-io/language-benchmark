@@ -1,0 +1,4 @@
+Verified on 2026-10-18:
+- PUT /api/articles/:slug/comments/:id implemented (200/401/403/404/422).
+- All 14 Hurl files (166 requests: 154 official + 12 new) pass against start.sh (PORT=8000).
+- Docker image builds and passes the same 166 requests.

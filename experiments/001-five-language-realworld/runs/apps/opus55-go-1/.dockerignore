@@ -1,0 +1,6 @@
+.git
+bin
+*.db
+*.db-shm
+*.db-wal
+.ralph-done

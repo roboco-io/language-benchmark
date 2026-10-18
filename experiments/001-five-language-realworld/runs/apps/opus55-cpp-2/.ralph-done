@@ -1,0 +1,5 @@
+Verified on 2026-10-18:
+- Hurl suite (13 files, 154 requests): pass via start.sh on macOS, start.sh in a clean debian:bookworm container (Drogon built from source), and the Docker image.
+- start.sh installs dependencies, builds Release and runs in the foreground on $PORT.
+- Docker image (Release build) reads $PORT and creates the schema on an empty /data volume.
+- setThreadNum = hardware_concurrency (10 on host, 6 in Docker); SQLite journal_mode=wal, busy_timeout=5000 ms (logged at startup).

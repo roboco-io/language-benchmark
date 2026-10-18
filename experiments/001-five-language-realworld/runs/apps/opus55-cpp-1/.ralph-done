@@ -1,0 +1,1 @@
+Verified 2026-10-18: Hurl suite 154/154 (local build, start.sh from a clean clone, Docker image with empty DB); PORT honored; setThreadNum(core count); SQLite WAL + busy_timeout 5000.

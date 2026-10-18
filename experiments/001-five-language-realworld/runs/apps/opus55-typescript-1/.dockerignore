@@ -1,0 +1,10 @@
+node_modules
+dist
+src/generated
+data
+*.db
+*.db-wal
+*.db-shm
+.git
+api
+PROMPT.md

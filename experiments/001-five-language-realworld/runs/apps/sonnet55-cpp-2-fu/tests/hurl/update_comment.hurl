@@ -1,0 +1,90 @@
+# Setup: two users and an article
+POST {{host}}/api/users
+{"user":{"username":"uc_a_{{uid}}","email":"uc_a_{{uid}}@test.com","password":"password123"}}
+HTTP 201
+[Captures]
+tokenA: jsonpath "$.user.token"
+
+POST {{host}}/api/users
+{"user":{"username":"uc_b_{{uid}}","email":"uc_b_{{uid}}@test.com","password":"password123"}}
+HTTP 201
+[Captures]
+tokenB: jsonpath "$.user.token"
+
+POST {{host}}/api/articles
+Authorization: Token {{tokenA}}
+{"article":{"title":"Update Comment {{uid}}","description":"d","body":"b"}}
+HTTP 201
+[Captures]
+slug: jsonpath "$.article.slug"
+
+POST {{host}}/api/articles/{{slug}}/comments
+Authorization: Token {{tokenA}}
+{"comment":{"body":"original"}}
+HTTP 201
+[Captures]
+cid: jsonpath "$.comment.id"
+created: jsonpath "$.comment.createdAt"
+
+# Update by author
+PUT {{host}}/api/articles/{{slug}}/comments/{{cid}}
+Authorization: Token {{tokenA}}
+{"comment":{"body":"edited"}}
+HTTP 200
+[Asserts]
+jsonpath "$.comment.id" == {{cid}}
+jsonpath "$.comment.body" == "edited"
+jsonpath "$.comment.createdAt" == "{{created}}"
+jsonpath "$.comment.updatedAt" exists
+jsonpath "$.comment.author.username" == "uc_a_{{uid}}"
+
+# List shows the new body
+GET {{host}}/api/articles/{{slug}}/comments
+HTTP 200
+[Asserts]
+jsonpath "$.comments[0].body" == "edited"
+
+# Other user is forbidden
+PUT {{host}}/api/articles/{{slug}}/comments/{{cid}}
+Authorization: Token {{tokenB}}
+{"comment":{"body":"hacked"}}
+HTTP 403
+[Asserts]
+jsonpath "$.errors.comment[0]" == "forbidden"
+
+# No token
+PUT {{host}}/api/articles/{{slug}}/comments/{{cid}}
+{"comment":{"body":"x"}}
+HTTP 401
+[Asserts]
+jsonpath "$.errors.token[0]" == "is missing"
+
+# Empty body
+PUT {{host}}/api/articles/{{slug}}/comments/{{cid}}
+Authorization: Token {{tokenA}}
+{"comment":{"body":""}}
+HTTP 422
+[Asserts]
+jsonpath "$.errors.body[0]" == "can't be blank"
+
+# Unknown comment
+PUT {{host}}/api/articles/{{slug}}/comments/999999
+Authorization: Token {{tokenA}}
+{"comment":{"body":"x"}}
+HTTP 404
+[Asserts]
+jsonpath "$.errors.comment[0]" == "not found"
+
+# Unknown article
+PUT {{host}}/api/articles/no-such-slug-{{uid}}/comments/{{cid}}
+Authorization: Token {{tokenA}}
+{"comment":{"body":"x"}}
+HTTP 404
+[Asserts]
+jsonpath "$.errors.article[0]" == "not found"
+
+# Body unchanged after failed attempts
+GET {{host}}/api/articles/{{slug}}/comments
+HTTP 200
+[Asserts]
+jsonpath "$.comments[0].body" == "edited"

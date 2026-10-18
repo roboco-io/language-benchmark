@@ -1,0 +1,2 @@
+build
+scan:go: 실패 종료 코드 1: govulncheck: fetching vulnerabilities: Get "https://vuln.go.dev/index/modules.json.gz": dial tcp: lookup vuln.go.dev: no such host 

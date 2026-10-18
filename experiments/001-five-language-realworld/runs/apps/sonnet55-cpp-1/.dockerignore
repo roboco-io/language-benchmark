@@ -1,0 +1,6 @@
+build
+.git
+*.db
+*.db-shm
+*.db-wal
+tests

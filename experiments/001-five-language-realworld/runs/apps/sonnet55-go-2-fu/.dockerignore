@@ -1,0 +1,5 @@
+.git
+bin
+*.db*
+tests
+PROMPT.md

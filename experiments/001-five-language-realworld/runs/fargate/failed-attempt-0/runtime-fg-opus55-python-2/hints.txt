@@ -1,0 +1,5 @@
+./app/db.py:24:        cur.execute("PRAGMA journal_mode=WAL")
+./app/db.py:25:        cur.execute("PRAGMA busy_timeout=5000")
+./app/db.py:38:# up front (BEGIN IMMEDIATE) so concurrent writers wait on busy_timeout instead
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: uvicorn --workers set to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:38:SQLite runs in WAL mode with `busy_timeout=5000` ms. Write requests open their transaction with

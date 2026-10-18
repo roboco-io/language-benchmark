@@ -1,0 +1,4 @@
+fastapi>=0.115
+uvicorn[standard]>=0.32
+SQLAlchemy>=2.0.36
+PyJWT>=2.9

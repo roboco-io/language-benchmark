@@ -1,0 +1,35 @@
+{
+  "name": "realworld-fastify-prisma",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RealWorld backend API implemented with Fastify, Prisma and SQLite",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "generate": "prisma generate",
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test:api": "bash api/run-api-tests-hurl.sh"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "better-sqlite3": "^12.11.1",
+    "fast-jwt": "^6.3.5",
+    "fastify": "^5.12.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.5",
+    "prisma": "^7.10.1",
+    "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.10.1": true,
+    "better-sqlite3@12.11.1": true,
+    "prisma@7.10.1": true
+  }
+}

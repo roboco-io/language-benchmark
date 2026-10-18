@@ -1,0 +1,122 @@
+=== RUN sonnet55-typescript-0 (claude-native claude-sonnet-5-5, PROMPT-typescript.md, PORT=48373, budget 2400s of 2400s) start: 2026-10-18 09:50:54 ===
+=== RUN sonnet55-typescript-0 finished: 2026-10-18 09:54:59 | 1,2026-10-18 09:54:59,0,13,154,13,154,1,pass ===
+=== RUN opus55-python-1 (claude-native claude-opus-5-5, PROMPT-python.md, PORT=49896, budget 2400s of 2400s) start: 2026-10-18 09:55:13 ===
+=== RUN opus55-python-1 finished: 2026-10-18 10:00:37 | 1,2026-10-18 10:00:37,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-go-1 (claude-native claude-sonnet-5-5, PROMPT-go.md, PORT=45781, budget 2400s of 2400s) start: 2026-10-18 10:00:37 ===
+=== RUN sonnet55-go-1 finished: 2026-10-18 10:04:57 | 1,2026-10-18 10:04:57,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-rust-1 (claude-native claude-sonnet-5-5, PROMPT-rust.md, PORT=41782, budget 2400s of 2400s) start: 2026-10-18 10:04:57 ===
+=== RUN sonnet55-rust-1 finished: 2026-10-18 10:10:09 | 1,2026-10-18 10:10:09,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-typescript-1 (claude-native claude-sonnet-5-5, PROMPT-typescript.md, PORT=40668, budget 2400s of 2400s) start: 2026-10-18 10:10:09 ===
+=== RUN sonnet55-typescript-1 finished: 2026-10-18 10:16:28 | 1,2026-10-18 10:16:28,0,13,154,13,154,1,pass ===
+=== RUN opus55-rust-1 (claude-native claude-opus-5-5, PROMPT-rust.md, PORT=44928, budget 2400s of 2400s) start: 2026-10-18 10:16:29 ===
+=== RUN opus55-rust-1 finished: 2026-10-18 10:23:33 | 1,2026-10-18 10:23:33,0,13,154,13,154,1,pass ===
+=== RUN opus55-go-1 (claude-native claude-opus-5-5, PROMPT-go.md, PORT=43533, budget 2400s of 2400s) start: 2026-10-18 10:23:33 ===
+=== RUN opus55-go-1 finished: 2026-10-18 10:31:30 | 1,2026-10-18 10:31:30,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-cpp-1 (claude-native claude-sonnet-5-5, PROMPT-cpp.md, PORT=45688, budget 2400s of 2400s) start: 2026-10-18 10:31:30 ===
+=== RUN sonnet55-cpp-1 finished: 2026-10-18 10:45:22 | 1,2026-10-18 10:45:22,0,13,154,13,154,1,pass ===
+=== RUN opus55-typescript-1 (claude-native claude-opus-5-5, PROMPT-typescript.md, PORT=41048, budget 2400s of 2400s) start: 2026-10-18 10:45:23 ===
+=== RUN opus55-typescript-1 finished: 2026-10-18 11:00:44 | 1,2026-10-18 11:00:44,0,13,154,13,154,1,pass ===
+=== RUN opus55-cpp-1 (claude-native claude-opus-5-5, PROMPT-cpp.md, PORT=41049, budget 2400s of 2400s) start: 2026-10-18 11:00:44 ===
+=== RUN opus55-cpp-1 finished: 2026-10-18 11:16:54 | 1,2026-10-18 11:16:54,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-python-1 (claude-native claude-sonnet-5-5, PROMPT-python.md, PORT=48849, budget 2400s of 2400s) start: 2026-10-18 11:16:54 ===
+=== RUN sonnet55-python-1 finished: 2026-10-18 11:20:59 | 1,2026-10-18 11:20:59,0,13,154,13,154,1,pass ===
+=== RUN opus55-python-2 (claude-native claude-opus-5-5, PROMPT-python.md, PORT=40484, budget 2400s of 2400s) start: 2026-10-18 11:20:59 ===
+=== RUN opus55-python-2 finished: 2026-10-18 11:26:11 | 1,2026-10-18 11:26:11,0,13,154,13,154,1,pass ===
+=== RUN opus55-go-2 (claude-native claude-opus-5-5, PROMPT-go.md, PORT=41727, budget 2400s of 2400s) start: 2026-10-18 11:26:11 ===
+=== RUN opus55-go-2 finished: 2026-10-18 11:35:31 | 2,2026-10-18 11:35:31,0,13,154,13,154,1,pass ===
+=== RUN opus55-rust-2 (claude-native claude-opus-5-5, PROMPT-rust.md, PORT=43895, budget 2400s of 2400s) start: 2026-10-18 11:35:31 ===
+=== RUN opus55-rust-2 finished: 2026-10-18 11:42:40 | 1,2026-10-18 11:42:40,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-typescript-2 (claude-native claude-sonnet-5-5, PROMPT-typescript.md, PORT=48418, budget 2400s of 2400s) start: 2026-10-18 11:42:40 ===
+=== RUN sonnet55-typescript-2 finished: 2026-10-18 11:49:47 | 1,2026-10-18 11:49:47,0,13,154,13,154,1,pass ===
+=== RUN opus55-typescript-2 (claude-native claude-opus-5-5, PROMPT-typescript.md, PORT=44329, budget 2400s of 2400s) start: 2026-10-18 11:49:48 ===
+=== RUN opus55-typescript-2 finished: 2026-10-18 11:59:21 | 1,2026-10-18 11:59:21,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-cpp-2 (claude-native claude-sonnet-5-5, PROMPT-cpp.md, PORT=43476, budget 2400s of 2400s) start: 2026-10-18 11:59:21 ===
+=== RUN sonnet55-cpp-2 finished: 2026-10-18 12:07:52 | 1,2026-10-18 12:07:52,0,13,154,13,154,1,pass ===
+=== RUN opus55-cpp-2 (claude-native claude-opus-5-5, PROMPT-cpp.md, PORT=41000, budget 2400s of 2400s) start: 2026-10-18 12:07:52 ===
+=== RUN opus55-cpp-2 finished: 2026-10-18 12:21:29 | 1,2026-10-18 12:21:29,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-rust-2 (claude-native claude-sonnet-5-5, PROMPT-rust.md, PORT=45954, budget 2400s of 2400s) start: 2026-10-18 12:21:29 ===
+=== RUN sonnet55-rust-2 finished: 2026-10-18 12:26:37 | 1,2026-10-18 12:26:37,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-python-2 (claude-native claude-sonnet-5-5, PROMPT-python.md, PORT=47788, budget 2400s of 2400s) start: 2026-10-18 12:26:37 ===
+=== RUN sonnet55-python-2 finished: 2026-10-18 12:29:59 | 1,2026-10-18 12:29:59,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-go-2 (claude-native claude-sonnet-5-5, PROMPT-go.md, PORT=43623, budget 2400s of 2400s) start: 2026-10-18 12:30:00 ===
+=== RUN sonnet55-go-2 finished: 2026-10-18 12:33:49 | 1,2026-10-18 12:33:49,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-rust-3 (claude-native claude-sonnet-5-5, PROMPT-rust.md, PORT=41458, budget 2400s of 2400s) start: 2026-10-18 12:33:49 ===
+=== RUN sonnet55-rust-3 finished: 2026-10-18 12:38:57 | 1,2026-10-18 12:38:57,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-python-3 (claude-native claude-sonnet-5-5, PROMPT-python.md, PORT=46260, budget 2400s of 2400s) start: 2026-10-18 12:38:57 ===
+=== RUN sonnet55-python-3 finished: 2026-10-18 12:42:05 | 1,2026-10-18 12:42:05,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-cpp-3 (claude-native claude-sonnet-5-5, PROMPT-cpp.md, PORT=43970, budget 2400s of 2400s) start: 2026-10-18 12:42:05 ===
+=== RUN sonnet55-cpp-3 finished: 2026-10-18 12:56:19 | 1,2026-10-18 12:56:19,0,13,154,13,154,1,pass ===
+=== RUN opus55-typescript-3 (claude-native claude-opus-5-5, PROMPT-typescript.md, PORT=42539, budget 2400s of 2400s) start: 2026-10-18 12:56:19 ===
+=== RUN opus55-typescript-3 finished: 2026-10-18 13:11:17 | 1,2026-10-18 13:11:17,0,13,154,13,154,1,pass ===
+=== RUN opus55-cpp-3 (claude-native claude-opus-5-5, PROMPT-cpp.md, PORT=42596, budget 2400s of 2400s) start: 2026-10-18 13:11:17 ===
+=== RUN opus55-cpp-3 finished: 2026-10-18 13:20:28 | 1,2026-10-18 13:20:28,0,13,154,13,154,1,pass ===
+=== RUN opus55-go-3 (claude-native claude-opus-5-5, PROMPT-go.md, PORT=46092, budget 2400s of 2400s) start: 2026-10-18 13:20:28 ===
+=== RUN opus55-go-3 finished: 2026-10-18 13:27:07 | 1,2026-10-18 13:27:07,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-typescript-3 (claude-native claude-sonnet-5-5, PROMPT-typescript.md, PORT=45055, budget 2400s of 2400s) start: 2026-10-18 13:27:07 ===
+=== RUN sonnet55-typescript-3 finished: 2026-10-18 13:32:29 | 1,2026-10-18 13:32:29,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-go-3 (claude-native claude-sonnet-5-5, PROMPT-go.md, PORT=43801, budget 2400s of 2400s) start: 2026-10-18 13:32:29 ===
+=== RUN sonnet55-go-3 finished: 2026-10-18 13:37:39 | 1,2026-10-18 13:37:39,0,13,154,13,154,1,pass ===
+=== RUN opus55-rust-3 (claude-native claude-opus-5-5, PROMPT-rust.md, PORT=41720, budget 2400s of 2400s) start: 2026-10-18 13:37:39 ===
+=== RUN opus55-rust-3 finished: 2026-10-18 13:47:26 | 1,2026-10-18 13:47:26,0,13,154,13,154,1,pass ===
+=== RUN opus55-python-3 (claude-native claude-opus-5-5, PROMPT-python.md, PORT=45143, budget 2400s of 2400s) start: 2026-10-18 13:47:26 ===
+=== RUN opus55-python-3 finished: 2026-10-18 13:53:09 | 1,2026-10-18 13:53:09,0,13,154,13,154,1,pass ===
+=== RUN opus55-python-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=40515, budget 1200s of 1200s) start: 2026-10-18 14:16:14 ===
+=== RUN opus55-python-1-fu finished: 2026-10-18 14:18:28 | 1,2026-10-18 14:18:28,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-go-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=47836, budget 1200s of 1200s) start: 2026-10-18 14:18:28 ===
+=== RUN sonnet55-go-1-fu finished: 2026-10-18 14:20:11 | 1,2026-10-18 14:20:11,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-rust-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=41378, budget 1200s of 1200s) start: 2026-10-18 14:20:13 ===
+=== RUN sonnet55-rust-1-fu finished: 2026-10-18 14:23:14 | 1,2026-10-18 14:23:14,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-typescript-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=44866, budget 1200s of 1200s) start: 2026-10-18 14:23:18 ===
+=== RUN sonnet55-typescript-1-fu finished: 2026-10-18 14:24:42 | 1,2026-10-18 14:24:42,0,14,167,14,167,1,pass ===
+=== RUN opus55-rust-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=48292, budget 1200s of 1200s) start: 2026-10-18 14:24:45 ===
+=== RUN opus55-rust-1-fu finished: 2026-10-18 14:27:26 | 1,2026-10-18 14:27:26,0,14,167,14,167,1,pass ===
+=== RUN opus55-go-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=40921, budget 1200s of 1200s) start: 2026-10-18 14:27:27 ===
+=== RUN opus55-go-1-fu finished: 2026-10-18 14:30:17 | 1,2026-10-18 14:30:17,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-cpp-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=45460, budget 1200s of 1200s) start: 2026-10-18 14:30:18 ===
+=== RUN sonnet55-cpp-1-fu finished: 2026-10-18 14:43:16 | 4,2026-10-18 14:43:16,0,14,167,14,167,1,pass ===
+=== RUN opus55-typescript-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=46812, budget 1200s of 1200s) start: 2026-10-18 14:43:22 ===
+=== RUN opus55-typescript-1-fu finished: 2026-10-18 14:45:45 | 1,2026-10-18 14:45:45,0,14,167,14,167,1,pass ===
+=== RUN opus55-cpp-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=43725, budget 1200s of 1200s) start: 2026-10-18 14:45:46 ===
+=== RUN opus55-cpp-1-fu finished: 2026-10-18 14:47:52 | 1,2026-10-18 14:47:52,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-python-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=40490, budget 1200s of 1200s) start: 2026-10-18 14:47:54 ===
+=== RUN sonnet55-python-1-fu finished: 2026-10-18 14:49:11 | 1,2026-10-18 14:49:11,0,14,167,14,167,1,pass ===
+=== RUN opus55-python-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42389, budget 1200s of 1200s) start: 2026-10-18 14:49:13 ===
+=== RUN opus55-python-2-fu finished: 2026-10-18 14:53:21 | 1,2026-10-18 14:53:21,0,14,167,14,167,1,pass ===
+=== RUN opus55-go-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42614, budget 1200s of 1200s) start: 2026-10-18 14:53:21 ===
+=== RUN opus55-go-2-fu finished: 2026-10-18 14:55:36 | 1,2026-10-18 14:55:36,0,14,167,14,167,1,pass ===
+=== RUN opus55-rust-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=43461, budget 1200s of 1200s) start: 2026-10-18 14:55:38 ===
+=== RUN opus55-rust-2-fu finished: 2026-10-18 14:58:31 | 1,2026-10-18 14:58:31,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-typescript-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=48106, budget 1200s of 1200s) start: 2026-10-18 14:58:34 ===
+=== RUN sonnet55-typescript-2-fu finished: 2026-10-18 14:59:56 | 1,2026-10-18 14:59:56,0,14,167,14,167,1,pass ===
+=== RUN opus55-typescript-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42200, budget 1200s of 1200s) start: 2026-10-18 15:00:00 ===
+=== RUN opus55-typescript-2-fu finished: 2026-10-18 15:02:24 | 1,2026-10-18 15:02:24,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-cpp-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=40403, budget 1200s of 1200s) start: 2026-10-18 15:02:25 ===
+=== RUN sonnet55-cpp-2-fu finished: 2026-10-18 15:04:15 | 1,2026-10-18 15:04:15,0,14,167,14,167,1,pass ===
+=== RUN opus55-cpp-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=45315, budget 1200s of 1200s) start: 2026-10-18 15:04:15 ===
+=== RUN opus55-cpp-2-fu finished: 2026-10-18 15:14:06 | 2,2026-10-18 15:14:06,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-rust-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=49129, budget 1200s of 1200s) start: 2026-10-18 15:14:08 ===
+=== RUN sonnet55-rust-2-fu finished: 2026-10-18 15:16:41 | 1,2026-10-18 15:16:41,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-python-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=42078, budget 1200s of 1200s) start: 2026-10-18 15:16:42 ===
+=== RUN sonnet55-python-2-fu finished: 2026-10-18 15:18:13 | 1,2026-10-18 15:18:13,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-go-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=48641, budget 1200s of 1200s) start: 2026-10-18 15:18:13 ===
+=== RUN sonnet55-go-2-fu finished: 2026-10-18 15:20:28 | 1,2026-10-18 15:20:28,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-rust-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=41521, budget 1200s of 1200s) start: 2026-10-18 15:20:30 ===
+=== RUN sonnet55-rust-3-fu finished: 2026-10-18 15:23:31 | 1,2026-10-18 15:23:31,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-python-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=44586, budget 1200s of 1200s) start: 2026-10-18 15:23:33 ===
+=== RUN sonnet55-python-3-fu finished: 2026-10-18 15:25:21 | 1,2026-10-18 15:25:21,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-cpp-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=43542, budget 1200s of 1200s) start: 2026-10-18 15:25:22 ===
+=== RUN sonnet55-cpp-3-fu finished: 2026-10-18 15:30:34 | 5,2026-10-18 15:30:34,0,0,0,,,1,rejected ===
+=== RUN opus55-typescript-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=40583, budget 1200s of 1200s) start: 2026-10-18 15:30:38 ===
+=== RUN opus55-typescript-3-fu finished: 2026-10-18 15:33:15 | 1,2026-10-18 15:33:15,0,14,167,14,167,1,pass ===
+=== RUN opus55-cpp-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=48660, budget 1200s of 1200s) start: 2026-10-18 15:33:15 ===
+=== RUN opus55-cpp-3-fu finished: 2026-10-18 15:36:38 | 1,2026-10-18 15:36:38,0,14,167,14,167,1,pass ===
+=== RUN opus55-go-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42753, budget 1200s of 1200s) start: 2026-10-18 15:36:38 ===
+=== RUN opus55-go-3-fu finished: 2026-10-18 15:40:32 | 2,2026-10-18 15:40:32,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-typescript-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=42704, budget 1200s of 1200s) start: 2026-10-18 15:40:36 ===
+=== RUN sonnet55-typescript-3-fu finished: 2026-10-18 15:41:54 | 1,2026-10-18 15:41:54,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-go-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=45820, budget 1200s of 1200s) start: 2026-10-18 15:41:54 ===
+=== RUN sonnet55-go-3-fu finished: 2026-10-18 15:43:42 | 1,2026-10-18 15:43:42,0,14,167,14,167,1,pass ===
+=== RUN opus55-rust-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=44684, budget 1200s of 1200s) start: 2026-10-18 15:43:50 ===
+=== RUN opus55-rust-3-fu finished: 2026-10-18 15:46:39 | 1,2026-10-18 15:46:39,0,14,167,14,167,1,pass ===
+=== RUN opus55-python-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42355, budget 1200s of 1200s) start: 2026-10-18 15:46:41 ===
+=== RUN opus55-python-3-fu finished: 2026-10-18 15:50:02 | 1,2026-10-18 15:50:02,0,14,167,14,167,1,pass ===

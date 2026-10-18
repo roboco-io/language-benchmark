@@ -1,0 +1,2 @@
+push
+scan:pip: 유효한 JSON 보고서 없음(종료 코드 1): ERROR:pip_audit._cli:Failed to upgrade `pip`: ['/var/folders/12/4bv943n16mg_3gzhbclnnzj80000gn/T/tmp1rxcv209/bin/python3.14', '-m', 'pip', 'install', '--upgrade', 'pip', 'wheel', 'setuptools'] 

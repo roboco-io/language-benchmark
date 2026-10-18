@@ -1,0 +1,5 @@
+Verified 2026-10-18:
+1. Hurl suite (13 files, 154 requests) passes against a fresh DB, a re-run, start.sh and the Docker container.
+2. ./start.sh fetches, builds (release) and runs the server in the foreground on $PORT.
+3. Dockerfile builds a release image; container honors PORT and creates the schema on an empty DB.
+4. tokio multi-thread runtime with one worker per core (10 on host, 6 in container); SQLite WAL + busy_timeout 5000 ms.

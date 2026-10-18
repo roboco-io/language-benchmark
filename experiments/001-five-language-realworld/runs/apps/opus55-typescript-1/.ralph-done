@@ -1,0 +1,5 @@
+All completion criteria verified on 2026-10-18:
+1. Hurl suite (13 files, 154 requests) passes against start.sh server and Docker container.
+2. start.sh installs (npm ci), builds and runs the server in the foreground on $PORT.
+3. Dockerfile multi-stage production build; container honours PORT and creates schema on an empty DB.
+4. Node cluster with one worker per CPU core; SQLite journal_mode=WAL and busy_timeout=5000 ms.

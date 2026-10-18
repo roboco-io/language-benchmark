@@ -1,0 +1,1 @@
+scan:go: 실패 종료 코드 1: govulncheck: Loading packages failed, possibly due to a mismatch between the Go version used to build govulncheck and the Go version on PATH. Consider rebuilding govulncheck with the current Go versio

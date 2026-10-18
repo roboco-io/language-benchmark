@@ -1,0 +1,143 @@
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 80046  5334.59585/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=5.31ms p(95)=14.32ms p(99)=21.12ms
+      { expected_response:true }............................................: p(50)=5.31ms p(95)=14.32ms p(99)=21.12ms
+    http_req_failed.........................................................: 0.00%  0 out of 80046
+    http_reqs...............................................................: 80046  5334.59585/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=5.2ms  p(95)=17.71ms p(99)=27.05ms
+    iterations..............................................................: 72885  4857.357251/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 226 MB 15 MB/s
+    data_sent...............................................................: 13 MB  863 kB/s
+
+
+
+time="2026-10-18T07:51:21Z" level=warning msg="The test has generated metrics with 100233 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 157020 5233.233604/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=5.44ms p(95)=14.34ms p(99)=20.72ms
+      { expected_response:true }............................................: p(50)=5.44ms p(95)=14.34ms p(99)=20.72ms
+    http_req_failed.........................................................: 0.00%  0 out of 157020
+    http_reqs...............................................................: 157020 5233.233604/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=5.32ms p(95)=17.87ms p(99)=26.64ms
+    iterations..............................................................: 142624 4753.437203/s
+    vus.....................................................................: 32     min=32          max=32
+    vus_max.................................................................: 32     min=32          max=32
+
+    NETWORK
+    data_received...........................................................: 442 MB 15 MB/s
+    data_sent...............................................................: 26 MB  849 kB/s
+
+
+
+time="2026-10-18T07:51:52Z" level=warning msg="The test has generated metrics with 100134 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 156847 5227.469933/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=5.47ms p(95)=13.84ms p(99)=20.76ms
+      { expected_response:true }............................................: p(50)=5.47ms p(95)=13.84ms p(99)=20.76ms
+    http_req_failed.........................................................: 0.00%  0 out of 156847
+    http_reqs...............................................................: 156847 5227.469933/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=5.35ms p(95)=18.02ms p(99)=26.48ms
+    iterations..............................................................: 142509 4749.606385/s
+    vus.....................................................................: 32     min=32          max=32
+    vus_max.................................................................: 32     min=32          max=32
+
+    NETWORK
+    data_received...........................................................: 442 MB 15 MB/s
+    data_sent...............................................................: 25 MB  848 kB/s
+
+
+
+time="2026-10-18T07:52:22Z" level=warning msg="The test has generated metrics with 100071 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 154019 5131.690469/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=5.58ms p(95)=14.22ms p(99)=20.49ms
+      { expected_response:true }............................................: p(50)=5.58ms p(95)=14.22ms p(99)=20.49ms
+    http_req_failed.........................................................: 0.00%  0 out of 154019
+    http_reqs...............................................................: 154019 5131.690469/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=5.45ms p(95)=18.14ms p(99)=26.55ms
+    iterations..............................................................: 140132 4668.9957/s
+    vus.....................................................................: 32     min=32          max=32
+    vus_max.................................................................: 32     min=32          max=32
+
+    NETWORK
+    data_received...........................................................: 436 MB 15 MB/s
+    data_sent...............................................................: 25 MB  830 kB/s
+
+
+
+time="2026-10-18T07:52:52Z" level=warning msg="The test has generated metrics with 100107 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:53:26Z" level=warning msg="The test has generated metrics with 200052 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:54:33Z" level=warning msg="The test has generated metrics with 400041 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:56:48Z" level=warning msg="The test has generated metrics with 800253 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T08:01:16Z" level=warning msg="The test has generated metrics with 1600146 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 3113203 5188.54886/s
+    status_4xx..............................................................: 0       0/s
+    status_5xx..............................................................: 0       0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=5.5ms  p(95)=14.44ms p(99)=20.88ms
+      { expected_response:true }............................................: p(50)=5.5ms  p(95)=14.44ms p(99)=20.88ms
+    http_req_failed.........................................................: 0.00%   0 out of 3113203
+    http_reqs...............................................................: 3113203 5188.54886/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=5.37ms p(95)=18.07ms p(99)=27.08ms
+    iterations..............................................................: 2830134 4716.778359/s
+    vus.....................................................................: 32      min=32           max=32
+    vus_max.................................................................: 32      min=32           max=32
+
+    NETWORK
+    data_received...........................................................: 8.8 GB  15 MB/s
+    data_sent...............................................................: 505 MB  841 kB/s
+
+
+

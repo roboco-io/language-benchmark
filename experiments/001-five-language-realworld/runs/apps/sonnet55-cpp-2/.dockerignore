@@ -1,0 +1,5 @@
+build/
+.git/
+*.db*
+data/
+tests/

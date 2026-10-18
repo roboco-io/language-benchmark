@@ -1,0 +1,16 @@
+./.ralph-done:5:4. Node cluster with one worker per CPU core; SQLite journal_mode=WAL and busy_timeout=5000 ms.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Node cluster with one worker process per core. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:28:| `WEB_CONCURRENCY` | number of CPU cores | Number of cluster workers. |
+./README.md:35:After this step, the primary forks one worker per available CPU core (`os.availableParallelism()`) with the Node `cluster` module. The workers share the listening port. If a worker exits unexpectedly, the primary starts a replacement. Each worker uses Prisma with the `better-sqlite3` driver adapter. Each worker connection sets `busy_timeout = 5000` ms, so a writer waits for a lock held by another worker instead of failing at once.
+./README.md:47:- `src/index.ts`: cluster primary and worker startup.
+./src/migrate.ts:22:    db.pragma(`busy_timeout = ${busyTimeoutMs}`);
+./src/migrate.ts:23:    db.pragma("journal_mode = WAL");
+./src/index.ts:1:import cluster from "node:cluster";
+./src/index.ts:7:// cluster module and are restarted if they exit unexpectedly.
+./src/index.ts:16:  for (let i = 0; i < workerCount; i++) cluster.fork();
+./src/index.ts:19:  cluster.on("exit", (worker, code, signal) => {
+./src/index.ts:22:    cluster.fork();
+./src/index.ts:26:    for (const worker of Object.values(cluster.workers ?? {})) worker?.kill();
+./src/index.ts:48:const start = cluster.isPrimary ? startPrimary : startWorker;
+./src/db.ts:12:  await prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL");
+./src/db.ts:13:  await prisma.$queryRawUnsafe(`PRAGMA busy_timeout = ${busyTimeoutMs}`);

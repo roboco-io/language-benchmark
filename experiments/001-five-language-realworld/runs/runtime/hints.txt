@@ -1,0 +1,11 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Node cluster with one worker process per core. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:13:- SQLite runs in WAL mode with `busy_timeout = 5000`. Each worker keeps one pooled connection so the PRAGMAs apply to every query.
+./src/index.ts:1:import cluster from 'node:cluster';
+./src/index.ts:28:  for (let i = 0; i < workers; i++) cluster.fork();
+./src/index.ts:31:  cluster.on('exit', (worker, code, signal) => {
+./src/index.ts:34:    cluster.fork();
+./src/index.ts:38:    for (const w of Object.values(cluster.workers ?? {})) w?.process.kill('SIGTERM');
+./src/index.ts:46:const main = cluster.isPrimary ? runPrimary : runWorker;
+./src/db.ts:5:// keeps exactly one pooled connection. Parallelism comes from the cluster, not from the pool.
+./src/db.ts:16:  await prisma.$queryRawUnsafe('PRAGMA journal_mode = WAL');
+./src/db.ts:17:  await prisma.$queryRawUnsafe('PRAGMA busy_timeout = 5000');

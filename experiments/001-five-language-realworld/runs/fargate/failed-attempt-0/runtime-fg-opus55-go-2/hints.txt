@@ -1,0 +1,9 @@
+./db.go:70:	dsn := fmt.Sprintf("file:%s?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(1)&_pragma=synchronous(NORMAL)&_txlock=immediate", path)
+./db.go:89:	db.Raw("PRAGMA journal_mode").Scan(&journalMode)
+./db.go:90:	db.Raw("PRAGMA busy_timeout").Scan(&busyTimeout)
+./db.go:91:	log.Printf("sqlite: path=%s journal_mode=%s busy_timeout=%dms", path, journalMode, busyTimeout)
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: GOMAXPROCS equal to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:10:  `journal_mode=WAL` and `busy_timeout=5000`.
+./README.md:11:- `GOMAXPROCS` is set to the number of available CPU cores at startup.
+./main.go:13:	runtime.GOMAXPROCS(runtime.NumCPU())
+./main.go:34:	log.Printf("listening on :%s (GOMAXPROCS=%d, NumCPU=%d)", port, runtime.GOMAXPROCS(0), runtime.NumCPU())

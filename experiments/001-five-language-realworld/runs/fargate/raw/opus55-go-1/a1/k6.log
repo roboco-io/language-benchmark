@@ -1,0 +1,139 @@
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 47985  3196.675171/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=7.16ms p(95)=32.37ms p(99)=42.79ms
+      { expected_response:true }............................................: p(50)=7.16ms p(95)=32.37ms p(99)=42.79ms
+    http_req_failed.........................................................: 0.00%  0 out of 47985
+    http_reqs...............................................................: 47985  3196.675171/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=7.28ms p(95)=35.48ms p(99)=50.75ms
+    iterations..............................................................: 43747  2914.347165/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 136 MB 9.0 MB/s
+    data_sent...............................................................: 7.4 MB 495 kB/s
+
+
+
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 96132  3202.669463/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=7.2ms p(95)=31.74ms p(99)=43ms   
+      { expected_response:true }............................................: p(50)=7.2ms p(95)=31.74ms p(99)=43ms   
+    http_req_failed.........................................................: 0.00%  0 out of 96132
+    http_reqs...............................................................: 96132  3202.669463/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=7.3ms p(95)=35.69ms p(99)=51.73ms
+    iterations..............................................................: 87258  2907.02921/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 269 MB 8.9 MB/s
+    data_sent...............................................................: 15 MB  501 kB/s
+
+
+
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 96904  3229.649086/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=7.14ms p(95)=32.08ms p(99)=42.38ms
+      { expected_response:true }............................................: p(50)=7.14ms p(95)=32.08ms p(99)=42.38ms
+    http_req_failed.........................................................: 0.00%  0 out of 96904
+    http_reqs...............................................................: 96904  3229.649086/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=7.32ms p(95)=35.49ms p(99)=49.82ms
+    iterations..............................................................: 88147  2937.792846/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 274 MB 9.1 MB/s
+    data_sent...............................................................: 15 MB  502 kB/s
+
+
+
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 97154  3237.12196/s
+    status_4xx..............................................................: 0      0/s
+    status_5xx..............................................................: 0      0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=7.12ms p(95)=32.42ms p(99)=42.47ms
+      { expected_response:true }............................................: p(50)=7.12ms p(95)=32.42ms p(99)=42.47ms
+    http_req_failed.........................................................: 0.00%  0 out of 97154
+    http_reqs...............................................................: 97154  3237.12196/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=7.29ms p(95)=35.43ms p(99)=49.92ms
+    iterations..............................................................: 88363  2944.210303/s
+    vus.....................................................................: 32     min=32         max=32
+    vus_max.................................................................: 32     min=32         max=32
+
+    NETWORK
+    data_received...........................................................: 273 MB 9.1 MB/s
+    data_sent...............................................................: 15 MB  503 kB/s
+
+
+
+time="2026-10-18T07:45:53Z" level=warning msg="The test has generated metrics with 100116 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:46:46Z" level=warning msg="The test has generated metrics with 200151 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:48:34Z" level=warning msg="The test has generated metrics with 400077 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+time="2026-10-18T07:52:09Z" level=warning msg="The test has generated metrics with 800055 unique time series, which is higher than the suggested limit of 100000 and could cause high memory usage. Consider not using high-cardinality values like unique IDs as metric tags or, if you need them in the URL, use the name metric tag or URL grouping. See https://grafana.com/docs/k6/latest/using-k6/tags-and-groups/ for details." component=metrics-engine-ingester
+
+
+  █ TOTAL RESULTS 
+
+    CUSTOM
+    status_2xx..............................................................: 1940088 3233.423357/s
+    status_4xx..............................................................: 0       0/s
+    status_5xx..............................................................: 0       0/s
+
+    HTTP
+    http_req_duration.......................................................: p(50)=7.11ms p(95)=32.35ms p(99)=43ms   
+      { expected_response:true }............................................: p(50)=7.11ms p(95)=32.35ms p(99)=43ms   
+    http_req_failed.........................................................: 0.00%   0 out of 1940088
+    http_reqs...............................................................: 1940088 3233.423357/s
+
+    EXECUTION
+    iteration_duration......................................................: p(50)=7.28ms p(95)=35.68ms p(99)=50.59ms
+    iterations..............................................................: 1763233 2938.670187/s
+    vus.....................................................................: 32      min=32           max=32
+    vus_max.................................................................: 32      min=32           max=32
+
+    NETWORK
+    data_received...........................................................: 5.4 GB  9.1 MB/s
+    data_sent...............................................................: 302 MB  504 kB/s
+
+
+

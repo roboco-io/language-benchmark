@@ -1,0 +1,6 @@
+target
+.tmp
+.git
+*.db
+*.db-*
+api

@@ -1,0 +1,9 @@
+./Dockerfile:6:    && cargo build --release --locked \
+./Dockerfile:9:RUN cargo build --release --locked
+./.ralph-done:5:4. tokio multi-thread runtime with one worker per core (10 on host, 6 in container); SQLite WAL + busy_timeout 5000 ms.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: tokio multi-thread runtime with one worker thread per core. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:33:with a `busy_timeout` of 5000 ms and foreign keys enabled.
+./start.sh:8:cargo build --release --locked
+./src/db.rs:70:        .journal_mode(SqliteJournalMode::Wal)
+./src/db.rs:71:        .busy_timeout(Duration::from_millis(5000))
+./src/main.rs:82:        .worker_threads(workers)

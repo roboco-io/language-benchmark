@@ -1,0 +1,99 @@
+{
+    "metrics": {
+        "http_req_blocked": {
+            "p(50)": 0.001224,
+            "p(95)": 0.002305,
+            "p(99)": 0.004162
+        },
+        "iteration_duration": {
+            "p(50)": 7.323135,
+            "p(95)": 35.49797699999998,
+            "p(99)": 49.8290564
+        },
+        "data_sent": {
+            "count": 15052649,
+            "rate": 501679.74574205896
+        },
+        "iterations": {
+            "count": 88147,
+            "rate": 2937.7928461578604
+        },
+        "vus_max": {
+            "min": 32,
+            "max": 32,
+            "value": 32
+        },
+        "data_received": {
+            "count": 273547091,
+            "rate": 9116869.400286945
+        },
+        "status_2xx": {
+            "count": 96904,
+            "rate": 3229.64908577809
+        },
+        "http_req_duration": {
+            "p(50)": 7.1457565,
+            "p(95)": 32.08386805,
+            "p(99)": 42.38232868
+        },
+        "http_req_sending": {
+            "p(50)": 0.003688,
+            "p(95)": 0.008314,
+            "p(99)": 0.01238897
+        },
+        "http_req_receiving": {
+            "p(50)": 0.017972,
+            "p(95)": 0.13277324999999998,
+            "p(99)": 0.26789191
+        },
+        "http_req_waiting": {
+            "p(50)": 7.102489500000001,
+            "p(95)": 32.0486983,
+            "p(99)": 42.30928943
+        },
+        "status_5xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "vus": {
+            "value": 32,
+            "min": 32,
+            "max": 32
+        },
+        "http_req_connecting": {
+            "p(50)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        },
+        "http_reqs": {
+            "count": 96904,
+            "rate": 3229.64908577809
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(50)": 7.1457565,
+            "p(95)": 32.08386805,
+            "p(99)": 42.38232868
+        },
+        "status_4xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 96904,
+            "value": 0
+        },
+        "http_req_tls_handshaking": {
+            "p(50)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        }
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {}
+    }
+}

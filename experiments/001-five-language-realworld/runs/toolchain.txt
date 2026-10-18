@@ -1,0 +1,16 @@
+node /Users/dohyunjung/.asdf/shims/node v24.14.0
+npm /Users/dohyunjung/.asdf/shims/npm 11.19.1
+python3 /opt/homebrew/bin/python3 Python 3.14.4
+go /opt/homebrew/bin/go go version go1.27.2 darwin/arm64
+cargo /Users/dohyunjung/.cargo/bin/cargo cargo 1.99.1 (5f94df478 2026-08-27)
+rustc /Users/dohyunjung/.cargo/bin/rustc rustc 1.99.1 (58cf8f9c3 2026-10-13)
+cmake /opt/homebrew/bin/cmake cmake version 4.4.4
+docker /usr/local/bin/docker Docker version 29.8.0, build 88096ef
+k6 /opt/homebrew/bin/k6 k6 v1.1.0 (go1.24.4, darwin/arm64)
+scc /opt/homebrew/bin/scc scc version 4.1.0
+trivy /opt/homebrew/bin/trivy Version: 0.76.0
+pip-audit /Users/dohyunjung/.local/share/langbench-tools/venv/bin/pip-audit pip-audit 2.10.1
+govulncheck /Users/dohyunjung/go/bin/govulncheck Go: go1.27.2 Scanner: govulncheck@v1.9.0
+cargo-audit /Users/dohyunjung/.cargo/bin/cargo-audit cargo-audit 0.22.2
+hurl /opt/homebrew/bin/hurl hurl 8.0.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+drogon /opt/homebrew/bin/brew 1.9.14

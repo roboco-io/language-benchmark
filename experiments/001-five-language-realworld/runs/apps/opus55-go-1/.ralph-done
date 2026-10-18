@@ -1,0 +1,5 @@
+Verified 2026-10-18:
+1. Hurl suite api/hurl: 13/13 files, 154/154 requests pass (local binary, start.sh, Docker).
+2. start.sh: downloads modules, builds, serves on $PORT in foreground.
+3. Dockerfile: multi-stage static release build; empty /data DB gets schema at start; honours $PORT.
+4. GOMAXPROCS=runtime.NumCPU() (10 on host, 6 in container = nproc); SQLite journal_mode=wal, busy_timeout=5000ms.

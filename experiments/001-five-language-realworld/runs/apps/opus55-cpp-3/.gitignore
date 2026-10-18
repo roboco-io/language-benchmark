@@ -1,0 +1,6 @@
+build/
+*.db
+*.db-wal
+*.db-shm
+.deps/
+uploads/

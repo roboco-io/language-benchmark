@@ -1,0 +1,6 @@
+build
+.deps
+.git
+*.db
+*.db-wal
+*.db-shm

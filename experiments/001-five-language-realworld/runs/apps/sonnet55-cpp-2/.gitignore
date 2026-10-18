@@ -1,0 +1,5 @@
+build/
+*.db
+*.db-shm
+*.db-wal
+data/

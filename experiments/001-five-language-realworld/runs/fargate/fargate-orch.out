@@ -1,0 +1,239 @@
+2026-10-18 16:31:30 opus55-python-1 로컬 준비 시작
+2026-10-18 16:32:09 opus55-python-1 로컬 준비 끝 rc=0 
+2026-10-18 16:32:09 sonnet55-go-1 로컬 준비 시작
+2026-10-18 16:32:33 opus55-python-1 a1 앱 160971b96d8b45fdbb4346e394c15d45 (172.31.28.57:45876) / 부하 f9f881301ba7497592e72038703628ea 시작
+2026-10-18 16:32:51 sonnet55-go-1 로컬 준비 끝 rc=0 
+2026-10-18 16:32:51 sonnet55-rust-1 로컬 준비 시작
+2026-10-18 16:33:14 sonnet55-go-1 a1 앱 3815ea7e17a6493d87bcffb987b90192 (172.31.19.52:40276) / 부하 902676f904d14ceb95cc258fbe6e3519 시작
+2026-10-18 16:33:20 opus55-python-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:33:21 opus55-python-1 a1 앱 160971b96d8b45fdbb4346e394c15d45 (172.31.28.57:45876) / 부하 6446649048c644219a8f66a4c04f9633 시작
+2026-10-18 16:34:02 sonnet55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:34:03 sonnet55-go-1 a1 앱 3815ea7e17a6493d87bcffb987b90192 (172.31.19.52:40276) / 부하 28142bf55f0d42ad9c0ad148e84a465f 시작
+2026-10-18 16:34:04 sonnet55-rust-1 로컬 준비 끝 rc=0 
+2026-10-18 16:34:04 sonnet55-typescript-1 로컬 준비 시작
+2026-10-18 16:34:28 sonnet55-rust-1 a1 앱 6d51deace3ce432186814f7140624cf7 (172.31.90.47:40655) / 부하 98e573d4bb4649568d5e9a67d3fd1f41 시작
+2026-10-18 16:34:55 sonnet55-typescript-1 로컬 준비 끝 rc=0 
+2026-10-18 16:34:55 opus55-rust-1 로컬 준비 시작
+2026-10-18 16:35:24 sonnet55-typescript-1 a1 앱 c54f6102fed5473e9d625b0fab798967 (172.31.88.253:45922) / 부하 f648fa392bb848e294418b03943556c5 시작
+2026-10-18 16:36:06 opus55-rust-1 로컬 준비 끝 rc=0 
+2026-10-18 16:36:06 opus55-go-1 로컬 준비 시작
+2026-10-18 16:36:10 sonnet55-typescript-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:36:11 sonnet55-typescript-1 a1 앱 c54f6102fed5473e9d625b0fab798967 (172.31.88.253:45922) / 부하 85ac1bdf20d241c7923424f1c24bd0f3 시작
+2026-10-18 16:36:25 opus55-rust-1 a1 앱 d5bfd2f2c2c84745aadd7cbdcd6581fd (172.31.2.34:40960) / 부하 893a5458d73146b59c3f20f7b98933b9 시작
+2026-10-18 16:36:44 opus55-go-1 로컬 준비 끝 rc=0 
+2026-10-18 16:36:44 sonnet55-cpp-1 로컬 준비 시작
+2026-10-18 16:37:08 opus55-go-1 a1 앱 3701ae50b02a498d89dcb4df8b8f0800 (172.31.13.1:41906) / 부하 71ef850696564142b9ca24272eaf104d 시작
+2026-10-18 16:37:12 opus55-rust-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:37:12 opus55-rust-1 a1 앱 d5bfd2f2c2c84745aadd7cbdcd6581fd (172.31.2.34:40960) / 부하 b27b356447c24aea84679b0b563446bb 시작
+2026-10-18 16:37:21 sonnet55-cpp-1 로컬 준비 끝 rc=0 
+2026-10-18 16:37:21 opus55-typescript-1 로컬 준비 시작
+2026-10-18 16:37:45 sonnet55-cpp-1 a1 앱 c13cf87cfcc84a1b916739830f4ab3bb (172.31.87.91:43136) / 부하 acd982b567c3415797f4490f751d712d 시작
+2026-10-18 16:37:55 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:37:56 opus55-go-1 a1 앱 3701ae50b02a498d89dcb4df8b8f0800 (172.31.13.1:41906) / 부하 c74413c5be21493db452828e7e3a0807 시작
+2026-10-18 16:38:00 opus55-rust-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:38:00 opus55-rust-1 a1 앱 d5bfd2f2c2c84745aadd7cbdcd6581fd (172.31.2.34:40960) / 부하 2a86759bd1484e66a597c88256862362 시작
+2026-10-18 16:38:03 opus55-typescript-1 로컬 준비 끝 rc=0 
+2026-10-18 16:38:03 opus55-cpp-1 로컬 준비 시작
+2026-10-18 16:38:27 opus55-typescript-1 a1 앱 113e913a4b4842959436523b210bc6aa (172.31.26.65:41754) / 부하 4a618ccbcb7643b198c4db4f5177a508 시작
+2026-10-18 16:38:43 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:38:44 opus55-go-1 a1 앱 3701ae50b02a498d89dcb4df8b8f0800 (172.31.13.1:41906) / 부하 3b81246db7eb461a8c860a07406d4ccb 시작
+2026-10-18 16:38:47 opus55-rust-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:38:48 opus55-rust-1 a1 앱 d5bfd2f2c2c84745aadd7cbdcd6581fd (172.31.2.34:40960) / 부하 2eba9760627348b4a5d20ef2fb9df3ef 시작
+2026-10-18 16:39:07 opus55-cpp-1 로컬 준비 끝 rc=0 
+2026-10-18 16:39:07 sonnet55-python-1 로컬 준비 시작
+2026-10-18 16:39:15 opus55-typescript-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:39:16 opus55-typescript-1 a1 앱 113e913a4b4842959436523b210bc6aa (172.31.26.65:41754) / 부하 ee1e2294fe0c430188d91a985b491724 시작
+2026-10-18 16:39:25 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 f927ec7e67754bd8bf91cd85727a449d 시작
+2026-10-18 16:39:30 sonnet55-python-1 로컬 준비 끝 rc=0 
+2026-10-18 16:39:30 opus55-python-2 로컬 준비 시작
+2026-10-18 16:39:31 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:39:32 opus55-go-1 a1 앱 3701ae50b02a498d89dcb4df8b8f0800 (172.31.13.1:41906) / 부하 562bd68ffe9d4cc1a88bfc8eb54391d6 시작
+2026-10-18 16:39:49 sonnet55-python-1 a1 앱 3c28ed6dc0494ec6b5385366d639c31c (172.31.15.163:42817) / 부하 be1ace6ec0244a53bf7faa7bd139dd1c 시작
+2026-10-18 16:39:56 opus55-typescript-1 오케스트레이터 오류: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/"
+2026-10-18 16:40:08 opus55-python-2 로컬 준비 끝 rc=1 push
+2026-10-18 16:40:08 opus55-go-2 로컬 준비 시작
+2026-10-18 16:40:12 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:40:12 opus55-go-2 로컬 준비 끝 rc=1 build
+2026-10-18 16:40:12 opus55-rust-2 로컬 준비 시작
+2026-10-18 16:40:13 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 b50ec2eb3e474ec38c785d307aec3f89 시작
+2026-10-18 16:40:16 opus55-rust-2 로컬 준비 끝 rc=1 build
+2026-10-18 16:40:16 sonnet55-typescript-2 로컬 준비 시작
+2026-10-18 16:40:19 opus55-go-1 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (4)
+2026-10-18 16:40:36 sonnet55-python-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:40:37 sonnet55-python-1 a1 앱 3c28ed6dc0494ec6b5385366d639c31c (172.31.15.163:42817) / 부하 fff4df37fd85418f9bbde3b872796d62 시작
+2026-10-18 16:40:42 opus55-go-1 a1 앱 d3339a87bc804bfdaa1eefb62133c4db (172.31.93.151:41906) / 부하 66577fd6a9de45c783ebcd72b66cf46d 시작
+2026-10-18 16:40:59 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:41:00 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 9d6b3bccbeac422db652de238abb5370 시작
+2026-10-18 16:41:01 sonnet55-typescript-2 로컬 준비 끝 rc=0 
+2026-10-18 16:41:01 opus55-typescript-2 로컬 준비 시작
+2026-10-18 16:41:24 sonnet55-python-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:41:25 sonnet55-python-1 a1 앱 3c28ed6dc0494ec6b5385366d639c31c (172.31.15.163:42817) / 부하 ae4c7eed862d4b27b47a334aebdc03ff 시작
+2026-10-18 16:41:28 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-18 16:41:29 opus55-go-1 a1 앱 d3339a87bc804bfdaa1eefb62133c4db (172.31.93.151:41906) / 부하 4ccabe3d580c484eb28c93b382e8c73e 시작
+2026-10-18 16:41:29 sonnet55-typescript-2 a1 앱 c3dd6f8016d5421ca6ebdd0427d44a06 (172.31.12.157:46643) / 부하 fbeb29a8d99c4ac2a024ad837a9438be 시작
+2026-10-18 16:41:54 opus55-typescript-2 로컬 준비 끝 rc=0 
+2026-10-18 16:41:54 sonnet55-cpp-2 로컬 준비 시작
+2026-10-18 16:42:02 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:42:03 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 7beadff68632411dbba602186ba6b0a8 시작
+2026-10-18 16:42:16 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (6)
+2026-10-18 16:42:16 sonnet55-typescript-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:42:17 opus55-go-1 a1 앱 d3339a87bc804bfdaa1eefb62133c4db (172.31.93.151:41906) / 부하 82e5ecc4ae3149b3a33182b274cbf062 시작
+2026-10-18 16:42:17 sonnet55-typescript-2 a1 앱 c3dd6f8016d5421ca6ebdd0427d44a06 (172.31.12.157:46643) / 부하 8ff6c591ec134956a36867ea0cd13658 시작
+2026-10-18 16:42:22 opus55-typescript-2 a1 앱 6c954ade08944597906703b57af7ae7a (172.31.16.32:47403) / 부하 b9f13354e6ea4fa2b76e07988df8a36a 시작
+2026-10-18 16:42:50 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-18 16:42:51 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 53e50e2a01da4ad392480fac973d3fee 시작
+2026-10-18 16:43:03 opus55-go-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (7)
+2026-10-18 16:43:04 sonnet55-typescript-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:43:04 sonnet55-cpp-2 로컬 준비 끝 rc=0 
+2026-10-18 16:43:04 opus55-cpp-2 로컬 준비 시작
+2026-10-18 16:43:04 opus55-go-1 a1 앱 d3339a87bc804bfdaa1eefb62133c4db (172.31.93.151:41906) / 부하 34601d846713485f9e0563e79c919ff5 시작
+2026-10-18 16:43:04 sonnet55-typescript-2 a1 앱 c3dd6f8016d5421ca6ebdd0427d44a06 (172.31.12.157:46643) / 부하 a34b6ef1168a49a1802f92242ae761ef 시작
+2026-10-18 16:43:25 opus55-typescript-2 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (1)
+2026-10-18 16:43:27 sonnet55-cpp-2 a1 앱 580ae04cf6cb472da441f8f168dc2585 (172.31.27.88:45096) / 부하 fc6118e662d14e0192f1af7932b4e374 시작
+2026-10-18 16:43:37 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-18 16:43:38 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 a608a8f678ff49c2bf206d238853b735 시작
+2026-10-18 16:43:51 sonnet55-typescript-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:43:52 sonnet55-typescript-2 a1 앱 c3dd6f8016d5421ca6ebdd0427d44a06 (172.31.12.157:46643) / 부하 b2b5ce1922f24e6eba6604751921512d 시작
+2026-10-18 16:43:53 opus55-typescript-2 a1 앱 858ef1426ceb4c2991724192893058f6 (172.31.9.103:47403) / 부하 243135b45cf7452dbb4ea82e8aa92885 시작
+2026-10-18 16:44:07 opus55-cpp-2 로컬 준비 끝 rc=0 
+2026-10-18 16:44:07 sonnet55-rust-2 로컬 준비 시작
+2026-10-18 16:44:25 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (6)
+2026-10-18 16:44:26 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 17b066dcd7a341f8a2861a44781b7410 시작
+2026-10-18 16:44:26 opus55-cpp-2 a1 앱 2b006a4834124244924d26d46015cac0 (172.31.90.199:40979) / 부하 b24fc84acf4a43fcb119dadba0399f66 시작
+2026-10-18 16:44:40 sonnet55-typescript-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-18 16:44:40 sonnet55-typescript-2 a1 앱 c3dd6f8016d5421ca6ebdd0427d44a06 (172.31.12.157:46643) / 부하 e7758650a6474ed384e89f5bd8f5a239 시작
+2026-10-18 16:45:12 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (7)
+2026-10-18 16:45:13 sonnet55-rust-2 로컬 준비 끝 rc=0 
+2026-10-18 16:45:13 sonnet55-python-2 로컬 준비 시작
+2026-10-18 16:45:13 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 2aee2b7850264af69ed33b3c935536ff 시작
+2026-10-18 16:45:31 sonnet55-rust-2 a1 앱 131b3d8e3aab46c49bdc5dc238925220 (172.31.91.95:45352) / 부하 6981ef5fa68c438796cc13cc43b67425 시작
+2026-10-18 16:45:36 sonnet55-python-2 로컬 준비 끝 rc=0 
+2026-10-18 16:45:36 sonnet55-go-2 로컬 준비 시작
+2026-10-18 16:46:00 sonnet55-python-2 a1 앱 a7c4d05018094029935be6ece3f9a1bd (172.31.0.155:46537) / 부하 32e8c2a78ed347309f55f640f6582bac 시작
+2026-10-18 16:46:00 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (8)
+2026-10-18 16:46:01 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 e46fc5ee4940452ea0f9078ce5a90b0e 시작
+2026-10-18 16:46:10 opus55-python-1 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 16:46:13 sonnet55-go-2 로컬 준비 끝 rc=0 
+2026-10-18 16:46:13 sonnet55-rust-3 로컬 준비 시작
+2026-10-18 16:46:17 sonnet55-rust-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:46:18 sonnet55-rust-2 a1 앱 131b3d8e3aab46c49bdc5dc238925220 (172.31.91.95:45352) / 부하 b26b5e95af4640b6865ac4e9d813ce6b 시작
+2026-10-18 16:46:38 sonnet55-go-2 a1 앱 b6c73b073be54d81942100a6709c181a (172.31.91.16:46907) / 부하 595de5c663974a6e99c55e04d2d7719f 시작
+2026-10-18 16:46:47 sonnet55-python-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:46:48 opus55-cpp-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (9)
+2026-10-18 16:46:48 opus55-cpp-1 a1 앱 2f6543b290fa4b73875f7752bdc1952f (172.31.23.22:48203) / 부하 725a6f8038c048f9881fe1f5047599dd 시작
+2026-10-18 16:46:48 sonnet55-python-2 a1 앱 a7c4d05018094029935be6ece3f9a1bd (172.31.0.155:46537) / 부하 136fd3e33cf44edcaceb5faf81522994 시작
+2026-10-18 16:46:53 sonnet55-go-1 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 16:47:05 sonnet55-rust-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:47:06 sonnet55-rust-2 a1 앱 131b3d8e3aab46c49bdc5dc238925220 (172.31.91.95:45352) / 부하 046c20a38415469d82f9c2adc5271ff7 시작
+2026-10-18 16:47:13 sonnet55-rust-1 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 16:47:22 sonnet55-rust-3 로컬 준비 끝 rc=0 
+2026-10-18 16:47:22 sonnet55-python-3 로컬 준비 시작
+2026-10-18 16:47:35 sonnet55-python-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:47:36 sonnet55-python-2 a1 앱 a7c4d05018094029935be6ece3f9a1bd (172.31.0.155:46537) / 부하 eebf12c3e4684045ba89e30710407549 시작
+2026-10-18 16:47:46 sonnet55-rust-3 a1 앱 014fe9737e5643d1b1dda46dab877354 (172.31.82.255:43338) / 부하 93ce7cf9ec774a2da68f80582e7f16aa 시작
+2026-10-18 16:47:46 sonnet55-python-3 로컬 준비 끝 rc=0 
+2026-10-18 16:47:46 sonnet55-cpp-3 로컬 준비 시작
+2026-10-18 16:48:10 sonnet55-python-3 a1 앱 10d60241842a48b28469ac1e686fc1a3 (172.31.86.33:44297) / 부하 a58c2eaed7174ef08c9d04f249e00f0c 시작
+2026-10-18 16:48:22 sonnet55-python-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:48:23 sonnet55-python-2 a1 앱 a7c4d05018094029935be6ece3f9a1bd (172.31.0.155:46537) / 부하 118b9934ff094310bd63867f2381c2ad 시작
+2026-10-18 16:48:56 sonnet55-python-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:48:57 sonnet55-python-3 a1 앱 10d60241842a48b28469ac1e686fc1a3 (172.31.86.33:44297) / 부하 5a4ffc4b79da414087958dea3d496e4d 시작
+2026-10-18 16:49:08 sonnet55-cpp-3 로컬 준비 끝 rc=0 
+2026-10-18 16:49:08 opus55-typescript-3 로컬 준비 시작
+2026-10-18 16:49:11 sonnet55-python-2 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-18 16:49:11 sonnet55-python-2 a1 앱 a7c4d05018094029935be6ece3f9a1bd (172.31.0.155:46537) / 부하 8930948142c2433fb67c6c5c462396d3 시작
+2026-10-18 16:49:18 sonnet55-typescript-1 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 16:49:31 sonnet55-cpp-3 a1 앱 a2ff88c93fd44020844b07a7f432981e (172.31.11.159:40537) / 부하 8c5544487d3446a2a204f1e013a0b4c4 시작
+2026-10-18 16:49:52 opus55-typescript-3 로컬 준비 끝 rc=0 
+2026-10-18 16:49:52 opus55-cpp-3 로컬 준비 시작
+2026-10-18 16:50:17 sonnet55-cpp-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:50:18 sonnet55-cpp-3 a1 앱 a2ff88c93fd44020844b07a7f432981e (172.31.11.159:40537) / 부하 36e0bd6108ac4c62be565d9d547064e4 시작
+2026-10-18 16:50:21 opus55-typescript-3 a1 앱 d7fc50c18d514d978bb13f6455fdb4f2 (172.31.86.198:42844) / 부하 ee5b669ff4a34fff8f10f30b99f576ec 시작
+2026-10-18 16:50:35 sonnet55-cpp-1 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 16:50:55 opus55-cpp-3 로컬 준비 끝 rc=0 
+2026-10-18 16:50:55 opus55-go-3 로컬 준비 시작
+2026-10-18 16:51:18 opus55-cpp-3 a1 앱 8f3d8bae06bd4a9fb659d993035226e0 (172.31.12.107:49754) / 부하 20eefe8ece834f4fbbf29ef37d7925d2 시작
+2026-10-18 16:51:32 opus55-go-3 로컬 준비 끝 rc=0 
+2026-10-18 16:51:32 sonnet55-typescript-3 로컬 준비 시작
+2026-10-18 16:51:37 opus55-rust-1 a1 종료 exit=0 files=12 outcome=ok relaunch=3
+2026-10-18 16:51:50 opus55-go-3 a1 앱 26ec4f16373c4492a3742d7c20a8bfee (172.31.24.70:46980) / 부하 6c31bba7d2b343f9b722bdeb1758bf51 시작
+2026-10-18 16:52:05 opus55-cpp-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:52:06 opus55-cpp-3 a1 앱 8f3d8bae06bd4a9fb659d993035226e0 (172.31.12.107:49754) / 부하 a02dffcc7d844e91a731ee879670771d 시작
+2026-10-18 16:52:18 sonnet55-typescript-3 로컬 준비 끝 rc=0 
+2026-10-18 16:52:18 sonnet55-go-3 로컬 준비 시작
+2026-10-18 16:52:37 opus55-go-3 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (1)
+2026-10-18 16:52:47 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 235054efa7274fbeb910e545d650f65e 시작
+2026-10-18 16:52:55 opus55-go-3 a1 앱 07c1dd724ab64bf7951f9b1ab4cc627d (172.31.21.214:46980) / 부하 caede65d971f4a3388d11cde0c72e6b7 시작
+2026-10-18 16:52:55 sonnet55-go-3 로컬 준비 끝 rc=0 
+2026-10-18 16:52:55 opus55-rust-3 로컬 준비 시작
+2026-10-18 16:53:18 sonnet55-go-3 a1 앱 b6dd1408ba4049b2bf2dc60f0852a751 (172.31.3.200:41826) / 부하 fa18faccbf574eba86b0ac45eb859773 시작
+2026-10-18 16:53:34 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:53:34 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 648bf7c584c7491f8466da4f79c0b54a 시작
+2026-10-18 16:53:57 opus55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:53:58 opus55-go-3 a1 앱 07c1dd724ab64bf7951f9b1ab4cc627d (172.31.21.214:46980) / 부하 99f3f50ad07b430e8dcc4b270cb5b398 시작
+2026-10-18 16:54:05 sonnet55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:54:06 sonnet55-go-3 a1 앱 b6dd1408ba4049b2bf2dc60f0852a751 (172.31.3.200:41826) / 부하 44c50656edfd4bc495b081dd94340354 시작
+2026-10-18 16:54:08 opus55-rust-3 로컬 준비 끝 rc=0 
+2026-10-18 16:54:08 opus55-python-3 로컬 준비 시작
+2026-10-18 16:54:13 sonnet55-python-1 a1 종료 exit=0 files=12 outcome=ok relaunch=2
+2026-10-18 16:54:22 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:54:23 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 8fec96e35ea843df8dfc18935249f0f6 시작
+2026-10-18 16:54:31 opus55-rust-3 a1 앱 a38938b7aac949b9aeb0193843ed11a0 (172.31.28.178:47037) / 부하 3723cc2f19e64e49a66c580c0a3f2388 시작
+2026-10-18 16:54:41 opus55-python-3 로컬 준비 끝 rc=0 
+2026-10-18 16:54:44 opus55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:54:45 opus55-go-3 a1 앱 07c1dd724ab64bf7951f9b1ab4cc627d (172.31.21.214:46980) / 부하 84edb0f4c8314bc585d1eb6c64a1e239 시작
+2026-10-18 16:54:53 sonnet55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:54:54 sonnet55-go-3 a1 앱 b6dd1408ba4049b2bf2dc60f0852a751 (172.31.3.200:41826) / 부하 47b47a1758304655a253831a9adc21a2 시작
+2026-10-18 16:55:05 opus55-python-3 a1 앱 f306fd67f4674843983bf70c988cad83 (172.31.6.214:42452) / 부하 5a59f847c61d44358aefade20e4571af 시작
+2026-10-18 16:55:10 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-18 16:55:11 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 d672d68d05a84204a9b9c6880000bbf9 시작
+2026-10-18 16:55:18 opus55-rust-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-18 16:55:19 opus55-rust-3 a1 앱 a38938b7aac949b9aeb0193843ed11a0 (172.31.28.178:47037) / 부하 ea50fe32aaef4763ba299f1bd9b0abbf 시작
+2026-10-18 16:55:48 opus55-go-3 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (4)
+2026-10-18 16:55:49 opus55-go-1 a1 종료 exit=0 files=12 outcome=ok relaunch=7
+2026-10-18 16:55:52 opus55-python-3 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (1)
+2026-10-18 16:55:58 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-18 16:55:59 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 4d4fd528176448cc87b24c39a1e4ea08 시작
+2026-10-18 16:56:06 opus55-rust-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:56:07 opus55-rust-3 a1 앱 a38938b7aac949b9aeb0193843ed11a0 (172.31.28.178:47037) / 부하 cd9bbf97eec94e98bcc518160033af01 시작
+2026-10-18 16:56:11 opus55-go-3 a1 앱 87e28905df4b4bdea4f93d3f0e426041 (172.31.25.105:46980) / 부하 43b3361cb4e941a49b4d1818a3901dd4 시작
+2026-10-18 16:56:15 sonnet55-cpp-2 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 16:56:16 opus55-python-3 a1 앱 1a71fcb605b44342b8bedf755e3602c6 (172.31.27.150:42452) / 부하 0f033e1de74c4f5a9ce1f3309ee6c1c8 시작
+2026-10-18 16:56:41 opus55-typescript-2 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 16:56:45 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-18 16:56:46 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 d5410fc374a14d26a49b87d6dfff0d34 시작
+2026-10-18 16:56:57 opus55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-18 16:56:58 opus55-go-3 a1 앱 87e28905df4b4bdea4f93d3f0e426041 (172.31.25.105:46980) / 부하 bd78e4791e0d4fa0a2cbba1ee9f11e96 시작
+2026-10-18 16:57:03 opus55-python-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-18 16:57:04 opus55-python-3 a1 앱 1a71fcb605b44342b8bedf755e3602c6 (172.31.27.150:42452) / 부하 f0348f2fba51415f86869df7ce870882 시작
+2026-10-18 16:57:13 opus55-cpp-2 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 16:57:26 sonnet55-typescript-2 a1 종료 exit=0 files=12 outcome=ok relaunch=4
+2026-10-18 16:57:33 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (6)
+2026-10-18 16:57:34 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 b3bbb334c9994c3db923a2b6974b5aec 시작
+2026-10-18 16:57:45 opus55-go-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (6)
+2026-10-18 16:57:46 opus55-go-3 a1 앱 87e28905df4b4bdea4f93d3f0e426041 (172.31.25.105:46980) / 부하 b390f2a0bb024b7480ac185ca215bd53 시작
+2026-10-18 16:58:21 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (7)
+2026-10-18 16:58:22 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 b3bffd2a7cbe4f29a2cb6679eb5b4fd8 시작
+2026-10-18 16:58:34 opus55-go-3 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (7)
+2026-10-18 16:58:52 opus55-go-3 a1 앱 ff24f04341724602bcf18ed55ea40c41 (172.31.14.148:46980) / 부하 0a87eacb8f994c21b75d35aa4441f40d 시작
+2026-10-18 16:59:08 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (8)
+2026-10-18 16:59:09 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 00f084cacdc44acb8969cf84799998dd 시작
+2026-10-18 16:59:34 opus55-cpp-1 a1 종료 exit=0 files=12 outcome=ok relaunch=9
+2026-10-18 16:59:42 sonnet55-rust-2 a1 종료 exit=0 files=12 outcome=ok relaunch=2
+2026-10-18 16:59:56 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (9)
+2026-10-18 16:59:57 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 e17a52208ac3466fa7e2edfa0a5f0368 시작
+2026-10-18 17:00:00 sonnet55-go-2 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 17:00:33 sonnet55-rust-3 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 17:00:43 sonnet55-typescript-3 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (10)
+2026-10-18 17:00:44 sonnet55-typescript-3 a1 앱 585d02968a2d4227ae12f3bf8ed5c006 (172.31.11.3:43952) / 부하 a822924d257b4ae3a2ab9d67dd6bebfb 시작
+2026-10-18 17:01:48 sonnet55-python-3 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 17:02:01 sonnet55-python-2 a1 종료 exit=0 files=12 outcome=ok relaunch=4
+2026-10-18 17:03:07 sonnet55-cpp-3 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 17:03:08 opus55-typescript-3 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-18 17:04:55 opus55-cpp-3 a1 종료 exit=0 files=12 outcome=ok relaunch=1
+2026-10-18 17:07:40 sonnet55-go-3 a1 종료 exit=0 files=12 outcome=ok relaunch=2
+2026-10-18 17:08:53 opus55-rust-3 a1 종료 exit=0 files=12 outcome=ok relaunch=2
+2026-10-18 17:09:54 opus55-python-3 a1 종료 exit=0 files=12 outcome=ok relaunch=2
+2026-10-18 17:10:25 sonnet55-typescript-3 오케스트레이터 오류: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/"
+2026-10-18 17:10:30 opus55-go-3 오케스트레이터 오류: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/"
+2026-10-18 17:10:30 ALL DONE opus55-cpp-1=ok opus55-cpp-2=ok opus55-cpp-3=ok opus55-go-1=ok opus55-go-2=prep-failed opus55-go-3=error: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/" opus55-python-1=ok opus55-python-2=prep-failed opus55-python-3=ok opus55-rust-1=ok opus55-rust-2=prep-failed opus55-rust-3=ok opus55-typescript-1=error: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/" opus55-typescript-2=ok opus55-typescript-3=ok sonnet55-cpp-1=ok sonnet55-cpp-2=ok sonnet55-cpp-3=ok sonnet55-go-1=ok sonnet55-go-2=ok sonnet55-go-3=ok sonnet55-python-1=ok sonnet55-python-2=ok sonnet55-python-3=ok sonnet55-rust-1=ok sonnet55-rust-2=ok sonnet55-rust-3=ok sonnet55-typescript-1=ok sonnet55-typescript-2=ok sonnet55-typescript-3=error: Could not connect to the endpoint URL: "https://ecs.us-east-1.amazonaws.com/"

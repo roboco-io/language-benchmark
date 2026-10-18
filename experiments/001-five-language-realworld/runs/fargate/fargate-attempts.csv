@@ -1,0 +1,33 @@
+run,attempt,start,end,app_stop,load_stop,load_exit,files,outcome
+opus55-python-1,1,16:32:10,16:46:10,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-go-1,1,16:32:51,16:46:53,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-rust-1,1,16:34:05,16:47:13,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-typescript-1,1,16:34:55,16:49:18,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-cpp-1,1,16:37:21,16:50:35,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-rust-1,1,16:36:06,16:51:37,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-python-1,1,16:39:31,16:54:13,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-go-1,1,16:40:19,16:55:49,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-cpp-2,1,16:43:05,16:56:15,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-typescript-2,1,16:43:25,16:56:41,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-cpp-2,1,16:44:07,16:57:13,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-typescript-2,1,16:41:01,16:57:26,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-cpp-1,1,16:39:07,16:59:34,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-rust-2,1,16:45:13,16:59:42,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-go-2,1,16:46:14,17:00:00,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-rust-3,1,16:47:22,17:00:33,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-python-3,1,16:47:47,17:01:48,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-python-2,1,16:45:36,17:02:01,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-cpp-3,1,16:49:08,17:03:07,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-typescript-3,1,16:49:52,17:03:08,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-cpp-3,1,16:50:56,17:04:55,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-go-3,1,16:52:56,17:07:40,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-rust-3,1,16:54:08,17:08:53,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-python-3,1,16:55:52,17:09:54,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-python-2,1,17:14:23,17:16:55,,"TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head ""https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools"": dial tcp 54.144.72.226:443: i/o timeout",,0,failed
+opus55-typescript-1,1,17:12:28,17:26:43,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-typescript-3,1,17:13:14,17:27:14,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-go-3,1,17:13:50,17:27:14,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-go-2,1,17:18:48,17:34:04,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-python-2,2,17:16:55,17:36:00,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-rust-2,1,17:16:09,17:38:08,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-go-2,2,17:34:04,17:47:14,,EssentialContainerExited: Essential container in task exited,0,12,ok

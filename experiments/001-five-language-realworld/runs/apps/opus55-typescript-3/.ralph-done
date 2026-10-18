@@ -1,0 +1,5 @@
+All completion criteria verified on 2026-10-18:
+- Hurl tests: 13 files, 154 requests passed (local start.sh and Docker container)
+- start.sh: clean install, build, migrate, foreground server on PORT
+- Dockerfile: production image, schema created on empty database
+- Cluster: one worker per CPU core; SQLite WAL mode and busy_timeout 5000 ms
