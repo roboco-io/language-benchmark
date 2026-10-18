@@ -15,6 +15,7 @@
   --grid: #e1e0d9; --axis: #c3c2b7; --border: #e1e0d9;
   --t1: #6da7ec; --t2: #b7d3f6; --t3: #f0efec;
   --s1: #2a78d6; --s2: #eb6834; --accent: #256abf; --warn-bg: #fff4dc;
+  --s1t: #d3e4f8; --s2t: #fbdccc;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -22,6 +23,7 @@
     --grid: #2c2c2a; --axis: #383835; --border: #2c2c2a;
     --t1: #2a78d6; --t2: #143e70; --t3: #262624;
     --s1: #3987e5; --s2: #d95926; --accent: #86b6ef; --warn-bg: #2e2614;
+    --s1t: #17324f; --s2t: #4a2516;
   }
 }
 :root[data-theme="dark"] {
@@ -29,6 +31,7 @@
   --grid: #2c2c2a; --axis: #383835; --border: #2c2c2a;
   --t1: #2a78d6; --t2: #143e70; --t3: #262624;
   --s1: #3987e5; --s2: #d95926; --accent: #86b6ef; --warn-bg: #2e2614;
+    --s1t: #17324f; --s2t: #4a2516;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
@@ -53,10 +56,13 @@ table.matrix { border-collapse: separate; border-spacing: 2px; font-size: 13px; 
 .matrix td { font-variant-numeric: tabular-nums; background: var(--t3); }
 .matrix td.t1 { background: var(--t1); } .matrix td.t2 { background: var(--t2); }
 .matrix td.na { background: transparent; color: var(--muted); }
+.matrix td.sb { background: var(--s1t); } .matrix td.ob { background: var(--s2t); }
+.matrix th.mh { text-align: center; color: var(--muted); font-weight: 500; }
 .matrix td.score { font-weight: 700; }
 .matrix small { color: var(--ink-2); font-weight: 400; margin-left: 4px; }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--ink-2); align-items: center; }
 .sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--border); }
+details.adv { margin-top: 12px; } details.adv summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
 .weights { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 18px; margin-top: 8px; }
 .weights label { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
 .weights input { width: 96px; accent-color: var(--accent); }
@@ -91,11 +97,22 @@ footer a, .note a { color: var(--accent); }
     <div class="legend" id="legend"></div>
   </section>
 
+  <section class="card" id="rankCard" hidden>
+    <h2 data-t="rankTitle"></h2>
+    <p class="note" data-t="rankNote"></p>
+    <div class="scroll"><svg id="rank" role="img" width="100%" height="240"></svg></div>
+  </section>
+
   <section class="card">
     <h2 data-t="weightsTitle"></h2>
-    <p class="note" data-t="weightsNote"></p>
-    <button class="link-btn" id="resetW" data-t="reset"></button>
-    <div class="weights" id="weights"></div>
+    <span class="seg" id="presetSeg"></span>
+    <p class="note" id="presetNote"></p>
+    <details class="adv">
+      <summary data-t="advanced"></summary>
+      <p class="note" data-t="weightsNote"></p>
+      <button class="link-btn" id="resetW" data-t="reset"></button>
+      <div class="weights" id="weights"></div>
+    </details>
   </section>
 
   <section class="card">
@@ -125,13 +142,26 @@ const T = {
   en: {
     title: "Language Benchmark",
     lead: "Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the same RealWorld backend in five languages. This compares code written by an agent, not raw language runtimes.",
-    model: "Model", both: "Both models",
+    model: "Model", both: "Compare models",
     matrixTitle: "Language × metric", score: "Score",
     grp: { process: "Building it (agent)", product: "What it built", maintain: "Maintainability" },
     empty: "No experiments yet. The grid fills in as EXP-001 (5 languages × 2 models × 3 runs) completes.",
     legendBest: "Top third in column", legendMid: "Middle", legendLow: "Bottom third", legendNa: "— not measured · m/n = runs measured / runs",
     weightsTitle: "Score weights", weightsNote: "The score is a weighted average of per-metric normalized values (0 worst – 1 best within each column). Changing weights changes the ranking; treat it as an aid, not a verdict.",
-    reset: "Reset to equal weights",
+    reset: "Reset to pre-registered weights",
+    advanced: "Advanced: set weights by hand",
+    presets: { prereg: "Pre-registered (24 equal)", balanced: "Balanced", speed: "Build speed", perf: "Performance & infra cost", maintain: "Maintenance & security", custom: "Custom" },
+    presetDesc: {
+      prereg: "All 24 metrics weighted equally. This is the rule fixed before EXP-001 and the basis of its verdict. Most metrics describe the output, so it favours languages that are strong at runtime.",
+      balanced: "Build speed, performance & infra cost, and maintenance & security each contribute one third.",
+      speed: "Which language gets the feature built fastest and cheapest? Build time 3, cost per pass 2, follow-up time 2, tokens 1, follow-up tokens 1.",
+      perf: "Which language serves the same traffic with fewer servers? Throughput 3, p95 2, peak memory 2, p99, idle memory, cold start, image size, soak memory growth, error rates 1 each.",
+      maintain: "Which language is easier to keep and change? Vulnerabilities 2, follow-up success 2, dependencies, LOC, follow-up time, Docker build time 1 each.",
+      custom: "Weights set by hand below.",
+    },
+    hidden: "Hidden because every language has the same value:",
+    rankTitle: "Rank by model", rankNote: "Composite rank under the selected weights. Lines connect the same language across models.",
+    sBetter: "Sonnet 5.5 better", oBetter: "Opus 5.5 better", same: "Same", diffNote: "cell = Sonnet · Opus, % = Opus vs Sonnet",
     detailTitle: "Per-run detail", detailEmpty: "No measured runs for this metric yet.", detailHint: "Showing only the model selected above. Choose “Both” to compare models.",
     stackTitle: "Stacks (fixed for all runs)", lang: "Language", fw: "Framework", db: "DB access",
     limits: "Runtime numbers are measured on AWS Fargate Spot (ARM64, Graviton4 only) with the same limits for every language: 2 vCPU and 1 GiB for the app, load generated from a separate task in the same subnet. Read them as relative comparisons, not absolute values. Costs are API-price equivalents; runs used an existing subscription.",
@@ -140,13 +170,26 @@ const T = {
   ko: {
     title: "Language Benchmark",
     lead: "바이브 코딩 백엔드에는 어떤 언어가 적합할까? Claude Code(Sonnet 5.5 / Opus 5.5)가 같은 RealWorld 백엔드를 5개 언어로 구현한 결과를 비교한다. 언어 런타임 자체가 아니라 에이전트가 만든 코드를 비교한다.",
-    model: "모델", both: "두 모델",
+    model: "모델", both: "두 모델 비교",
     matrixTitle: "언어 × 지표", score: "종합 점수",
     grp: { process: "만드는 과정(에이전트)", product: "만들어진 결과물", maintain: "유지보수성" },
     empty: "아직 실험 결과가 없다. EXP-001(5개 언어 × 2개 모델 × 3회)이 끝나면 표가 채워진다.",
     legendBest: "열 내 상위 1/3", legendMid: "중간", legendLow: "하위 1/3", legendNa: "— 미측정 · m/n = 측정한 run / 전체 run",
     weightsTitle: "종합 점수 가중치", weightsNote: "종합 점수는 지표별 정규화 값(각 열 안에서 0 최하 – 1 최상)의 가중평균이다. 가중치를 바꾸면 순위도 바뀌므로 결론이 아니라 해석 보조로 본다.",
-    reset: "가중치 균등으로 초기화",
+    reset: "사전 등록 가중치로 초기화",
+    advanced: "고급: 가중치 직접 조정",
+    presets: { prereg: "사전 등록(24개 균등)", balanced: "균형", speed: "구현 속도", perf: "성능·인프라 비용", maintain: "유지보수·보안", custom: "직접 조정" },
+    presetDesc: {
+      prereg: "24개 지표를 모두 같은 무게로 더한다. EXP-001 실행 전에 고정한 판정 기준이다. 지표 대부분이 결과물 지표라 런타임 성능이 좋은 언어에 유리하다.",
+      balanced: "구현 속도, 성능·인프라 비용, 유지보수·보안 세 묶음이 각각 1/3씩 기여한다.",
+      speed: "어떤 언어가 기능을 가장 빠르고 싸게 만드는가. 구현 시간 3, 합격당 비용 2, 기능 추가 시간 2, 토큰 1, 기능 추가 토큰 1.",
+      perf: "어떤 언어가 같은 트래픽을 더 적은 서버로 처리하는가. 처리량 3, p95 2, 최대 메모리 2, p99·유휴 메모리·콜드 스타트·이미지 크기·장시간 메모리 증가·에러율 각 1.",
+      maintain: "어떤 언어가 유지·변경하기 쉬운가. 취약점 2, 기능 추가 성공률 2, 직접 의존성·코드량·기능 추가 시간·Docker 빌드 시간 각 1.",
+      custom: "아래에서 직접 정한 가중치.",
+    },
+    hidden: "모든 언어가 같은 값이라 숨긴 지표:",
+    rankTitle: "모델별 순위", rankNote: "선택한 가중치로 계산한 종합 점수 순위다. 선은 같은 언어를 두 모델 사이에서 잇는다.",
+    sBetter: "Sonnet 5.5 우세", oBetter: "Opus 5.5 우세", same: "같음", diffNote: "칸 = Sonnet · Opus, % = Sonnet 대비 Opus",
     detailTitle: "run별 상세", detailEmpty: "이 지표를 측정한 run이 아직 없다.", detailHint: "위에서 고른 모델의 run만 표시한다. 두 모델을 비교하려면 “두 모델”을 고른다.",
     stackTitle: "언어별 스택(모든 run 고정)", lang: "언어", fw: "웹 프레임워크", db: "DB 접근",
     limits: "런타임 수치는 AWS Fargate Spot(ARM64, Graviton4만 사용)에서 모든 언어에 같은 제한(앱 2 vCPU·메모리 1 GiB)을 걸고, 같은 서브넷의 별도 태스크에서 부하를 걸어 측정했다. 절대값이 아니라 언어 간 상대 비교로 해석한다. 비용은 API 단가 환산값이며 실제 실행은 기존 구독으로 했다.",
@@ -155,13 +198,26 @@ const T = {
   ja: {
     title: "Language Benchmark",
     lead: "バイブコーディングのバックエンドにはどの言語が向いているか? Claude Code(Sonnet 5.5 / Opus 5.5)が同じ RealWorld バックエンドを5言語で実装した結果を比較する。比較対象は言語ランタイムではなく、エージェントが書いたコードである。",
-    model: "モデル", both: "両モデル",
+    model: "モデル", both: "モデル比較",
     matrixTitle: "言語 × 指標", score: "総合スコア",
     grp: { process: "作る過程(エージェント)", product: "成果物", maintain: "保守性" },
     empty: "実験結果はまだない。EXP-001(5言語 × 2モデル × 3回)が終わると表が埋まる。",
     legendBest: "列内上位1/3", legendMid: "中位", legendLow: "下位1/3", legendNa: "— 未測定 · m/n = 測定した run / 全 run",
     weightsTitle: "総合スコアの重み", weightsNote: "総合スコアは指標ごとの正規化値(各列内で 0 最低 – 1 最高)の加重平均である。重みを変えると順位も変わるため、結論ではなく解釈の補助として扱う。",
-    reset: "重みを均等に戻す",
+    reset: "事前登録の重みに戻す",
+    advanced: "詳細: 重みを手動で設定",
+    presets: { prereg: "事前登録(24指標均等)", balanced: "バランス", speed: "実装スピード", perf: "性能・インフラコスト", maintain: "保守・セキュリティ", custom: "手動" },
+    presetDesc: {
+      prereg: "24指標をすべて同じ重みで合算する。EXP-001 実行前に固定した判定基準である。指標の多くが成果物指標なので、ランタイム性能の高い言語に有利になる。",
+      balanced: "実装スピード、性能・インフラコスト、保守・セキュリティの3グループがそれぞれ1/3ずつ寄与する。",
+      speed: "どの言語が機能を最も速く安く作れるか。実装時間 3、合格あたりコスト 2、機能追加時間 2、トークン 1、機能追加トークン 1。",
+      perf: "どの言語が同じトラフィックを少ないサーバーで処理できるか。スループット 3、p95 2、最大メモリ 2、p99・アイドルメモリ・コールドスタート・イメージサイズ・長時間メモリ増加・エラー率 各 1。",
+      maintain: "どの言語が保守・変更しやすいか。脆弱性 2、機能追加成功率 2、直接依存・コード量・機能追加時間・Docker ビルド時間 各 1。",
+      custom: "下で手動設定した重み。",
+    },
+    hidden: "全言語が同じ値のため非表示の指標:",
+    rankTitle: "モデル別順位", rankNote: "選んだ重みで計算した総合スコアの順位。線は同じ言語を両モデル間でつなぐ。",
+    sBetter: "Sonnet 5.5 優位", oBetter: "Opus 5.5 優位", same: "同じ", diffNote: "セル = Sonnet · Opus、% = Sonnet 比の Opus",
     detailTitle: "run 別詳細", detailEmpty: "この指標を測定した run はまだない。", detailHint: "上で選んだモデルの run のみ表示する。両モデルを比べるには「両モデル」を選ぶ。",
     stackTitle: "言語別スタック(全 run 固定)", lang: "言語", fw: "フレームワーク", db: "DB アクセス",
     limits: "ランタイムの数値は AWS Fargate Spot(ARM64、Graviton4 のみ)で、全言語に同じ制限(アプリ 2 vCPU・メモリ 1 GiB)をかけ、同じサブネットの別タスクから負荷をかけて測定した。絶対値ではなく言語間の相対比較として読む。コストは API 単価換算で、実行は既存のサブスクリプションで行った。",
@@ -170,13 +226,26 @@ const T = {
   zh: {
     title: "Language Benchmark",
     lead: "哪种语言最适合氛围编程(vibe coding)后端?Claude Code(Sonnet 5.5 / Opus 5.5)用 5 种语言实现同一个 RealWorld 后端,本页比较其结果。比较的是智能体编写的代码,而非语言运行时本身。",
-    model: "模型", both: "两个模型",
+    model: "模型", both: "模型对比",
     matrixTitle: "语言 × 指标", score: "综合得分",
     grp: { process: "构建过程(智能体)", product: "产出物", maintain: "可维护性" },
     empty: "尚无实验结果。EXP-001(5 种语言 × 2 个模型 × 3 次)完成后表格将被填充。",
     legendBest: "列内前 1/3", legendMid: "中间", legendLow: "后 1/3", legendNa: "— 未测量 · m/n = 已测量 run / 全部 run",
     weightsTitle: "综合得分权重", weightsNote: "综合得分是各指标归一化值(每列内 0 最差 – 1 最好)的加权平均。改变权重会改变排名,请将其视为解读辅助而非结论。",
-    reset: "重置为等权重",
+    reset: "重置为预注册权重",
+    advanced: "高级:手动设置权重",
+    presets: { prereg: "预注册(24 项等权)", balanced: "均衡", speed: "实现速度", perf: "性能与基础设施成本", maintain: "维护与安全", custom: "自定义" },
+    presetDesc: {
+      prereg: "24 项指标等权相加。这是 EXP-001 运行前固定的判定标准。多数指标属于产出物指标,因此对运行时性能好的语言有利。",
+      balanced: "实现速度、性能与基础设施成本、维护与安全三组各占 1/3。",
+      speed: "哪种语言能最快、最便宜地完成功能?实现时间 3、每次通过成本 2、新增功能时间 2、token 1、新增功能 token 1。",
+      perf: "哪种语言能用更少的服务器承载同样的流量?吞吐量 3、p95 2、峰值内存 2,p99、空闲内存、冷启动、镜像大小、长时间内存增长、错误率各 1。",
+      maintain: "哪种语言更易维护和修改?漏洞 2、新增功能成功率 2,直接依赖、代码量、新增功能时间、Docker 构建时间各 1。",
+      custom: "在下方手动设置的权重。",
+    },
+    hidden: "所有语言数值相同而隐藏的指标:",
+    rankTitle: "各模型排名", rankNote: "按所选权重计算的综合得分排名。连线连接两个模型中的同一语言。",
+    sBetter: "Sonnet 5.5 更好", oBetter: "Opus 5.5 更好", same: "相同", diffNote: "单元格 = Sonnet · Opus,% = Opus 相对 Sonnet",
     detailTitle: "各 run 详情", detailEmpty: "尚无测量此指标的 run。", detailHint: "仅显示上方所选模型的 run。要比较两个模型,请选择“两个模型”。",
     stackTitle: "各语言技术栈(所有 run 固定)", lang: "语言", fw: "框架", db: "数据库访问",
     limits: "运行时数据在 AWS Fargate Spot(ARM64,仅 Graviton4)上测量,所有语言使用相同限制(应用 2 vCPU、内存 1 GiB),负载来自同一子网中的独立任务。请作为语言间的相对比较解读,而非绝对值。成本为按 API 单价换算的值,实际运行使用现有订阅。",
@@ -200,10 +269,15 @@ const store = {
 };
 const state = {
   ui: store.get("lb.ui", (navigator.language || "en").slice(0, 2)),
-  model: store.get("lb.model", "all"),
+  model: store.get("lb.model", "compare"),
   metric: "rps",
-  weights: Score.defaultWeights(metrics),
+  preset: store.get("lb.preset", "prereg"),
 };
+if (state.model === "all") state.model = "compare"; // 이전 버전의 "두 모델 평균" 선택값
+if (!["prereg", "balanced", "speed", "perf", "maintain"].includes(state.preset)) state.preset = "prereg";
+state.weights = Score.presetWeights(state.preset, metrics);
+const PRESETS = ["prereg", "balanced", "speed", "perf", "maintain"];
+const compare = () => state.model === "compare";
 if (!T[state.ui]) state.ui = "en";
 const t = () => T[state.ui];
 const label = (m) => m[state.ui] || m.en;
@@ -235,7 +309,11 @@ function seg(el, items, current, onPick) {
     el.appendChild(b);
   }
 }
-const cellsFor = () => Object.fromEntries(B.languages.map((l) => [l.key, B.cells[l.key][state.model]]));
+const cellsOf = (model) => Object.fromEntries(B.languages.map((l) => [l.key, B.cells[l.key][model]]));
+const cellsFor = () => cellsOf(state.model);
+const [MA, MB] = B.models.map((m) => m.key); // 비교 모드의 a(Sonnet), b(Opus)
+// 현재 보기에서 모든 언어가 같은 값인 지표(표·run별 상세에서 숨김). 종합 점수 계산에는 가중치대로 그대로 쓴다.
+const hiddenKeys = () => Score.constantMetrics(compare() ? [cellsOf(MA), cellsOf(MB)] : [cellsFor()], metrics);
 
 function renderText() {
   document.documentElement.lang = state.ui === "zh" ? "zh-CN" : state.ui;
@@ -243,19 +321,24 @@ function renderText() {
   document.getElementById("generated").textContent = B.generated.replace("T", " ").replace("+00:00", " UTC");
   document.getElementById("empty").hidden = B.runs.length > 0;
   seg(document.getElementById("langSeg"), LANG_UI, state.ui, (k) => { state.ui = k; store.set("lb.ui", k); render(); });
-  seg(document.getElementById("modelSeg"), [...B.models.map((m) => [m.key, m.name]), ["all", t().both]], state.model,
+  seg(document.getElementById("modelSeg"), [...B.models.map((m) => [m.key, m.name]), ["compare", t().both]], state.model,
     (k) => { state.model = k; store.set("lb.model", k); render(); });
 }
 
 function renderMatrix() {
+  const hidden = hiddenKeys();
+  const shown = metrics.filter((m) => !hidden.includes(m.key));
+  const hiddenNote = hidden.length
+    ? `<span>${t().hidden} ${hidden.map((k) => label(metrics.find((m) => m.key === k))).join(", ")}</span>` : "";
+  if (compare()) return renderCompare(shown, hiddenNote);
   const cells = cellsFor();
   const langs = B.languages;
   const score = Score.composite(cells, metrics, state.weights);
-  const groups = ["process", "product", "maintain"];
+  const groups = ["process", "product", "maintain"].filter((g) => shown.some((m) => m.group === g));
   let h = '<thead><tr class="grp"><th class="lang"></th><th></th>';
-  for (const g of groups) h += `<th colspan="${metrics.filter((m) => m.group === g).length}">${t().grp[g]}</th>`;
+  for (const g of groups) h += `<th colspan="${shown.filter((m) => m.group === g).length}">${t().grp[g]}</th>`;
   h += '</tr><tr><th class="lang"></th><th>' + t().score + "</th>";
-  for (const g of groups) for (const m of metrics.filter((x) => x.group === g)) h += `<th>${label(m)}</th>`;
+  for (const g of groups) for (const m of shown.filter((x) => x.group === g)) h += `<th>${label(m)}</th>`;
   h += "</tr></thead><tbody>";
   // 값이 2개 이상이고 서로 다를 때만 칠한다(전부 같으면 순위가 없다)
   const tier = (v, distinct) => (v === null || distinct < 2 ? "" : v >= 2 / 3 ? "t1" : v >= 1 / 3 ? "t2" : "");
@@ -263,7 +346,7 @@ function renderMatrix() {
   const scoreVals = langs.map((l) => score[l.key]);
   const scoreNorm = Score.normalize(scoreVals, "higher");
   const scoreCount = distinctOf(scoreVals);
-  const ordered = groups.flatMap((g) => metrics.filter((m) => m.group === g));
+  const ordered = groups.flatMap((g) => shown.filter((m) => m.group === g));
   const norms = Object.fromEntries(ordered.map((m) => {
     const vals = langs.map((l) => cells[l.key][m.key]);
     return [m.key, { norm: Score.normalize(vals, m.better), count: distinctOf(vals) }];
@@ -294,25 +377,110 @@ function renderMatrix() {
     `<span><i class="sw" style="background:var(--t1)"></i>${t().legendBest}</span>` +
     `<span><i class="sw" style="background:var(--t2)"></i>${t().legendMid}</span>` +
     `<span><i class="sw" style="background:var(--t3)"></i>${t().legendLow}</span>` +
-    `<span>${t().legendNa} · ↑/↓</span>`;
+    `<span>${t().legendNa} · ↑/↓</span>` + hiddenNote;
+}
+
+// 두 모델 비교: 칸마다 Sonnet · Opus 값과 Sonnet 대비 Opus 변화율. 더 나은 모델 색으로 칠한다.
+function renderCompare(shown, hiddenNote) {
+  const A = cellsOf(MA), Bc = cellsOf(MB);
+  const langs = B.languages;
+  const sa = Score.composite(A, metrics, state.weights), sb = Score.composite(Bc, metrics, state.weights);
+  const ra = Score.ranks(sa), rb = Score.ranks(sb);
+  const nameA = B.models[0].name, nameB = B.models[1].name;
+  const groups = ["process", "product", "maintain"].filter((g) => shown.some((m) => m.group === g));
+  let h = '<thead><tr class="grp"><th class="lang"></th><th colspan="2"></th>';
+  for (const g of groups) h += `<th colspan="${shown.filter((m) => m.group === g).length}">${t().grp[g]}</th>`;
+  h += `</tr><tr><th class="lang"></th><th>${t().score}<br>${nameA}</th><th>${t().score}<br>${nameB}</th>`;
+  const ordered = groups.flatMap((g) => shown.filter((m) => m.group === g));
+  for (const m of ordered) h += `<th>${label(m)}</th>`;
+  h += "</tr></thead><tbody>";
+  const sc = (v, r) => (v === null ? "—" : `${Math.round(v * 100)} <small>#${r}</small>`);
+  langs.forEach((l) => {
+    const d = Score.modelDiff(sa[l.key], sb[l.key], "higher");
+    h += `<tr><th class="lang">${l.name}</th>`;
+    h += `<td class="score ${d.better === "a" ? "sb" : ""}">${sc(sa[l.key], ra[l.key])}</td>`;
+    h += `<td class="score ${d.better === "b" ? "ob" : ""}">${sc(sb[l.key], rb[l.key])}</td>`;
+    for (const m of ordered) {
+      const a = A[l.key][m.key], b = Bc[l.key][m.key];
+      const df = Score.modelDiff(a, b, m.better);
+      const cls = a === null && b === null ? "na" : df.better === "a" ? "sb" : df.better === "b" ? "ob" : "";
+      const pct = df.pct === null || df.pct === 0 ? "" : `<small>${df.pct > 0 ? "+" : "−"}${Math.abs(df.pct) >= 100 ? Math.round(Math.abs(df.pct)) : Math.abs(df.pct).toFixed(0)}%</small>`;
+      h += `<td class="${cls}" data-l="${l.key}" data-m="${m.key}">${fmt(m, a)} · ${fmt(m, b)}${pct}</td>`;
+    }
+    h += "</tr>";
+  });
+  const table = document.getElementById("matrix");
+  table.innerHTML = h + "</tbody>";
+  table.querySelectorAll("td[data-m]").forEach((td) => {
+    const m = metrics.find((x) => x.key === td.dataset.m);
+    const dir = m.better === "higher" ? "↑" : "↓";
+    bindTip(td, `<b>${B.languages.find((l) => l.key === td.dataset.l).name} · ${label(m)}</b> (${dir})<br>` +
+      `${nameA}: ${fmt(m, A[td.dataset.l][m.key])}<br>${nameB}: ${fmt(m, Bc[td.dataset.l][m.key])}`);
+  });
+  document.getElementById("legend").innerHTML =
+    `<span><i class="sw" style="background:var(--s1t)"></i>${t().sBetter}</span>` +
+    `<span><i class="sw" style="background:var(--s2t)"></i>${t().oBetter}</span>` +
+    `<span><i class="sw" style="background:var(--t3)"></i>${t().same}</span>` +
+    `<span>${t().diffNote} · — ${t().legendNa.replace(/^— /, "")}</span>` + hiddenNote;
+}
+
+// 모델별 순위 기울기 그래프(비교 모드에서만)
+function renderRank() {
+  const card = document.getElementById("rankCard");
+  card.hidden = !compare();
+  if (!compare()) return;
+  const svg = document.getElementById("rank");
+  const sa = Score.composite(cellsOf(MA), metrics, state.weights), sb = Score.composite(cellsOf(MB), metrics, state.weights);
+  const ra = Score.ranks(sa), rb = Score.ranks(sb);
+  const n = B.languages.length, rowH = 36, top = 34;
+  const W = Math.max(svg.clientWidth || 600, 320), H = top + rowH * n;
+  const xa = Math.min(220, W * 0.32), xb = W - Math.min(220, W * 0.32);
+  svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const NS = "http://www.w3.org/2000/svg";
+  svg.innerHTML = "";
+  const add = (tag, attrs, text) => { const el = document.createElementNS(NS, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); if (text !== undefined) el.textContent = text; svg.appendChild(el); return el; };
+  const y = (r) => top + rowH * (r - 1) + rowH / 2;
+  add("text", { x: xa, y: 16, "text-anchor": "middle", "font-weight": 600 }, B.models[0].name);
+  add("text", { x: xb, y: 16, "text-anchor": "middle", "font-weight": 600 }, B.models[1].name);
+  for (const l of B.languages) {
+    if (ra[l.key] === null || rb[l.key] === null) continue;
+    const ya = y(ra[l.key]), yb = y(rb[l.key]);
+    add("line", { x1: xa + 6, y1: ya, x2: xb - 6, y2: yb, stroke: ra[l.key] === rb[l.key] ? "var(--axis)" : "var(--accent)", "stroke-width": 2 });
+    add("circle", { cx: xa, cy: ya, r: 5, fill: "var(--s1)" });
+    add("rect", { x: xb - 5, y: yb - 5, width: 10, height: 10, rx: 2, fill: "var(--s2)" });
+    add("text", { x: xa - 12, y: ya + 4, "text-anchor": "end" }, `${ra[l.key]}. ${l.name} ${Math.round(sa[l.key] * 100)}`);
+    add("text", { x: xb + 12, y: yb + 4 }, `${rb[l.key]}. ${l.name} ${Math.round(sb[l.key] * 100)}`);
+  }
 }
 
 function renderWeights() {
+  seg(document.getElementById("presetSeg"), PRESETS.map((k) => [k, t().presets[k]]), state.preset, (k) => {
+    state.preset = k; store.set("lb.preset", k); state.weights = Score.presetWeights(k, metrics);
+    renderWeights(); renderMatrix(); renderRank();
+  });
+  document.getElementById("presetNote").textContent = t().presetDesc[state.preset];
   const box = document.getElementById("weights");
   box.innerHTML = "";
   for (const m of metrics) {
     const lab = document.createElement("label");
-    lab.innerHTML = `<span>${label(m)}</span><span><input type="range" min="0" max="3" step="1" value="${state.weights[m.key]}"> <output>${state.weights[m.key]}</output></span>`;
+    lab.innerHTML = `<span>${label(m)}</span><span><input type="range" min="0" max="3" step="0.5" value="${state.weights[m.key]}"> <output>${+state.weights[m.key].toFixed(2)}</output></span>`;
     const input = lab.querySelector("input");
     input.setAttribute("aria-label", label(m));
-    input.oninput = () => { state.weights[m.key] = +input.value; lab.querySelector("output").textContent = input.value; renderMatrix(); };
+    input.oninput = () => {
+      state.weights[m.key] = +input.value; lab.querySelector("output").textContent = input.value;
+      state.preset = "custom"; document.getElementById("presetNote").textContent = t().presetDesc.custom;
+      document.querySelectorAll("#presetSeg button").forEach((b) => b.setAttribute("aria-pressed", false));
+      renderMatrix(); renderRank();
+    };
     box.appendChild(lab);
   }
 }
 
 function renderDetail() {
   const sel = document.getElementById("metricSel");
-  sel.innerHTML = metrics.filter((m) => !["pass_rate", "cost_per_pass"].includes(m.key))
+  const hidden = hiddenKeys();
+  if (hidden.includes(state.metric)) state.metric = "rps";
+  sel.innerHTML = metrics.filter((m) => !["pass_rate", "cost_per_pass"].includes(m.key) && !hidden.includes(m.key))
     .map((m) => `<option value="${m.key}" ${m.key === state.metric ? "selected" : ""}>${label(m)}</option>`).join("");
   sel.onchange = () => { state.metric = sel.value; renderDetail(); };
   const m = metrics.find((x) => x.key === state.metric);
@@ -320,7 +488,7 @@ function renderDetail() {
   const W = Math.max(svg.clientWidth || 600, 320), rowH = 40, top = 16, left = 96, right = 24;
   const H = top + rowH * B.languages.length + 28;
   svg.setAttribute("height", H); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  const models = state.model === "all" ? B.models.map((x) => x.key) : [state.model];
+  const models = compare() ? B.models.map((x) => x.key) : [state.model];
   const runs = B.runs.filter((r) => +r.pass === 1 && models.includes(r.model) && r[m.key] !== "" && r[m.key] !== undefined)
     .map((r) => ({ ...r, v: RATIO.has(m.key) ? +r[m.key] : +r[m.key] }));
   const NS = "http://www.w3.org/2000/svg";
@@ -370,11 +538,12 @@ function renderStack() {
 }
 
 document.getElementById("resetW").onclick = () => {
-  state.weights = Score.defaultWeights(metrics);
-  renderWeights(); renderMatrix();
+  state.preset = "prereg"; store.set("lb.preset", "prereg");
+  state.weights = Score.presetWeights("prereg", metrics);
+  renderWeights(); renderMatrix(); renderRank();
 };
-function render() { renderText(); renderMatrix(); renderWeights(); renderDetail(); renderStack(); }
-addEventListener("resize", () => renderDetail());
+function render() { renderText(); renderMatrix(); renderRank(); renderWeights(); renderDetail(); renderStack(); }
+addEventListener("resize", () => { renderDetail(); renderRank(); });
 render();
 </script>
 </body>
