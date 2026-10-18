@@ -1,6 +1,6 @@
 // scripts/build_dashboard_data.py가 analysis/metrics/runs.csv에서 생성한다. 직접 수정 금지.
 window.BENCH = {
- "generated": "2026-10-18T08:55:54+00:00",
+ "generated": "2026-10-18T12:39:01+00:00",
  "languages": [
   {
    "key": "typescript",

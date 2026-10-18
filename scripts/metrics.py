@@ -1,7 +1,14 @@
 """언어 × 지표 대시보드의 지표 정의. analysis/metrics/SCHEMA.md와 같이 갱신한다."""
 
-LANGUAGES = ["typescript", "python", "go", "rust", "cpp"]
-LANGUAGE_NAMES = {"typescript": "TypeScript", "python": "Python", "go": "Go", "rust": "Rust", "cpp": "C++"}
+import sys
+from pathlib import Path
+
+# 언어 목록·표시 이름은 언어 레지스트리(languages/*.json)가 정본이다.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / ".claude" / "skills" / "langbench" / "scripts"))
+import langreg  # noqa: E402
+
+LANGUAGES = langreg.keys()
+LANGUAGE_NAMES = {e["key"]: e["name"] for e in langreg.load_all()}
 MODELS = ["sonnet55", "opus55"]
 MODEL_NAMES = {"sonnet55": "Sonnet 5.5", "opus55": "Opus 5.5"}
 

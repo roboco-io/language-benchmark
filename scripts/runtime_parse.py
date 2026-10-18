@@ -3,6 +3,9 @@ import json
 import re
 import tomllib
 
+import metrics  # noqa: F401  (langreg 경로를 sys.path에 올린다)
+import langreg
+
 _UNITS = {"B": 1 / 1048576, "KiB": 1 / 1024, "MiB": 1.0, "GiB": 1024.0, "TiB": 1048576.0,
           "kB": 1000 / 1048576, "MB": 1e6 / 1048576, "GB": 1e9 / 1048576}
 
@@ -30,18 +33,9 @@ def mem_mb(text):
 
 
 # --- 코드량 ---
-_PRIMARY = {
-    "typescript": {"TypeScript", "JavaScript"},
-    "python": {"Python"},
-    "go": {"Go"},
-    "rust": {"Rust"},
-    "cpp": {"C++", "C++ Header", "C Header"},
-}
-
-
 def loc(scc_json, language):
     """scc --format json 결과(언어별 dict 목록)에서 주 언어의 Code 줄만 합산한다."""
-    names = _PRIMARY[language]
+    names = set(langreg.get(language)["loc"]["scc_names"])
     return sum(int(x["Code"]) for x in scc_json if x["Name"] in names)
 
 
@@ -79,32 +73,56 @@ def _deps_cpp(text):
     return len(names)
 
 
+def _deps_package_json(repo):
+    text = _read(repo / "package.json")
+    return None if text is None else len(json.loads(text).get("dependencies", {}))
+
+
+def _deps_pyproject_or_requirements(repo):
+    text = _read(repo / "pyproject.toml")
+    if text is not None:
+        proj = tomllib.loads(text).get("project", {})
+        if "dependencies" in proj:
+            return len(proj["dependencies"])
+    text = _read(repo / "requirements.txt")
+    if text is None:
+        return None
+    return sum(1 for ln in text.splitlines()
+               if ln.strip() and not ln.strip().startswith(("#", "-r")))
+
+
+def _deps_go_mod(repo):
+    text = _read(repo / "go.mod")
+    return None if text is None else _deps_go(text)
+
+
+def _deps_cargo_toml(repo):
+    text = _read(repo / "Cargo.toml")
+    return None if text is None else len(tomllib.loads(text).get("dependencies", {}))
+
+
+def _deps_cmake(repo):
+    text = _read(repo / "CMakeLists.txt")
+    return None if text is None else _deps_cpp(text)
+
+
+# 레지스트리의 deps.kind -> 의존성 수 함수
+DEPS_BY_KIND = {
+    "package-json": _deps_package_json,
+    "pyproject-or-requirements": _deps_pyproject_or_requirements,
+    "go-mod": _deps_go_mod,
+    "cargo-toml": _deps_cargo_toml,
+    "cmake": _deps_cmake,
+}
+
+
 def deps(repo, language):
     """직접 런타임 의존성 수. 매니페스트가 없으면 None(미측정). 0은 측정한 0이다."""
-    if language == "typescript":
-        text = _read(repo / "package.json")
-        return None if text is None else len(json.loads(text).get("dependencies", {}))
-    if language == "python":
-        text = _read(repo / "pyproject.toml")
-        if text is not None:
-            proj = tomllib.loads(text).get("project", {})
-            if "dependencies" in proj:
-                return len(proj["dependencies"])
-        text = _read(repo / "requirements.txt")
-        if text is None:
-            return None
-        return sum(1 for ln in text.splitlines()
-                   if ln.strip() and not ln.strip().startswith(("#", "-r")))
-    if language == "go":
-        text = _read(repo / "go.mod")
-        return None if text is None else _deps_go(text)
-    if language == "rust":
-        text = _read(repo / "Cargo.toml")
-        return None if text is None else len(tomllib.loads(text).get("dependencies", {}))
-    if language == "cpp":
-        text = _read(repo / "CMakeLists.txt")
-        return None if text is None else _deps_cpp(text)
-    raise ValueError("알 수 없는 언어: %r" % language)
+    try:
+        kind = langreg.get(language)["deps"]["kind"]
+    except KeyError:
+        raise ValueError("알 수 없는 언어: %r" % language) from None
+    return DEPS_BY_KIND[kind](repo)
 
 
 # --- 취약점 ---

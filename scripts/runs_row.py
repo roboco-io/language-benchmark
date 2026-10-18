@@ -15,14 +15,16 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-import runtime_parse
-from aggregate_tokens import aggregate
-from metrics import CSV_COLUMNS, LANGUAGES, MODELS
+from metrics import CSV_COLUMNS, LANGUAGES, MODELS  # langreg 경로를 sys.path에 올린다
+import langreg  # noqa: E402
+import runtime_parse  # noqa: E402
+from aggregate_tokens import aggregate  # noqa: E402
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 PRODUCT_COLUMNS = CSV_COLUMNS[CSV_COLUMNS.index("rps"):CSV_COLUMNS.index("vulns") + 1]
 # R4: 취약점 수에 필요한 보고서. 하나라도 없으면 부분 합계를 내지 않고 빈 칸으로 둔다.
-SCANNERS = {"typescript": "npm", "python": "pip", "go": "go", "rust": "cargo", "cpp": None}
+SCANNERS = {e["key"]: (None if e["scanner"]["format"] == "none" else e["scanner"]["format"])
+            for e in langreg.load_all()}
 
 
 def parse_run(run):
