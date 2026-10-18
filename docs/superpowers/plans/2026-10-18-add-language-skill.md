@@ -314,3 +314,29 @@ def test_local_prep_has_no_language_case(self):
 - [ ] **Step 4: 전체 테스트** — `cd .claude/skills/langbench && python3 -m unittest discover -s tests`, `cd scripts && python3 -m unittest discover -p 'test_*.py'`, `node scripts/test_score.mjs`, `node scripts/test_decision.mjs` 모두 PASS. `grep -c '~'`로 수정한 Markdown에 물결표 없음 확인.
 
 - [ ] **Step 5: Commit** — `git commit -m "feat(skills): add langbench-add-language skill and registry docs"`
+
+### Task 8: Java·PHP·C# 레지스트리 항목 (EXP-002 준비)
+
+사용자 결정(2026-10-18): Java·PHP·C#을 실험 하나(EXP-002)로 실행한다. 스택은 Java Spring Boot + Spring Data JPA(Maven), PHP Laravel + Eloquent(Octane, FrankenPHP 워커), C# ASP.NET Core + EF Core이며 모두 SQLite다. 이 작업은 실험을 실행하지 않고 등록만 한다.
+
+**Files:**
+- Create: `.claude/skills/langbench/languages/{java,php,csharp}.json`
+- Modify: `.claude/skills/langbench/scripts/langreg.py`(`DEPS_KINDS`에 `maven-pom`·`composer-json`·`csproj`, `SCANNER_FORMATS`에 `osv`·`composer`·`dotnet`), `scripts/runtime_parse.py`(deps·vuln 추출 함수), `.claude/skills/langbench/assets/checksums.md5`, `PROMPT-{java,php,csharp}.md`(render_prompts로 생성)
+- Test: `scripts/test_runtime_parse.py`(픽스처 추가), `.claude/skills/langbench/tests/test_langreg.py`
+
+**Interfaces:**
+- Consumes: Task 1-3의 레지스트리·`DEPS_BY_KIND`·`_EXTRACT`.
+- Produces:
+  - `order`: java 6, php 7, csharp 8. 표시 이름 `Java`, `PHP`, `C#`.
+  - deps 규칙: `maven-pom` = `pom.xml`의 `<dependencies>` 바로 아래 `<dependency>` 중 `<scope>`가 `test`·`provided`가 아닌 것의 수(`<dependencyManagement>` 안은 제외). `composer-json` = `composer.json`의 `require` 키 중 `php`와 `ext-*`를 뺀 수. `csproj` = 저장소 안 모든 `*.csproj`의 `<PackageReference>` 중 `PrivateAssets="all"`이 아닌 것의 Include 이름 고유 수(테스트 프로젝트 `*Test*.csproj` 제외).
+  - 스캐너: java `{format: "osv", name: "osv", report: "osv.json", required_key: "results", ok_rc: "0 1", argv: ["osv-scanner","scan","source","--format","json","-L","pom.xml"]}`, php `{format: "composer", name: "composer", report: "composer.json", required_key: "advisories", ok_rc: "0 1", argv: ["composer","audit","--format=json","--locked"]}`, csharp `{format: "dotnet", name: "dotnet", report: "dotnet.json", required_key: "projects", argv: ["dotnet","list","package","--vulnerable","--include-transitive","--format","json"]}`. 리포트 파일 이름이 `composer.json` 매니페스트와 겹치지 않도록 php 리포트는 `composer-audit.json`으로 한다.
+  - 추출기: `_ids_osv`(results[].packages[].vulnerabilities[] → [id]+aliases), `_ids_composer`(advisories{pkg: [..]} → [advisoryId 또는 cve]), `_ids_dotnet`(projects[].frameworks[].{topLevelPackages,transitivePackages}[].vulnerabilities[] → advisoryurl의 GHSA 꼬리).
+  - toolchain: java `java`(bin `/opt/homebrew/opt/openjdk@25/bin/java`, args `["-version"]`), `mvn`, `osv-scanner`; php `php`, `composer`; csharp `dotnet`(args `["--version"]`).
+  - loc: java scc `["Java"]`, test `Test\.java|Tests\.java`, exclude `target`, `.mvn`; php scc `["PHP"]`, test `Test\.php`, exclude `vendor`, `storage`, `bootstrap/cache`; csharp scc `["C#"]`, test `Tests?\.cs`, exclude `bin`, `obj`. cleanup: java `target`, php `vendor`, csharp `bin`, `obj`.
+  - prompt WORKERS: java "Spring Boot's embedded Tomcat with its thread pool sized to the core count", php "Laravel Octane on FrankenPHP with one worker per core", csharp "Kestrel with the default .NET thread pool (scales with the core count)". STACK: "Java 25 + Spring Boot + Spring Data JPA (Hibernate) + SQLite, built with Maven", "PHP 8.5 + Laravel + Eloquent + SQLite, served by Laravel Octane on FrankenPHP", "C# (.NET 10) + ASP.NET Core + Entity Framework Core + SQLite".
+
+- [ ] **Step 1: 실패하는 테스트** — 세 deps 규칙과 세 추출기마다 작은 픽스처로 기대값을 단언한다(예: test 스코프 1개·일반 3개인 pom.xml → 3, `php`·`ext-pdo` 포함 require 5개 → 3, 두 csproj에 같은 패키지 중복 → 고유 수). `langreg.keys()`가 8개이고 `validate` 전부 통과.
+- [ ] **Step 2: 실패 확인** — `cd scripts && python3 -m unittest test_runtime_parse -v`.
+- [ ] **Step 3: 구현** — JSON 3개, kind·format 함수, `render_prompts.py`로 PROMPT 3개 생성 후 `checksums.md5`에 md5 추가(기존 5줄 불변).
+- [ ] **Step 4: 통과 확인** — 두 테스트 스위트 전체 PASS, `render_prompts.py --check` 종료 코드 0, 기존 5개 PROMPT md5 불변.
+- [ ] **Step 5: Commit** — `git commit -m "feat(langbench): register Java, PHP and C# for EXP-002"`
