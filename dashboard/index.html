@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Language Benchmark</title>
-<meta name="description" content="Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the RealWorld backend in TypeScript, Python, Go, Rust and C++.">
+<meta name="description" content="Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the same RealWorld backend in several languages and compares speed, performance and maintainability.">
 <meta property="og:title" content="Language Benchmark · 바이브 코딩 백엔드 언어 비교 | Vibe-coded backend languages compared">
-<meta property="og:description" content="AI 코딩 에이전트(Claude Code)가 같은 RealWorld 백엔드를 TypeScript·Python·Go·Rust·C++로 구현한 결과를 구현 속도·성능·유지보수 지표로 비교합니다. Same backend, five languages, two Claude models.">
+<meta property="og:description" content="AI 코딩 에이전트(Claude Code)가 같은 RealWorld 백엔드를 여러 언어로 구현한 결과를 구현 속도·성능·유지보수 지표로 비교합니다. Same backend, many languages, two Claude models.">
 <meta property="og:image" content="https://roboco.io/language-benchmark/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="roboco-logo.svg" type="image/svg+xml">
@@ -170,11 +170,11 @@ footer a, .note a { color: var(--accent); }
 const T = {
   en: {
     title: "Language Benchmark",
-    lead: "Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the same RealWorld backend in five languages. This compares code written by an agent, not raw language runtimes.",
+    lead: "Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) implements the same RealWorld backend in {n} languages. This compares code written by an agent, not raw language runtimes.",
     model: "Model", both: "Compare models",
     matrixTitle: "Language × metric", score: "Score",
     grp: { process: "Building it (agent)", product: "What it built", maintain: "Maintainability" },
-    empty: "No experiments yet. The grid fills in as EXP-001 (5 languages × 2 models × 3 runs) completes.",
+    empty: "No experiments yet. The grid fills in as EXP-001 ({n} languages × 2 models × 3 runs) completes.",
     legendBest: "best", legendLow: "Worst in column", diffScale: "light: gap under 20%, dark: 20% or more", legendNa: "— not measured · m/n = runs measured / runs",
     weightsTitle: "Score weights", weightsNote: "The score is a weighted average of per-metric normalized values (0 worst – 1 best within each column). Changing weights changes the ranking; treat it as an aid, not a verdict.",
     reset: "Reset to pre-registered weights",
@@ -198,11 +198,11 @@ const T = {
   },
   ko: {
     title: "Language Benchmark",
-    lead: "바이브 코딩 백엔드에는 어떤 언어가 적합할까? Claude Code(Sonnet 5.5 / Opus 5.5)가 같은 RealWorld 백엔드를 5개 언어로 구현한 결과를 비교한다. 언어 런타임 자체가 아니라 에이전트가 만든 코드를 비교한다.",
+    lead: "바이브 코딩 백엔드에는 어떤 언어가 적합할까? Claude Code(Sonnet 5.5 / Opus 5.5)가 같은 RealWorld 백엔드를 {n}개 언어로 구현한 결과를 비교한다. 언어 런타임 자체가 아니라 에이전트가 만든 코드를 비교한다.",
     model: "모델", both: "두 모델 비교",
     matrixTitle: "언어 × 지표", score: "종합 점수",
     grp: { process: "만드는 과정(에이전트)", product: "만들어진 결과물", maintain: "유지보수성" },
-    empty: "아직 실험 결과가 없다. EXP-001(5개 언어 × 2개 모델 × 3회)이 끝나면 표가 채워진다.",
+    empty: "아직 실험 결과가 없다. EXP-001({n}개 언어 × 2개 모델 × 3회)이 끝나면 표가 채워진다.",
     legendBest: "최상", legendLow: "열 내 최하", diffScale: "옅음: 차이 20% 미만, 짙음: 20% 이상", legendNa: "— 미측정 · m/n = 측정한 run / 전체 run",
     weightsTitle: "종합 점수 가중치", weightsNote: "종합 점수는 지표별 정규화 값(각 열 안에서 0 최하 – 1 최상)의 가중평균이다. 가중치를 바꾸면 순위도 바뀌므로 결론이 아니라 해석 보조로 본다.",
     reset: "사전 등록 가중치로 초기화",
@@ -226,11 +226,11 @@ const T = {
   },
   ja: {
     title: "Language Benchmark",
-    lead: "バイブコーディングのバックエンドにはどの言語が向いているか? Claude Code(Sonnet 5.5 / Opus 5.5)が同じ RealWorld バックエンドを5言語で実装した結果を比較する。比較対象は言語ランタイムではなく、エージェントが書いたコードである。",
+    lead: "バイブコーディングのバックエンドにはどの言語が向いているか? Claude Code(Sonnet 5.5 / Opus 5.5)が同じ RealWorld バックエンドを{n}言語で実装した結果を比較する。比較対象は言語ランタイムではなく、エージェントが書いたコードである。",
     model: "モデル", both: "モデル比較",
     matrixTitle: "言語 × 指標", score: "総合スコア",
     grp: { process: "作る過程(エージェント)", product: "成果物", maintain: "保守性" },
-    empty: "実験結果はまだない。EXP-001(5言語 × 2モデル × 3回)が終わると表が埋まる。",
+    empty: "実験結果はまだない。EXP-001({n}言語 × 2モデル × 3回)が終わると表が埋まる。",
     legendBest: "最上位", legendLow: "列内最下位", diffScale: "淡: 差20%未満、濃: 20%以上", legendNa: "— 未測定 · m/n = 測定した run / 全 run",
     weightsTitle: "総合スコアの重み", weightsNote: "総合スコアは指標ごとの正規化値(各列内で 0 最低 – 1 最高)の加重平均である。重みを変えると順位も変わるため、結論ではなく解釈の補助として扱う。",
     reset: "事前登録の重みに戻す",
@@ -254,11 +254,11 @@ const T = {
   },
   zh: {
     title: "Language Benchmark",
-    lead: "哪种语言最适合氛围编程(vibe coding)后端?Claude Code(Sonnet 5.5 / Opus 5.5)用 5 种语言实现同一个 RealWorld 后端,本页比较其结果。比较的是智能体编写的代码,而非语言运行时本身。",
+    lead: "哪种语言最适合氛围编程(vibe coding)后端?Claude Code(Sonnet 5.5 / Opus 5.5)用 {n} 种语言实现同一个 RealWorld 后端,本页比较其结果。比较的是智能体编写的代码,而非语言运行时本身。",
     model: "模型", both: "模型对比",
     matrixTitle: "语言 × 指标", score: "综合得分",
     grp: { process: "构建过程(智能体)", product: "产出物", maintain: "可维护性" },
-    empty: "尚无实验结果。EXP-001(5 种语言 × 2 个模型 × 3 次)完成后表格将被填充。",
+    empty: "尚无实验结果。EXP-001({n} 种语言 × 2 个模型 × 3 次)完成后表格将被填充。",
     legendBest: "最好", legendLow: "列内最差", diffScale: "浅:差异低于 20%,深:20% 及以上", legendNa: "— 未测量 · m/n = 已测量 run / 全部 run",
     weightsTitle: "综合得分权重", weightsNote: "综合得分是各指标归一化值(每列内 0 最差 – 1 最好)的加权平均。改变权重会改变排名,请将其视为解读辅助而非结论。",
     reset: "重置为预注册权重",
@@ -282,10 +282,6 @@ const T = {
   },
 };
 const LANG_UI = [["en", "EN"], ["ko", "KO"], ["ja", "JA"], ["zh", "中文"]];
-const STACKS = [
-  ["TypeScript", "Fastify", "Prisma"], ["Python", "FastAPI (uvicorn)", "SQLAlchemy"],
-  ["Go", "Gin", "GORM (modernc SQLite)"], ["Rust", "Axum (tokio)", "SQLx"], ["C++", "Drogon (C++20)", "Drogon ORM"],
-];
 const qTheme = new URLSearchParams(location.search).get("theme");
 if (qTheme === "light" || qTheme === "dark") document.documentElement.dataset.theme = qTheme;
 const B = window.BENCH;
@@ -356,7 +352,7 @@ const followupDeviation = (language, model, key) => language === 'cpp' && model 
 
 function renderText() {
   document.documentElement.lang = state.ui === "zh" ? "zh-CN" : state.ui;
-  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t()[el.dataset.t]; });
+  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t()[el.dataset.t].replaceAll("{n}", B.languages.length); });
   document.getElementById("generated").textContent = B.generated.replace("T", " ").replace("+00:00", " UTC");
   document.getElementById("empty").hidden = B.runs.length > 0;
   seg(document.getElementById("langSeg"), LANG_UI, state.ui, (k) => { state.ui = k; store.set("lb.ui", k); render(); });
@@ -579,7 +575,7 @@ function renderDetail() {
 function renderStack() {
   document.getElementById("stack").innerHTML =
     `<tr><th>${t().lang}</th><th>${t().fw}</th><th>${t().db}</th></tr>` +
-    STACKS.map((s) => `<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]} · SQLite</td></tr>`).join("");
+    B.languages.map((l) => `<tr><td>${l.name}</td><td>${l.stack.framework}</td><td>${l.stack.db} · SQLite</td></tr>`).join("");
 }
 
 document.getElementById("resetW").onclick = () => {

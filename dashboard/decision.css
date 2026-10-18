@@ -55,3 +55,5 @@ svg [role="button"] { cursor:pointer; }
   #rank { min-width:580px; }
 }
 @media (prefers-reduced-motion:reduce) { #tip { transition:none; } }
+
+.exp-badge { display:inline-block; margin-left:6px; padding:1px 6px; border:1px solid var(--border); border-radius:999px; font-size:11px; font-weight:400; color:var(--ink-2); white-space:nowrap; vertical-align:middle; }

@@ -18,9 +18,9 @@
   function scope(rows) {
     return { total:rows.length, passed:rows.filter(r => +r.pass === 1).length, experiments:new Set(rows.map(r => r.exp)).size };
   }
-  function evidenceLinks(run) {
-    const folders = { 'EXP-001':'001-five-language-realworld' };
-    const folder = folders[run.exp];
+  // 증거 폴더는 BENCH.experiments(experiment.json에서 생성)에서 읽는다.
+  function evidenceLinks(run, experiments) {
+    const folder = experiments?.[run.exp]?.folder;
     if (!folder) return null;
     const base = 'https://github.com/roboco-io/language-benchmark';
     const path = `experiments/${folder}`;
@@ -29,6 +29,12 @@
       raw:`${base}/tree/main/${path}/runs/fargate/raw/${encodeURIComponent(run.run)}`,
       followup:`${base}/tree/main/${path}/runs/apps/${encodeURIComponent(run.run)}-fu`,
       csv:`${base}/blob/main/analysis/metrics/runs.csv` };
+  }
+  // 언어들이 속한 실험 중 날짜가 가장 이른 실험(기준선)을 반환한다. 날짜가 같으면 실험 ID 순이다.
+  function baselineExp(languages, experiments) {
+    const ids = [...new Set(languages.map(l => l.exp))].filter(id => experiments?.[id]?.date);
+    ids.sort((a, b) => experiments[a].date.localeCompare(experiments[b].date) || a.localeCompare(b));
+    return ids[0] ?? null;
   }
   // 현재 목적의 지표에서 다른 언어에 대한 상대적인 강점과 부담을 반환한다.
   // 강점은 최고값, 부담은 최저값인 지표다. 비교 언어의 절반 넘게 같은 값을 가지면 구별 정보가 없으므로 제외하고,
@@ -66,7 +72,7 @@
       return [k, better === 'higher' ? t : 1 - t];
     }));
   }
-  const api = { summarize, scope, evidenceLinks, tradeoffs, bars };
+  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Decision = api;
 })(typeof window !== 'undefined' ? window : globalThis);

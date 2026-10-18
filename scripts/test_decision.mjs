@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-const { summarize, evidenceLinks, scope, tradeoffs, bars } =createRequire(import.meta.url)('../dashboard/decision.js');
+const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp } =createRequire(import.meta.url)('../dashboard/decision.js');
 const rows = [
   { exp: 'EXP-001', run: 'sonnet55-go-1', language: 'go', model: 'sonnet55', pass: '1', rps: '0', cost_usd: '2' },
   { exp: 'EXP-001', run: 'sonnet55-go-2', language: 'go', model: 'sonnet55', pass: '1', rps: '10', cost_usd: '3' },
@@ -20,11 +20,15 @@ assert.equal(summarize(rows, 'rust', 'sonnet55', 'rps').total, 0);
 assert.equal(summarize(rows, 'go', 'sonnet55', 'pass_rate').median, 2/3);
 assert.equal(summarize([{...rows[0], rps:null}], 'go', 'sonnet55', 'rps').measured, 0);
 assert.deepEqual(scope(rows), { total:4, passed:3, experiments:1 });
-const links = evidenceLinks(rows[0]);
+const exps={'EXP-001':{folder:'001-five-language-realworld',date:'2026-10-18'},'EXP-002':{folder:'002-add-zig',date:'2026-11-01'}};
+const links = evidenceLinks(rows[0], exps);
 assert.ok(links.source.endsWith('/runs/apps/sonnet55-go-1'));
 assert.ok(links.report.endsWith('/report.md'));
 assert.ok(links.deviations.endsWith('/runs/deviations.md'));
-assert.equal(evidenceLinks({...rows[0],exp:'EXP-999'}), null);
+assert.ok(evidenceLinks({...rows[0], exp:'EXP-002'}, exps).source.includes('002-add-zig'));
+assert.equal(evidenceLinks({...rows[0],exp:'EXP-999'}, exps), null);
+assert.equal(baselineExp([{exp:'EXP-002'},{exp:'EXP-001'}], exps), 'EXP-001');
+assert.equal(baselineExp([], exps), null);
 const ms=[{key:'rps',better:'higher'},{key:'wall_min',better:'lower'}];
 assert.deepEqual(tradeoffs({go:{rps:10,wall_min:20},rust:{rps:5,wall_min:10}}, 'go', ms, {rps:1,wall_min:1}),
   {strength:'rps',burden:'wall_min'});
@@ -51,7 +55,7 @@ for (const lang of bench.languages) for (const model of bench.models) for (const
   const expected=bench.cells[lang.key][model.key][m.key];
   assert.ok(actual === expected || Math.abs(actual-expected) < 1e-10, `${lang.key}/${model.key}/${m.key}: ${actual} vs ${expected}`);
 }
-for (const row of bench.runs) for (const [kind,url] of Object.entries(evidenceLinks(row))) {
+for (const row of bench.runs) for (const [kind,url] of Object.entries(evidenceLinks(row, bench.experiments))) {
   const path=url.replace(/^https:\/\/github.com\/roboco-io\/language-benchmark\/(tree|blob)\/main\//,'');
   assert.ok(existsSync(new URL('../'+path,import.meta.url)), `${kind}: ${path}`);
 }
