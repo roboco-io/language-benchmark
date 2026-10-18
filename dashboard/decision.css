@@ -1,0 +1,53 @@
+/* 선택에 필요한 수치는 가까이, 근거는 한 번의 조작으로 연다. */
+.scope-strip { margin:18px 0; padding:12px 0; border-block:1px solid var(--axis); }
+.scope-strip p { margin:4px 0; }
+.scope-facts { font-weight:600; }
+.scope-strip a, .card a { color:var(--accent); }
+#proxyNote:empty { display:none; }
+.decision-table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; }
+.decision-table th, .decision-table td { border-bottom:1px solid var(--border); padding:12px 10px; text-align:left; vertical-align:top; }
+.decision-table thead th { font-weight:600; color:var(--ink-2); }
+.decision-table th:first-child { position:sticky; left:0; background:var(--surface); z-index:1; }
+.decision-table .metric-cell { min-width:130px; }
+.compact-table .metric-cell { min-width:100px; }
+.compact-table .metric-cell + .metric-cell { margin-top:6px; }
+.compact-table:not(.show-repeats) .observation, .compact-table:not(.show-repeats) .observations { display:none; }
+.compact-table .model-label { display:inline; margin-right:6px; }
+.compact-table .metric-value { display:inline; }
+.repeat-toggle { display:block; margin:10px 0; font-size:13px; color:var(--ink-2); }
+.metric-value { display:block; border:0; background:none; padding:0; color:var(--ink); font:inherit; font-weight:600; text-align:left; cursor:pointer; text-decoration:underline; text-decoration-color:var(--axis); text-underline-offset:3px; }
+.observation { display:block; color:var(--ink-2); font-size:11px; margin-top:4px; }
+.model-label { display:block; color:var(--ink-2); font-size:11px; font-weight:400; }
+.observations { display:flex; gap:4px; flex-wrap:wrap; margin-top:5px; }
+.observation-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); display:inline-block; }
+.observation-dot.opus55 { background:var(--s2); border-radius:1px; }
+.reason-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:0 20px; margin-top:16px; }
+.reason { border-top:2px solid var(--axis); padding:10px 0; }
+.reason h3 { margin:0 0 6px; font-size:15px; }
+.reason p { font-size:12px; margin:6px 0; }
+.reason strong { font-weight:600; }
+.pair-controls { display:flex; flex-wrap:wrap; gap:12px; margin:12px 0; }
+.pair-controls label { display:flex; gap:8px; align-items:center; font-size:13px; }
+.issue-note { padding:10px 12px; border-left:3px solid var(--accent); background:var(--warn-bg); font-size:13px; }
+.evidence-links { display:flex; gap:8px 18px; flex-wrap:wrap; margin:12px 0; }
+.run-values { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px 16px; margin-top:12px; }
+.run-values div { border-bottom:1px solid var(--border); padding-bottom:6px; }
+.run-values dt { font-size:12px; color:var(--ink-2); }
+.run-values dd { margin:2px 0; font-variant-numeric:tabular-nums; font-size:14px; }
+.full-metrics > summary { cursor:pointer; font-weight:600; }
+#evidencePanel { scroll-margin-top:16px; }
+#evidencePanel select { max-width:100%; }
+button:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+svg [role="button"] { cursor:pointer; }
+@media (max-width:600px) {
+  main { padding:18px 10px 40px; }
+  .card { padding:12px; }
+  #presetSeg { display:flex; flex-wrap:wrap; }
+  .seg button { padding:9px 10px; }
+  .reason-grid { grid-template-columns:1fr; }
+  .reason { display:grid; grid-template-columns:80px 1fr; gap:8px; }
+  .pair-controls { align-items:stretch; }
+  .decision-table th, .decision-table td { padding:10px 8px; }
+  #rank { min-width:580px; }
+}
+@media (prefers-reduced-motion:reduce) { #tip { transition:none; } }
