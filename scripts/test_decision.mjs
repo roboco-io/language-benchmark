@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp, duel, duelBar } =createRequire(import.meta.url)('../dashboard/decision.js');
+const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp, duel, duelKind, duelBar } =createRequire(import.meta.url)('../dashboard/decision.js');
 const rows = [
   { exp: 'EXP-001', run: 'sonnet55-go-1', language: 'go', model: 'sonnet55', pass: '1', rps: '0', cost_usd: '2' },
   { exp: 'EXP-001', run: 'sonnet55-go-2', language: 'go', model: 'sonnet55', pass: '1', rps: '10', cost_usd: '3' },
@@ -47,11 +47,24 @@ assert.deepEqual(bars({a:3.4,b:13.6}, 'lower'), {a:1,b:3.4/13.6});
 assert.deepEqual(bars({a:0,b:3.4,c:134.4}, 'lower'), {a:1,b:1-3.4/134.4,c:0});
 assert.deepEqual(bars({a:5,b:5}, 'lower'), {a:1,b:1});
 // 대결형 비교: 승자·배수·범위 겹침과 막대 길이
-assert.deepEqual(duel(2240, 3283, 'higher', [2000,2500], [3000,3600]), {winner:'b', ratio:3283/2240, overlap:false});
-assert.deepEqual(duel(4.3, 5.1, 'lower', [3.8,5.2], [5.1,5.2]), {winner:'a', ratio:5.1/4.3, overlap:true});
-assert.deepEqual(duel(1, 1, 'higher', null, null), {winner:null, ratio:1, overlap:false});
-assert.deepEqual(duel(null, 3, 'higher', null, null), {winner:null, ratio:null, overlap:false});
+assert.deepEqual(duel(2240, 3283, 'higher', [2000,2500], [3000,3600]), {winner:'b', ratio:3283/2240, overlap:false, measured:true});
+assert.deepEqual(duel(4.3, 5.1, 'lower', [3.8,5.2], [5.1,5.2]), {winner:'a', ratio:5.1/4.3, overlap:true, measured:true});
+assert.deepEqual(duel(1, 1, 'higher', null, null), {winner:null, ratio:1, overlap:false, measured:true});
+assert.deepEqual(duel(null, 3, 'higher', null, null), {winner:null, ratio:null, overlap:false, measured:false});
 assert.equal(duel(0, 3, 'lower', null, null).ratio, null);
+assert.equal(duel(0, 3, 'lower', null, null).winner, 'a');
+// 측정된 0 대 0은 미측정이 아니라 동일이다(0과 빈 칸은 다른 값).
+assert.deepEqual(duel(0, 0, 'lower', [0,0], [0,0]), {winner:null, ratio:null, overlap:true, measured:true});
+assert.equal(duelKind(duel(0, 0, 'lower', null, null)), 'same');
+assert.equal(duelKind(duel(null, 0, 'lower', null, null)), 'notMeasured');
+assert.equal(duelKind(duel(0, null, 'lower', null, null)), 'notMeasured');
+// 배수가 1.0배로 반올림되는 차이(1.05배 미만)는 승리로 세지 않는다.
+assert.equal(duel(100, 104, 'higher', null, null).winner, null);
+assert.equal(duelKind(duel(100, 104, 'higher', null, null)), 'same');
+assert.equal(duel(104, 100, 'lower', null, null).winner, null);
+assert.equal(duel(100, 105, 'higher', null, null).winner, 'b');
+assert.equal(duelKind(duel(100, 105, 'higher', null, null)), 'win');
+assert.equal(duelKind(duel(0, 3, 'lower', null, null)), 'win');
 assert.equal(duelBar(4), 1); assert.equal(duelBar(1), 0); assert.equal(duelBar(null), 0);
 // 새 UI가 기존 공개 집계값을 보존하고 실제 증거 파일로 연결하는지 검사한다.
 const context={window:{}};

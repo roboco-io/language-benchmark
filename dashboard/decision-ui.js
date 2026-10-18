@@ -162,8 +162,8 @@ const DecisionUI = (() => {
     });
     const wins={a:rows.filter(r => r.d.winner === 'a').length, b:rows.filter(r => r.d.winner === 'b').length};
     const note=d => {
-      if (d.ratio === null && d.winner === null) return t.notMeasured;
-      if (d.winner === null) return t.same;
+      const kind=Decision.duelKind(d);
+      if (kind !== 'win') return t[kind];
       const who=name(d.winner === 'a' ? la : lb);
       return (d.ratio === null ? who : fill(t.times,{name:who,r:d.ratio.toFixed(1)})) + (d.overlap ? t.overlap : '');
     };

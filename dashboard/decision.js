@@ -76,17 +76,23 @@
   // 3회 반복 범위가 서로 겹치면 overlap이다(겹침은 동등하다는 증명이 아니라 주의 표시다).
   function duel(a, b, better, rangeA, rangeB) {
     const x = number(a), y = number(b);
-    if (x === null || y === null) return { winner:null, ratio:null, overlap:false };
+    if (x === null || y === null) return { winner:null, ratio:null, overlap:false, measured:false };
     const ratio = x > 0 && y > 0 ? Math.max(x, y) / Math.min(x, y) : null;
     const overlap = !!(rangeA && rangeB) && Math.max(rangeA[0], rangeB[0]) <= Math.min(rangeA[1], rangeB[1]);
-    const winner = x === y ? null : (better === 'higher' ? x > y : x < y) ? 'a' : 'b';
-    return { winner, ratio, overlap };
+    // 배수가 1.0배로 반올림되는 차이(1.05배 미만)는 동일로 본다. 0 대 0도 동일이다(측정된 값).
+    const tie = x === y || (ratio !== null && ratio < 1.05);
+    const winner = tie ? null : (better === 'higher' ? x > y : x < y) ? 'a' : 'b';
+    return { winner, ratio, overlap, measured:true };
+  }
+  // 대결 결과의 종류: 'notMeasured'(한쪽이라도 빈 칸), 'same'(동일), 'win'(승자 있음).
+  function duelKind(d) {
+    return !d.measured ? 'notMeasured' : d.winner === null ? 'same' : 'win';
   }
   // 대결 막대 길이(0-1). 4배에서 가득 찬다.
   function duelBar(ratio) {
     return ratio === null || ratio === undefined ? 0 : Math.min(1, Math.log2(ratio) / 2);
   }
-  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars, duel, duelBar };
+  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars, duel, duelKind, duelBar };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Decision = api;
 })(typeof window !== 'undefined' ? window : globalThis);
