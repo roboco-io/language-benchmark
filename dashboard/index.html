@@ -389,7 +389,7 @@ function renderMatrix() {
   }));
   langs.forEach((l, i) => {
     const c = cells[l.key];
-    h += `<tr><th class="lang">${l.name}</th>`;
+    h += `<tr><th class="lang">${l.name}${expBadge(l)}</th>`;
     const sv = score[l.key];
     h += `<td class="score ${sv === null ? "na" : tier(scoreNorm[i], scoreCount)}">${sv === null ? "—" : Math.round(sv * 100)}</td>`;
     for (const m of ordered) {
@@ -434,7 +434,7 @@ function renderCompare(shown, hiddenNote) {
   const sc = (v, r) => (v === null ? "—" : `${Math.round(v * 100)} <small>#${r}</small>`);
   langs.forEach((l) => {
     const d = Score.modelDiff(sa[l.key], sb[l.key], "higher");
-    h += `<tr><th class="lang">${l.name}</th>`;
+    h += `<tr><th class="lang">${l.name}${expBadge(l)}</th>`;
     h += `<td class="score ${d.better === "a" ? strength("sb", d) : ""}">${sc(sa[l.key], ra[l.key])}</td>`;
     h += `<td class="score ${d.better === "b" ? strength("ob", d) : ""}">${sc(sb[l.key], rb[l.key])}</td>`;
     for (const m of ordered) {
@@ -570,6 +570,14 @@ function renderDetail() {
       ? '<rect x="2" y="2" width="10" height="10" rx="2" fill="var(--s2)"/>'
       : '<circle cx="7" cy="7" r="5.5" fill="var(--s1)"/>'}</svg> ${md.name}</span>`).join("");
   if (models.length === 1) document.getElementById("detailLegend").innerHTML += ` <span>${t().detailHint}</span>`;
+}
+
+// 기준선 실험과 다른 시점에 실행한 언어에 "<exp> · <date>" 배지를 붙인다(decision-ui.js의 배지와 같은 마크업).
+function expBadge(l) {
+  const base = Decision.baselineExp(B.languages, B.experiments);
+  if (!base || l.exp === base) return "";
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  return ` <span class="exp-badge">${esc(l.exp)} · ${esc(B.experiments[l.exp]?.date)}</span>`;
 }
 
 function renderStack() {
