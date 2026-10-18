@@ -132,9 +132,9 @@ const T = {
     legendBest: "Top third in column", legendMid: "Middle", legendLow: "Bottom third", legendNa: "— not measured · m/n = runs measured / runs",
     weightsTitle: "Score weights", weightsNote: "The score is a weighted average of per-metric normalized values (0 worst – 1 best within each column). Changing weights changes the ranking; treat it as an aid, not a verdict.",
     reset: "Reset to equal weights",
-    detailTitle: "Per-run detail", detailEmpty: "No measured runs for this metric yet.",
+    detailTitle: "Per-run detail", detailEmpty: "No measured runs for this metric yet.", detailHint: "Showing only the model selected above. Choose “Both” to compare models.",
     stackTitle: "Stacks (fixed for all runs)", lang: "Language", fw: "Framework", db: "DB access",
-    limits: "Runtime numbers are measured in Docker Desktop on macOS (a VM) with identical CPU and memory limits for every language. Read them as relative comparisons, not absolute values. Costs are API-price equivalents; runs used an existing subscription.",
+    limits: "Runtime numbers are measured on AWS Fargate Spot (ARM64, Graviton4 only) with the same limits for every language: 2 vCPU and 1 GiB for the app, load generated from a separate task in the same subnet. Read them as relative comparisons, not absolute values. Costs are API-price equivalents; runs used an existing subscription.",
     updated: "Data generated", sister: "Sister repo: coding-agent-benchmark",
   },
   ko: {
@@ -147,9 +147,9 @@ const T = {
     legendBest: "열 내 상위 1/3", legendMid: "중간", legendLow: "하위 1/3", legendNa: "— 미측정 · m/n = 측정한 run / 전체 run",
     weightsTitle: "종합 점수 가중치", weightsNote: "종합 점수는 지표별 정규화 값(각 열 안에서 0 최하 – 1 최상)의 가중평균이다. 가중치를 바꾸면 순위도 바뀌므로 결론이 아니라 해석 보조로 본다.",
     reset: "가중치 균등으로 초기화",
-    detailTitle: "run별 상세", detailEmpty: "이 지표를 측정한 run이 아직 없다.",
+    detailTitle: "run별 상세", detailEmpty: "이 지표를 측정한 run이 아직 없다.", detailHint: "위에서 고른 모델의 run만 표시한다. 두 모델을 비교하려면 “두 모델”을 고른다.",
     stackTitle: "언어별 스택(모든 run 고정)", lang: "언어", fw: "웹 프레임워크", db: "DB 접근",
-    limits: "런타임 수치는 macOS Docker Desktop(VM)에서 모든 언어에 같은 CPU·메모리 제한을 걸고 측정했다. 절대값이 아니라 언어 간 상대 비교로 해석한다. 비용은 API 단가 환산값이며 실제 실행은 기존 구독으로 했다.",
+    limits: "런타임 수치는 AWS Fargate Spot(ARM64, Graviton4만 사용)에서 모든 언어에 같은 제한(앱 2 vCPU·메모리 1 GiB)을 걸고, 같은 서브넷의 별도 태스크에서 부하를 걸어 측정했다. 절대값이 아니라 언어 간 상대 비교로 해석한다. 비용은 API 단가 환산값이며 실제 실행은 기존 구독으로 했다.",
     updated: "데이터 생성", sister: "자매 리포: coding-agent-benchmark",
   },
   ja: {
@@ -162,9 +162,9 @@ const T = {
     legendBest: "列内上位1/3", legendMid: "中位", legendLow: "下位1/3", legendNa: "— 未測定 · m/n = 測定した run / 全 run",
     weightsTitle: "総合スコアの重み", weightsNote: "総合スコアは指標ごとの正規化値(各列内で 0 最低 – 1 最高)の加重平均である。重みを変えると順位も変わるため、結論ではなく解釈の補助として扱う。",
     reset: "重みを均等に戻す",
-    detailTitle: "run 別詳細", detailEmpty: "この指標を測定した run はまだない。",
+    detailTitle: "run 別詳細", detailEmpty: "この指標を測定した run はまだない。", detailHint: "上で選んだモデルの run のみ表示する。両モデルを比べるには「両モデル」を選ぶ。",
     stackTitle: "言語別スタック(全 run 固定)", lang: "言語", fw: "フレームワーク", db: "DB アクセス",
-    limits: "ランタイムの数値は macOS の Docker Desktop(VM)で、全言語に同じ CPU・メモリ制限をかけて測定した。絶対値ではなく言語間の相対比較として読む。コストは API 単価換算で、実行は既存のサブスクリプションで行った。",
+    limits: "ランタイムの数値は AWS Fargate Spot(ARM64、Graviton4 のみ)で、全言語に同じ制限(アプリ 2 vCPU・メモリ 1 GiB)をかけ、同じサブネットの別タスクから負荷をかけて測定した。絶対値ではなく言語間の相対比較として読む。コストは API 単価換算で、実行は既存のサブスクリプションで行った。",
     updated: "データ生成", sister: "姉妹リポジトリ: coding-agent-benchmark",
   },
   zh: {
@@ -177,9 +177,9 @@ const T = {
     legendBest: "列内前 1/3", legendMid: "中间", legendLow: "后 1/3", legendNa: "— 未测量 · m/n = 已测量 run / 全部 run",
     weightsTitle: "综合得分权重", weightsNote: "综合得分是各指标归一化值(每列内 0 最差 – 1 最好)的加权平均。改变权重会改变排名,请将其视为解读辅助而非结论。",
     reset: "重置为等权重",
-    detailTitle: "各 run 详情", detailEmpty: "尚无测量此指标的 run。",
+    detailTitle: "各 run 详情", detailEmpty: "尚无测量此指标的 run。", detailHint: "仅显示上方所选模型的 run。要比较两个模型,请选择“两个模型”。",
     stackTitle: "各语言技术栈(所有 run 固定)", lang: "语言", fw: "框架", db: "数据库访问",
-    limits: "运行时数据在 macOS 的 Docker Desktop(虚拟机)中测量,所有语言使用相同的 CPU 与内存限制。请作为语言间的相对比较解读,而非绝对值。成本为按 API 单价换算的值,实际运行使用现有订阅。",
+    limits: "运行时数据在 AWS Fargate Spot(ARM64,仅 Graviton4)上测量,所有语言使用相同限制(应用 2 vCPU、内存 1 GiB),负载来自同一子网中的独立任务。请作为语言间的相对比较解读,而非绝对值。成本为按 API 单价换算的值,实际运行使用现有订阅。",
     updated: "数据生成于", sister: "姊妹仓库: coding-agent-benchmark",
   },
 };
@@ -356,10 +356,11 @@ function renderDetail() {
       bindTip(dot, `<b>${r.run}</b><br>${label(m)}: ${fmt(m, r.v)}`);
     });
   }
-  document.getElementById("detailLegend").innerHTML = B.models.map((md) =>
+  document.getElementById("detailLegend").innerHTML = B.models.filter((md) => models.includes(md.key)).map((md) =>
     `<span><svg width="14" height="14" style="vertical-align:-2px">${md.key === "opus55"
       ? '<rect x="2" y="2" width="10" height="10" rx="2" fill="var(--s2)"/>'
       : '<circle cx="7" cy="7" r="5.5" fill="var(--s1)"/>'}</svg> ${md.name}</span>`).join("");
+  if (models.length === 1) document.getElementById("detailLegend").innerHTML += ` <span>${t().detailHint}</span>`;
 }
 
 function renderStack() {
