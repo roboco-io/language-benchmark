@@ -107,6 +107,19 @@ class HostMeasureTest(MeasureBase):
                 owned.append(pid)
         self.assertEqual(owned, [])
 
+    def test_injected_port_preferred_over_admin_listener(self):
+        # FrankenPHP(Laravel Octane)는 PORT 외에 관리 포트도 연다. lsof 첫 포트(관리 포트)로 채점하면 모든 요청이 404다(EXP-002).
+        r = self.run_script("measure.sh", self.app("admin"), HURL)
+        self.assertEqual(r.stdout.strip(), "1,1", r.stderr)
+
+    def test_app_ignoring_port_is_graded_after_grace(self):
+        # PORT를 무시하고 다른 포트를 연 앱도 PORT_GRACE초 뒤 그 포트로 채점한다(기존 동작 유지).
+        repo = self.app("ok")
+        with open(os.path.join(repo, "start.sh"), "w") as f:
+            f.write("#!/bin/bash\nPORT=47219 exec python3 server.py\n")
+        r = self.run_script("measure.sh", repo, HURL, env={"PORT_GRACE": "2"})
+        self.assertEqual(r.stdout.strip(), "1,1", r.stderr)
+
     def test_dead_start_sh_returns_early(self):
         t0 = time.time()
         repo = self.app("dies")

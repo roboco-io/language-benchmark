@@ -83,13 +83,19 @@ repo_alive() {
   return 1
 }
 
-# 리포 소속 프로세스가 LISTEN 중인 첫 포트 반환
-find_port() {
+# 리포 소속 프로세스가 LISTEN 중인 포트 목록(lsof 순서)
+owned_ports() {
   lsof -nP -iTCP -sTCP:LISTEN 2>/dev/null | tail -n +2 | while read -r _ pid _ _ _ _ _ _ name _; do
-    belongs_to_repo "$pid" || continue
-    echo "${name##*:}"
-    break
+    belongs_to_repo "$pid" && echo "${name##*:}"
   done
+}
+# 채점 포트: 주입한 PORT($1)에서 리포 소속 프로세스가 LISTEN하면 그 포트를 쓴다.
+# FrankenPHP(Laravel Octane)처럼 관리 포트를 함께 여는 서버에서 lsof 첫 포트가 관리 포트일 수 있다(EXP-002).
+# PORT를 쓰지 않는 앱은 리포 소속 첫 포트로 채점한다. 이 대체 포트는 PORT_GRACE초 동안 PORT가 열리지 않을 때만 받는다(호출 측 루프).
+find_port() {
+  local ports; ports=$(owned_ports)
+  [ -z "$ports" ] && return
+  if printf '%s\n' "$ports" | grep -qx "$1"; then echo "$1 injected"; else echo "$(printf '%s\n' "$ports" | head -1) other"; fi
 }
 
 cleanup
@@ -99,13 +105,22 @@ SPORT="$(free_port)"
 ( cd "$REPO" && PORT="$SPORT" exec bash start.sh > "$BASE/server-iter.log" 2>&1 < /dev/null ) > /dev/null 2>&1 &
 SRV=$!
 PORT=""
+PORT_GRACE="${PORT_GRACE:-15}"
+OTHER_SINCE=0
 for _ in $(seq 1 "$START_SEC"); do
-  PORT=$(find_port | head -1)
-  [ -n "$PORT" ] && break
+  read -r CAND KIND <<<"$(find_port "$SPORT")"
+  if [ "$KIND" = injected ]; then PORT="$CAND"; break; fi
+  if [ -n "$CAND" ]; then
+    OTHER_SINCE=$((OTHER_SINCE + 1))
+    [ "$OTHER_SINCE" -ge "$PORT_GRACE" ] && { PORT="$CAND"; break; }
+  else
+    OTHER_SINCE=0
+  fi
   # start.sh가 이미 죽었고 리포 소속 프로세스도 남아 있지 않으면 기다려도 LISTEN하지 않는다
   kill -0 "$SRV" 2>/dev/null || repo_alive || break
   sleep 1
 done
+[ -z "$PORT" ] && [ -n "$CAND" ] && PORT="$CAND"   # 기동 대기가 끝날 때까지 PORT가 열리지 않았으면 대체 포트로 채점한다
 if [ -z "$PORT" ]; then cleanup; echo "0,0"; exit 0; fi
 
 HURL_OUT="$BASE/hurl-last.log"
