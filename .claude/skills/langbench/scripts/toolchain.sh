@@ -28,14 +28,18 @@ p=$(which_ docker);  check docker "$p" "$p" --version
 p=$(which_ k6);      check k6 "$p" "$p" version
 p=$(which_ scc);     check scc "$p" "$p" --version
 p=$(which_ trivy);   check trivy "$p" "$p" --version
+p=$(which_ python3); check python3 "$p" "$p" --version   # 하네스 스크립트가 언어와 무관하게 쓴다
 check hurl "$HURL_BIN" "$HURL_BIN" --version
 
 # 언어 도구: 레지스트리(langreg.py toolchain)에서 읽는다. LANGS가 있으면 그 언어만, 없으면 등록된 전부.
 # 줄: 이름 TAB probe TAB bin TAB bin_env TAB ver_lines TAB 버전 인자... (빈 필드는 '-')
 LB_DIR="$(cd "$(dirname "$0")" && pwd)"
+# 레지스트리를 못 읽으면(파이썬·langreg.py 실패, 모르는 언어 키) 조용히 통과하지 않고 실패한다.
+reg=$(python3 "$LB_DIR/langreg.py" toolchain ${LANGS:-}) || { echo "toolchain: 언어 레지스트리를 읽지 못함 (LANGS=${LANGS:-})" >&2; exit 1; }
 # shellcheck disable=SC2086  # LANGS는 공백으로 나뉜 언어 키 목록이다
 while IFS=$'\t' read -r name probe bin bin_env vl rest; do
   [ -n "$name" ] || continue
+  [ "$name" = python3 ] && continue   # 공통 도구에서 이미 점검했다
   IFS=$'\t' read -r -a targs <<< "$rest"
   if [ "$probe" = brew-or-pkgconfig ]; then
     # brew 설치 버전 또는 pkg-config 버전 (예: Drogon)
@@ -51,6 +55,6 @@ while IFS=$'\t' read -r name probe bin bin_env vl rest; do
   fi
   if [ "$bin_env" != - ]; then p="${!bin_env:-}"; else p=$(which_ "$bin"); fi
   VER_LINES="$vl" check "$name" "$p" "$p" "${targs[@]}"
-done < <(python3 "$LB_DIR/langreg.py" toolchain ${LANGS:-})
+done <<< "$reg"
 
 exit $fail

@@ -100,6 +100,35 @@ class LangregTest(unittest.TestCase):
     def test_cleanup_dirs(self):
         self.assertEqual(set(self.run_cli("cleanup-dirs").split()), {"target", ".venv", "build"})
 
+    def run_toolchain(self, **env):
+        return subprocess.run(["bash", os.path.join(SKILL, "scripts", "toolchain.sh")], capture_output=True, text=True,
+                              env=dict(os.environ, **env))
+
+    def test_toolchain_langs_subset(self):
+        r = self.run_toolchain(LANGS="go")
+        names = [l.split()[0] for l in r.stdout.splitlines()]
+        self.assertIn("go", names)
+        self.assertIn("python3", names)  # 공통 도구
+        self.assertEqual(names.count("python3"), 1)
+        for n in ("cargo", "cmake", "node", "drogon"):
+            self.assertNotIn(n, names)
+
+    def test_toolchain_python_prints_python3_once(self):
+        names = [l.split()[0] for l in self.run_toolchain(LANGS="python").stdout.splitlines()]
+        self.assertEqual(names.count("python3"), 1)
+
+    def test_toolchain_registry_failure_fails(self):
+        r = self.run_toolchain(LANGS="nolang")
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("레지스트리", r.stderr)
+        # langreg.py가 없는 디렉터리의 사본도 실패해야 한다
+        with tempfile.TemporaryDirectory() as d:
+            import shutil
+            shutil.copy(os.path.join(SKILL, "scripts", "toolchain.sh"), d)
+            r = subprocess.run(["bash", os.path.join(d, "toolchain.sh")], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("레지스트리", r.stderr)
+
     def test_prompts_unchanged(self):
         with open(os.path.join(SKILL, "assets", "checksums.md5")) as f:
             entries = {l.split()[1]: l.split()[0] for l in f if l.strip()}

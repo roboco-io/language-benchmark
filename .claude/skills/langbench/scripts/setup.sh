@@ -22,7 +22,7 @@ mkdir -p "$BASE"
 # 툴체인 점검: 하나라도 없으면 중단한다. 출력은 실험 README에 옮길 버전 기록이다.
 # LB_SKIP_TOOLCHAIN=1은 테스트 전용 우회다(실험에서는 쓰지 않는다).
 if [ "${LB_SKIP_TOOLCHAIN:-}" != 1 ]; then
-  bash "$SKILL/scripts/toolchain.sh" > "$BASE/toolchain.txt" \
+  LANGS="$LANGS" bash "$SKILL/scripts/toolchain.sh" > "$BASE/toolchain.txt" \
     || { echo "툴체인 점검 실패 — 위 '없음' 도구를 설치한 뒤 다시 실행 (설치는 사용자 승인 후)" >&2; exit 1; }
 fi
 cp "$CFG" "$BASE/bench.env"

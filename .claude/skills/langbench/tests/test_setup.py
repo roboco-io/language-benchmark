@@ -117,7 +117,7 @@ PRICE_TIERS=""
                 if name != "cmake" and not os.path.lexists(link):
                     os.symlink(os.path.join(d, name), link)
         env_file = os.path.join(self.tmp, "bench.env")
-        self.run_setup()  # bench.env 작성(툴체인 점검 생략 모드)
+        self.run_setup(langs="typescript cpp")  # bench.env 작성(툴체인 점검 생략 모드). cpp가 cmake를 요구한다
         shutil.rmtree(os.path.join(self.home, "experiments"))
         env = dict(os.environ, HOME=self.home, PATH=bin_dir)
         env.pop("LB_SKIP_TOOLCHAIN", None)
@@ -125,6 +125,12 @@ PRICE_TIERS=""
                            env=env, capture_output=True, text=True)
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("없음: cmake", r.stderr)
+        # LANGS에서 cpp를 빼면 setup.sh가 그 부분집합만 점검하므로 cmake가 없어도 툴체인 점검을 통과한다
+        self.run_setup(langs="typescript")
+        shutil.rmtree(os.path.join(self.home, "experiments"))
+        r = subprocess.run(["/bin/bash", os.path.join(self.skill, "scripts", "setup.sh"), env_file],
+                           env=env, capture_output=True, text=True)
+        self.assertNotIn("없음: cmake", r.stderr)
 
 
 if __name__ == "__main__":
