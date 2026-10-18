@@ -340,3 +340,35 @@ def test_local_prep_has_no_language_case(self):
 - [ ] **Step 3: 구현** — JSON 3개, kind·format 함수, `render_prompts.py`로 PROMPT 3개 생성 후 `checksums.md5`에 md5 추가(기존 5줄 불변).
 - [ ] **Step 4: 통과 확인** — 두 테스트 스위트 전체 PASS, `render_prompts.py --check` 종료 코드 0, 기존 5개 PROMPT md5 불변.
 - [ ] **Step 5: Commit** — `git commit -m "feat(langbench): register Java, PHP and C# for EXP-002"`
+
+### Task 9: 두 언어 비교를 대결형 레이아웃으로
+
+사용자 결정(2026-10-18): "두 언어 비교" 패널(`dashboard/decision-ui.js`의 `renderPair`)을 지표별 대결형으로 바꾼다. 한 행이 한 지표이고, 왼쪽에 A 언어 값, 오른쪽에 B 언어 값, 가운데 축에서 나은 쪽으로 막대가 뻗는다. 맨 위에 승수 요약을 둔다. 모델은 개요 표와 같은 방식으로 한 번에 하나만 보여 준다.
+
+**Files:**
+- Modify: `dashboard/decision.js`(함수 추가), `dashboard/decision-ui.js`(`renderPair`, 문구 4개 언어), `dashboard/decision.css`
+- Test: `scripts/test_decision.mjs`
+
+**Interfaces:**
+- Consumes: 기존 `Decision.summarize(rows, language, model, key)`의 `median`·`min`·`max`, Task 5의 데이터 기반 언어 목록.
+- Produces:
+  - `Decision.duel(a, b, better, rangeA, rangeB) -> {winner: 'a'|'b'|null, ratio: number|null, overlap: boolean}`. `a`·`b`는 중앙값, `range*`는 `[min, max]` 또는 `null`. 값이 하나라도 없으면 `{winner:null, ratio:null, overlap:false}`. 같으면 `winner:null`. `ratio`는 나은 값과 못한 값의 배수(높을수록 좋음: 큰 값÷작은 값, 낮을수록 좋음: 큰 값÷작은 값)이며 어느 값이든 0 이하이면 `null`. `overlap`은 두 범위가 모두 있고 `max(lowA, lowB) <= min(highA, highB)`일 때 `true`.
+  - `Decision.duelBar(ratio) -> number`: 0-1 막대 길이. `ratio`가 `null`이면 0, 아니면 `Math.min(1, Math.log2(ratio) / 2)`(4배에서 가득 참).
+  - 화면 규칙: 요약 줄 "`<A> <n>승 · <B> <m>승`"(동률·미측정은 세지 않음). 행 오른쪽 설명: 승자 있음 → "`<승자> <ratio 소수 1자리>배`", `overlap`이면 뒤에 " · 범위 겹침", 동률 → "동일", 값 없음 → "미측정". 값은 버튼이며 누르면 기존 `open({language, model, metric})`로 증거 패널을 연다. 기존 "범위·반복값 표시" 토글을 이 패널에도 두어 켜면 값 아래에 최솟값–최댓값을 보여 준다. 비교 모드("두 모델 비교")에서는 패널 안 Sonnet/Opus 탭(개요 표의 `overviewModel`과 같은 방식, 별도 상태 `pairModel`).
+  - 문구 키(4개 언어): `wins`, `times`, `overlap`, `same`, `notMeasured`(기존 재사용).
+
+- [ ] **Step 1: 실패하는 테스트** (`scripts/test_decision.mjs`)
+
+```js
+assert.deepEqual(duel(2240, 3283, 'higher', [2000,2500], [3000,3600]), {winner:'b', ratio:3283/2240, overlap:false});
+assert.deepEqual(duel(4.3, 5.1, 'lower', [3.8,5.2], [5.1,5.2]), {winner:'a', ratio:5.1/4.3, overlap:true});
+assert.deepEqual(duel(1, 1, 'higher', null, null), {winner:null, ratio:1, overlap:false});
+assert.deepEqual(duel(null, 3, 'higher', null, null), {winner:null, ratio:null, overlap:false});
+assert.equal(duel(0, 3, 'lower', null, null).ratio, null);
+assert.equal(duelBar(4), 1); assert.equal(duelBar(1), 0); assert.equal(duelBar(null), 0);
+```
+
+- [ ] **Step 2: 실패 확인** — `node scripts/test_decision.mjs` → FAIL.
+- [ ] **Step 3: 구현** — `renderPair`를 위 규칙으로 다시 쓴다. 기존 `table()`·`statCell()`이 다른 곳에서 쓰이지 않게 되면 함께 지운다.
+- [ ] **Step 4: 확인** — `node scripts/test_decision.mjs`·`node scripts/test_score.mjs` PASS. 헤드리스 Chrome에서 Go vs Rust(Sonnet) 요약이 위 규칙대로 계산된 승수와 같은지, 값 클릭 시 증거 패널의 run이 해당 언어·모델로 바뀌는지, 390px 폭에서 페이지 가로 넘침이 없는지 확인한다.
+- [ ] **Step 5: Commit** — `git commit -m "feat(dashboard): head-to-head layout for the two-language comparison"`
