@@ -21,8 +21,14 @@ class BuildTests(unittest.TestCase):
         go = next(l for l in data["languages"] if l["key"] == "go")
         self.assertEqual(go["exp"], "EXP-001")
         self.assertEqual(go["stack"]["framework"], "Gin")
-        rust = next(l for l in data["languages"] if l["key"] == "rust")
-        self.assertIsNone(rust["exp"])
+        self.assertEqual([l["key"] for l in data["languages"]], ["go"])
+
+    def test_only_languages_with_rows_exported(self):
+        five = ["typescript", "python", "go", "rust", "cpp"]
+        data = build([row(l, "sonnet55", 1) for l in five])
+        self.assertEqual([l["key"] for l in data["languages"]], five)
+        self.assertEqual(list(data["cells"]), five)
+        self.assertEqual(list(build([])["cells"]), LANGUAGES)
 
     def test_mixed_experiments_raise(self):
         r2 = dict(row("go", "opus55", 1), exp="EXP-002")

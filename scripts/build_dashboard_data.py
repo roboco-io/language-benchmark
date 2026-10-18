@@ -57,12 +57,15 @@ def build(rows: list[dict], experiments: dict | None = None) -> dict:
             raise ValueError(f"알 수 없는 모델: {r.get('model')!r} (run {r.get('run')})")
     cells = {}
     lang_exp = {}
-    for lang in LANGUAGES:
+    # 행이 하나라도 있는 언어만 내보낸다(레지스트리에만 있고 아직 실행 전인 언어가 빈 칸으로 공개되지 않게).
+    # 행이 전혀 없으면 빈 상태 화면을 위해 등록된 언어를 모두 내보낸다.
+    exported = [k for k in LANGUAGES if any(r["language"] == k for r in rows)] or list(LANGUAGES)
+    for lang in exported:
         exps = sorted({r.get("exp") for r in rows if r["language"] == lang and r.get("exp")})
         if len(exps) > 1:
             raise ValueError(f"{lang}: 실험이 섞임 {', '.join(exps)}")
         lang_exp[lang] = exps[0] if exps else None
-    for lang in LANGUAGES:
+    for lang in exported:
         lang_rows = [r for r in rows if r["language"] == lang]
         cells[lang] = {model: _cell([r for r in lang_rows if r["model"] == model]) for model in MODELS}
         cells[lang]["all"] = _cell(lang_rows)
@@ -70,7 +73,7 @@ def build(rows: list[dict], experiments: dict | None = None) -> dict:
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "experiments": experiments or {},
         "languages": [{"key": k, "name": LANGUAGE_NAMES[k], "stack": langreg.get(k)["stack"],
-                       "exp": lang_exp[k]} for k in LANGUAGES],
+                       "exp": lang_exp[k]} for k in exported],
         "models": [{"key": k, "name": MODEL_NAMES[k]} for k in MODELS],
         "metrics": METRICS,
         "cells": cells,
