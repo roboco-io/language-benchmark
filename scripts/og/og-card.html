@@ -14,13 +14,14 @@ p{font-size:30px;color:#c3c2b7;margin-top:16px;max-width:980px;line-height:1.35}
 </style></head>
 <body>
 <div class="top"><div><h1>Language Benchmark</h1>
-<p>Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) builds the same RealWorld backend in five languages.</p></div>
+<p>Which language suits vibe-coded backends? Claude Code (Sonnet 5.5 / Opus 5.5) builds the same RealWorld backend in <span id="nlang"></span> languages.</p></div>
 <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296.34 226.83" fill="currentColor" role="img" aria-label="ROBOCO"><g> <g id="Layer_1"> <g> <rect x="72.1" y="154.17" width="152.94" height="8.94"/> <rect x="98.99" y="10.03" width="9.07" height="9.13" transform="translate(207.06 29.2) rotate(-180)"/> <rect x="108.07" y="19.11" width="9.07" height="9.01" transform="translate(225.22 47.24) rotate(-180)"/> <rect x="90.05" y="19.14" width="8.98" height="18.08" transform="translate(189.07 56.36) rotate(-180)"/> <rect x="72.06" y="37.18" width="18" height="9" transform="translate(162.13 83.36) rotate(-180)"/> <rect x="62.96" y="46.15" width="9.14" height="108.07" transform="translate(135.06 200.36) rotate(-180)"/> <path d="M90.02,63.05v72.95h116.26V63.05h-116.26ZM122.21,119.11h-10.44v-31.56h10.44v31.56ZM185.38,118.82h-10.44v-31.56h10.44v31.56Z"/> <rect x="117.03" y="28.08" width="63" height="9.01" transform="translate(297.06 65.18) rotate(-180)"/> <rect x="189.03" y="10.1" width="9" height="9.05"/> <rect x="180.01" y="19.16" width="9.04" height="8.95"/> <rect x="198.02" y="19.14" width="9" height="18.02"/> <rect x="207" y="37.14" width="18.04" height="8.97"/> <rect x="225" y="46.11" width="9.01" height="108.09"/> </g> <g> <path d="M39.32,216.9v-8.86h-6.42v8.86H13.64v-35.42h32.1v4.43h6.42v17.71h-6.42v4.43h6.42v8.86h-12.84ZM39.32,190.33h-6.42v8.86h6.42v-8.86Z"/> <path d="M65.01,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM84.27,190.33h-6.42v17.71h6.42v-17.71Z"/> <path d="M103.54,216.9v-35.42h32.1v4.43h6.42v13.28h6.42v13.28h-6.42v4.43h-38.53ZM129.22,190.33h-6.42v4.43h6.42v-4.43ZM129.22,203.61h-6.42v4.43h6.42v-4.43Z"/> <path d="M161.33,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM180.59,190.33h-6.42v17.71h6.42v-17.71Z"/> <path d="M206.27,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v8.86h-12.84v-4.43h-6.42v17.71h6.42v-4.43h12.84v8.86h-6.42v4.43h-25.68Z"/> <path d="M251.22,216.9v-4.43h-6.42v-26.57h6.42v-4.43h25.68v4.43h6.42v26.57h-6.42v4.43h-25.68ZM270.48,190.33h-6.42v17.71h6.42v-17.71Z"/> </g> </g> </g></svg></div></div>
 <div class="langs" id="langs"></div>
 <div class="foot"><span id="runs"></span><span>roboco.io/language-benchmark</span></div>
 <script src="data.js"></script>
 <script>
 const B = window.BENCH;
+document.getElementById("nlang").textContent = B.languages.length;
 document.getElementById("langs").innerHTML = B.languages.map((l) => `<span>${l.name}</span>`).join("");
 const passed = B.runs.filter((r) => +r.pass === 1).length;
 document.getElementById("runs").textContent = B.runs.length ? `${B.runs.length} runs · ${passed} passed` : "Experiments in progress";
