@@ -1,0 +1,94 @@
+=== run order written: /Users/dohyunjung/experiments/langbench-exp002/run-order.txt (seed 20261019) : 2026-10-19 07:21:55 ===
+=== starting sequential runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / java php csharp / n=3, order /Users/dohyunjung/experiments/langbench-exp002/run-order.txt) : 2026-10-19 07:21:55 ===
+=== start opus55-java-1 : 2026-10-19 07:21:55 ===
+=== end opus55-java-1 (exit 0) | 1,2026-10-19 07:36:58,0,13,154,13,154,1,pass : 2026-10-19 07:36:58 ===
+=== start sonnet55-java-1 : 2026-10-19 07:36:58 ===
+=== end sonnet55-java-1 (exit 0) | 1,2026-10-19 07:42:52,0,13,154,13,154,1,pass : 2026-10-19 07:42:52 ===
+=== start opus55-csharp-1 : 2026-10-19 07:42:52 ===
+=== end opus55-csharp-1 (exit 0) | 1,2026-10-19 07:49:17,0,13,154,13,154,1,pass : 2026-10-19 07:49:17 ===
+=== start sonnet55-csharp-1 : 2026-10-19 07:49:17 ===
+=== end sonnet55-csharp-1 (exit 0) | 1,2026-10-19 07:52:41,0,13,154,13,154,1,pass : 2026-10-19 07:52:41 ===
+=== start sonnet55-php-1 : 2026-10-19 07:52:41 ===
+=== end sonnet55-php-1 (exit 0) | 30,2026-10-19 08:32:54,125,0,13,,,0,na : 2026-10-19 08:32:54 ===
+=== start opus55-php-1 : 2026-10-19 08:32:54 ===
+=== portbug fix 75d0a42 applied; sonnet55-php-1 opus55-php-1 invalidated -> invalid-portbug/ : 2026-10-19 08:54:37 ===
+=== starting sequential runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / java php csharp / n=3, order /Users/dohyunjung/experiments/langbench-exp002/run-order.txt) : 2026-10-19 08:54:37 ===
+=== skip opus55-java-1 : 2026-10-19 08:54:37 ===
+=== skip sonnet55-java-1 : 2026-10-19 08:54:37 ===
+=== skip opus55-csharp-1 : 2026-10-19 08:54:37 ===
+=== skip sonnet55-csharp-1 : 2026-10-19 08:54:37 ===
+=== start sonnet55-php-1 : 2026-10-19 08:54:37 ===
+=== end sonnet55-php-1 (exit 0) | timeout,2026-10-19 08:54:38 : 2026-10-19 08:54:38 ===
+=== start opus55-php-1 : 2026-10-19 08:54:38 ===
+=== starting sequential runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / java php csharp / n=3, order /Users/dohyunjung/experiments/langbench-exp002/run-order.txt) : 2026-10-19 08:55:09 ===
+=== skip opus55-java-1 : 2026-10-19 08:55:09 ===
+=== skip sonnet55-java-1 : 2026-10-19 08:55:09 ===
+=== skip opus55-csharp-1 : 2026-10-19 08:55:09 ===
+=== skip sonnet55-csharp-1 : 2026-10-19 08:55:09 ===
+=== start sonnet55-php-1 : 2026-10-19 08:55:09 ===
+=== end sonnet55-php-1 (exit 0) | 1,2026-10-19 09:01:33,0,13,154,13,154,1,pass : 2026-10-19 09:01:33 ===
+=== start opus55-php-1 : 2026-10-19 09:01:33 ===
+=== end opus55-php-1 (exit 0) | 1,2026-10-19 09:09:51,0,13,154,13,154,1,pass : 2026-10-19 09:09:51 ===
+=== start opus55-csharp-2 : 2026-10-19 09:09:51 ===
+=== end opus55-csharp-2 (exit 0) | 1,2026-10-19 09:16:25,0,13,154,13,154,1,pass : 2026-10-19 09:16:25 ===
+=== start sonnet55-java-2 : 2026-10-19 09:16:25 ===
+=== end sonnet55-java-2 (exit 0) | 1,2026-10-19 09:25:42,0,13,154,13,154,1,pass : 2026-10-19 09:25:42 ===
+=== start opus55-php-2 : 2026-10-19 09:25:42 ===
+=== end opus55-php-2 (exit 0) | 1,2026-10-19 09:38:18,0,13,154,13,154,1,pass : 2026-10-19 09:38:18 ===
+=== start sonnet55-csharp-2 : 2026-10-19 09:38:18 ===
+=== end sonnet55-csharp-2 (exit 0) | 1,2026-10-19 09:41:59,0,13,154,13,154,1,pass : 2026-10-19 09:41:59 ===
+=== start opus55-java-2 : 2026-10-19 09:41:59 ===
+=== end opus55-java-2 (exit 0) | 1,2026-10-19 09:50:55,0,13,154,13,154,1,pass : 2026-10-19 09:50:55 ===
+=== start sonnet55-php-2 : 2026-10-19 09:50:55 ===
+=== end sonnet55-php-2 (exit 0) | 1,2026-10-19 09:59:09,0,13,154,13,154,1,pass : 2026-10-19 09:59:09 ===
+=== start sonnet55-php-3 : 2026-10-19 09:59:09 ===
+=== end sonnet55-php-3 (exit 0) | 1,2026-10-19 10:08:25,0,13,154,13,154,1,pass : 2026-10-19 10:08:25 ===
+=== start opus55-csharp-3 : 2026-10-19 10:08:25 ===
+=== end opus55-csharp-3 (exit 0) | 1,2026-10-19 10:14:36,0,13,154,13,154,1,pass : 2026-10-19 10:14:36 ===
+=== start sonnet55-csharp-3 : 2026-10-19 10:14:36 ===
+=== end sonnet55-csharp-3 (exit 0) | 1,2026-10-19 10:18:12,0,13,154,13,154,1,pass : 2026-10-19 10:18:12 ===
+=== start sonnet55-java-3 : 2026-10-19 10:18:12 ===
+=== end sonnet55-java-3 (exit 0) | 1,2026-10-19 10:22:30,0,13,154,13,154,1,pass : 2026-10-19 10:22:30 ===
+=== start opus55-java-3 : 2026-10-19 10:22:30 ===
+=== end opus55-java-3 (exit 0) | 1,2026-10-19 10:33:34,0,13,154,13,154,1,pass : 2026-10-19 10:33:34 ===
+=== start opus55-php-3 : 2026-10-19 10:33:34 ===
+=== end opus55-php-3 (exit 0) | 1,2026-10-19 10:43:21,0,13,154,13,154,1,pass : 2026-10-19 10:43:21 ===
+=== ALL RUNS FINISHED : 2026-10-19 10:43:21 ===
+=== starting follow-up runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / java php csharp / n=3) : 2026-10-19 10:43:50 ===
+=== start opus55-java-1-fu : 2026-10-19 10:43:50 ===
+=== end opus55-java-1-fu (exit 0) | 1,2026-10-19 10:46:21,0,14,167,14,167,1,pass : 2026-10-19 10:46:21 ===
+=== start sonnet55-java-1-fu : 2026-10-19 10:46:21 ===
+=== end sonnet55-java-1-fu (exit 0) | 1,2026-10-19 10:47:33,0,14,167,14,167,1,pass : 2026-10-19 10:47:33 ===
+=== start opus55-csharp-1-fu : 2026-10-19 10:47:33 ===
+=== end opus55-csharp-1-fu (exit 0) | 1,2026-10-19 10:49:40,0,14,167,14,167,1,pass : 2026-10-19 10:49:40 ===
+=== start sonnet55-csharp-1-fu : 2026-10-19 10:49:40 ===
+=== end sonnet55-csharp-1-fu (exit 0) | 1,2026-10-19 10:51:07,0,14,167,14,167,1,pass : 2026-10-19 10:51:07 ===
+=== start sonnet55-php-1-fu : 2026-10-19 10:51:07 ===
+=== end sonnet55-php-1-fu (exit 0) | 1,2026-10-19 10:52:25,0,14,167,14,167,1,pass : 2026-10-19 10:52:25 ===
+=== start opus55-php-1-fu : 2026-10-19 10:52:25 ===
+=== end opus55-php-1-fu (exit 0) | 1,2026-10-19 10:54:50,0,14,167,14,167,1,pass : 2026-10-19 10:54:50 ===
+=== start opus55-csharp-2-fu : 2026-10-19 10:54:50 ===
+=== end opus55-csharp-2-fu (exit 0) | 1,2026-10-19 10:56:37,0,14,167,14,167,1,pass : 2026-10-19 10:56:37 ===
+=== start sonnet55-java-2-fu : 2026-10-19 10:56:37 ===
+=== end sonnet55-java-2-fu (exit 0) | 1,2026-10-19 10:58:05,0,14,167,14,167,1,pass : 2026-10-19 10:58:05 ===
+=== start opus55-php-2-fu : 2026-10-19 10:58:05 ===
+=== end opus55-php-2-fu (exit 0) | 1,2026-10-19 11:00:03,0,14,167,14,167,1,pass : 2026-10-19 11:00:03 ===
+=== start sonnet55-csharp-2-fu : 2026-10-19 11:00:03 ===
+=== end sonnet55-csharp-2-fu (exit 0) | 1,2026-10-19 11:01:13,0,14,167,14,167,1,pass : 2026-10-19 11:01:13 ===
+=== start opus55-java-2-fu : 2026-10-19 11:01:13 ===
+=== end opus55-java-2-fu (exit 0) | 1,2026-10-19 11:03:45,0,14,167,14,167,1,pass : 2026-10-19 11:03:45 ===
+=== start sonnet55-php-2-fu : 2026-10-19 11:03:45 ===
+=== end sonnet55-php-2-fu (exit 0) | 1,2026-10-19 11:05:02,0,14,167,14,167,1,pass : 2026-10-19 11:05:02 ===
+=== start sonnet55-php-3-fu : 2026-10-19 11:05:02 ===
+=== end sonnet55-php-3-fu (exit 0) | 1,2026-10-19 11:06:35,0,14,167,14,167,1,pass : 2026-10-19 11:06:35 ===
+=== start opus55-csharp-3-fu : 2026-10-19 11:06:35 ===
+=== end opus55-csharp-3-fu (exit 0) | 1,2026-10-19 11:08:31,0,14,167,14,167,1,pass : 2026-10-19 11:08:31 ===
+=== start sonnet55-csharp-3-fu : 2026-10-19 11:08:31 ===
+=== end sonnet55-csharp-3-fu (exit 0) | 1,2026-10-19 11:10:00,0,14,167,14,167,1,pass : 2026-10-19 11:10:00 ===
+=== start sonnet55-java-3-fu : 2026-10-19 11:10:00 ===
+=== end sonnet55-java-3-fu (exit 0) | 1,2026-10-19 11:11:21,0,14,167,14,167,1,pass : 2026-10-19 11:11:21 ===
+=== start opus55-java-3-fu : 2026-10-19 11:11:21 ===
+=== end opus55-java-3-fu (exit 0) | 1,2026-10-19 11:14:14,0,14,167,14,167,1,pass : 2026-10-19 11:14:14 ===
+=== start opus55-php-3-fu : 2026-10-19 11:14:14 ===
+=== end opus55-php-3-fu (exit 0) | 1,2026-10-19 11:16:18,0,14,167,14,167,1,pass : 2026-10-19 11:16:18 ===
+=== ALL FOLLOW-UPS FINISHED : 2026-10-19 11:16:18 ===

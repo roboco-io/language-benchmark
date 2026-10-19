@@ -1,0 +1,4 @@
+Verified 2026-10-19 from a clean clone of commit 4846ec4:
+- start.sh (PORT=8814): restore + Release build + foreground server; Hurl 13/13 files, 154/154 requests passed.
+- Docker image (PORT=9124, empty /data): schema auto-created; Hurl 13/13 files, 154/154 requests passed.
+- Startup log: journal_mode=wal, busy_timeout=5000ms; Kestrel on default thread pool.

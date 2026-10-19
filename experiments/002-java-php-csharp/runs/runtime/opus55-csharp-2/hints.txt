@@ -1,0 +1,12 @@
+./.ralph-done:4:- Startup log: journal_mode=wal, busy_timeout=5000ms; Kestrel on default thread pool.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Kestrel with the default .NET thread pool (scales with the core count). SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:35:Kestrel serves requests on the default .NET thread pool, which scales with the number of available
+./README.md:37:`busy_timeout = 5000` ms through an EF Core connection interceptor. The startup log prints the
+./README.md:38:effective `journal_mode`, `busy_timeout` and core count.
+./src/RealWorld/Data/AppDb.cs:121:/// Applies per-connection SQLite pragmas. busy_timeout is a per-connection setting,
+./src/RealWorld/Data/AppDb.cs:126:    private const string Pragmas = "PRAGMA busy_timeout = 5000; PRAGMA synchronous = NORMAL; PRAGMA foreign_keys = ON;";
+./src/RealWorld/Program.cs:14:// Kestrel runs on the default .NET thread pool, which sizes itself to the number of CPU cores.
+./src/RealWorld/Program.cs:46:    db.Database.ExecuteSqlRaw("PRAGMA journal_mode = WAL;");
+./src/RealWorld/Program.cs:47:    var journal = db.Database.SqlQueryRaw<string>("PRAGMA journal_mode").AsEnumerable().First();
+./src/RealWorld/Program.cs:48:    var busy = db.Database.SqlQueryRaw<int>("PRAGMA busy_timeout").AsEnumerable().First();
+./src/RealWorld/Program.cs:49:    app.Logger.LogInformation("SQLite {Path}: journal_mode={Journal}, busy_timeout={Busy}ms, workers={Cores} cores",

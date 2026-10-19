@@ -1,0 +1,8 @@
+vendor
+.git
+.env
+database/*.sqlite*
+storage/logs/*
+tests/hurl
+bootstrap/cache/*.php
+storage/framework/*/*

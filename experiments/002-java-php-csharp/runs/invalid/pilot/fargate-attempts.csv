@@ -1,0 +1,2 @@
+run,attempt,start,end,app_stop,load_stop,load_exit,files,outcome
+pilot-go,1,07:17:30,07:21:40,,EssentialContainerExited: Essential container in task exited,0,12,ok

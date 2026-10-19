@@ -1,0 +1,5 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Kestrel with the default .NET thread pool (scales with the core count). SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:13:The schema is created automatically on startup. SQLite runs in WAL mode with a 5000 ms `busy_timeout`.
+./README.md:14:Kestrel uses the default .NET thread pool, which scales with the CPU core count.
+./src/Api/Program.cs:14:// "Default Timeout=5" makes Microsoft.Data.Sqlite apply a 5000 ms busy_timeout.
+./src/Api/Program.cs:26:    db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");

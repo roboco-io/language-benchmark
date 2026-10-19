@@ -1,0 +1,1 @@
+PUT /api/articles/:slug/comments/:id implemented; all 14 Hurl files (167 requests) pass via start.sh and Docker.

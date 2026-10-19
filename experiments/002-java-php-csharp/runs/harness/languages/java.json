@@ -1,0 +1,70 @@
+{
+  "key": "java",
+  "name": "Java",
+  "order": 6,
+  "prompt": {
+    "STACK": "Java 25 + Spring Boot + Spring Data JPA (Hibernate) + SQLite, built with Maven",
+    "WORKERS": "Spring Boot's embedded Tomcat with its thread pool sized to the core count"
+  },
+  "stack": {
+    "framework": "Spring Boot",
+    "db": "Spring Data JPA (Hibernate, SQLite)"
+  },
+  "toolchain": [
+    {
+      "name": "java",
+      "bin": "java",
+      "args": [
+        "-version"
+      ]
+    },
+    {
+      "name": "mvn",
+      "bin": "mvn",
+      "args": [
+        "-version"
+      ]
+    },
+    {
+      "name": "osv-scanner",
+      "bin": "osv-scanner",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "osv",
+    "name": "osv",
+    "report": "osv.json",
+    "required_key": "results",
+    "ok_rc": "0 1",
+    "argv": [
+      "bash",
+      "-c",
+      "mvn -q -B -DoutputFormat=json -DoutputName=bom org.cyclonedx:cyclonedx-maven-plugin:2.9.1:makeBom 1>&2 && osv-scanner scan source --format json --allow-no-lockfiles -L target/bom.json"
+    ]
+  },
+  "deps": {
+    "kind": "maven-pom"
+  },
+  "loc": {
+    "scc_names": [
+      "Java"
+    ],
+    "test_pattern": "Test\\.java|Tests\\.java",
+    "exclude_dirs": [
+      "target",
+      ".mvn"
+    ]
+  },
+  "hints": [
+    "server.tomcat",
+    "hibernate",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "target"
+  ]
+}

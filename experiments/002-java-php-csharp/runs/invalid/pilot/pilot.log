@@ -1,0 +1,5 @@
+2026-10-19 07:16:47 pilot-go 로컬 준비 시작
+2026-10-19 07:17:30 pilot-go 로컬 준비 끝 rc=0 
+2026-10-19 07:17:48 pilot-go a1 앱 a214c1fa430b40cb93aab84d7814656c (172.31.84.188:45217) / 부하 a53ca09b94ea446ca1d04517f1b92e74 시작
+2026-10-19 07:21:40 pilot-go a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-19 07:21:41 ALL DONE pilot-go=ok

@@ -1,0 +1,19 @@
+{
+  "_comment": "claude-api 스킬의 Current Models 표(cached 2026-10-06)와 shared/prompt-caching.md(캐시 쓰기 5분 TTL 1.25×)에서 옮김. cache_write는 5분 TTL 단가 — Claude Code가 1시간 TTL로 쓴 토큰은 과소 추정된다.",
+  "claude-sonnet-5-5": {
+    "provider": "Anthropic (Claude Code 구독)",
+    "context_window": 1000000, "max_output": 128000,
+    "context_source": "claude-api skill Current Models (cached 2026-10-06)",
+    "billing": "subscription",
+    "pricing": {"input": 2.0, "output": 10.0, "cache_read": 0.2, "cache_write": 2.5, "tiers": [],
+                "source": "claude-api skill: Current Models table + prompt-caching.md (5m write 1.25x); platform.claude.com/docs/en/about-claude/pricing", "checked_at": "2026-10-18"}
+  },
+  "claude-opus-5-5": {
+    "provider": "Anthropic (Claude Code 구독)",
+    "context_window": 1000000, "max_output": 128000,
+    "context_source": "claude-api skill Current Models (cached 2026-10-06)",
+    "billing": "subscription",
+    "pricing": {"input": 4.0, "output": 20.0, "cache_read": 0.2, "cache_write": 5.0, "tiers": [],
+                "source": "claude-api skill: Current Models table + prompt-caching.md (5m write 1.25x); platform.claude.com/docs/en/about-claude/pricing", "checked_at": "2026-10-18"}
+  }
+}

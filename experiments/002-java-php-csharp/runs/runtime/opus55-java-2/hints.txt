@@ -1,0 +1,16 @@
+./.ralph-done:3:- Tomcat threads = CPU cores; SQLite journal_mode=wal, busy_timeout=5000ms (logged at startup)
+./pom.xml:35:            <groupId>org.hibernate.orm</groupId>
+./pom.xml:36:            <artifactId>hibernate-community-dialects</artifactId>
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:9:(`hibernate-community-dialects` SQLite dialect), `sqlite-jdbc`, and Maven. Passwords are hashed with BCrypt
+./README.md:42:`journal_mode=WAL` and `busy_timeout=5000` through JDBC URL parameters; the effective values are logged at
+./README.md:43:startup (`SQLite journal_mode=wal busy_timeout=5000ms`).
+./src/main/resources/application.properties:6:spring.datasource.url=jdbc:sqlite:${DB_PATH:realworld.db}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true
+./src/main/resources/application.properties:9:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:10:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:12:spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+./src/main/java/io/realworld/api/config/ServerConfig.java:22:    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatThreadPoolCustomizer() {
+./src/main/java/io/realworld/api/config/ServerConfig.java:33:    /** Logs the effective SQLite pragmas so the WAL / busy_timeout settings are verifiable. */
+./src/main/java/io/realworld/api/config/ServerConfig.java:40:                try (ResultSet rs = s.executeQuery("PRAGMA journal_mode")) {
+./src/main/java/io/realworld/api/config/ServerConfig.java:43:                try (ResultSet rs = s.executeQuery("PRAGMA busy_timeout")) {
+./src/main/java/io/realworld/api/config/ServerConfig.java:46:                log.info("SQLite journal_mode={} busy_timeout={}ms", journalMode, busyTimeout);

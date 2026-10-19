@@ -1,0 +1,19 @@
+./.ralph-done:5:4. Tomcat threads = available cores (10 host, 2 with --cpus 2); SQLite journal_mode=wal, busy_timeout=5000ms.
+./pom.xml:44:            <groupId>org.hibernate.orm</groupId>
+./pom.xml:45:            <artifactId>hibernate-community-dialects</artifactId>
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:43:At startup the application sets the Tomcat worker pool (`server.tomcat.threads.max`/`min-spare`) and
+./README.md:47:Every SQLite connection is opened with `journal_mode=WAL` and `busy_timeout=5000`. The effective values
+./src/main/resources/application.properties:6:spring.datasource.url=jdbc:sqlite:${app.db.path}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true
+./src/main/resources/application.properties:8:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:9:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:11:spring.jpa.properties.hibernate.default_batch_fetch_size=100
+./src/main/java/io/realworld/config/StartupReport.java:21:    public StartupReport(DataSource dataSource, @Value("${server.tomcat.threads.max}") int tomcatMaxThreads) {
+./src/main/java/io/realworld/config/StartupReport.java:28:        String journalMode = jdbc.queryForObject("PRAGMA journal_mode", String.class);
+./src/main/java/io/realworld/config/StartupReport.java:29:        Integer busyTimeout = jdbc.queryForObject("PRAGMA busy_timeout", Integer.class);
+./src/main/java/io/realworld/config/StartupReport.java:30:        log.info("cpu cores={}, tomcat max threads={}, sqlite journal_mode={}, busy_timeout={}ms",
+./src/main/java/io/realworld/config/SqliteTransactionModeConfig.java:18: * fails it with SQLITE_BUSY immediately instead of honouring busy_timeout. Write transactions therefore
+./src/main/java/io/realworld/config/SqliteTransactionModeConfig.java:19: * start with BEGIN IMMEDIATE, which takes the write lock up front and waits up to busy_timeout for it.
+./src/main/java/io/realworld/config/SerializedWriteTransactionManager.java:12: * queueing waiters, so under load an unlucky writer can starve past busy_timeout. This transaction manager
+./src/main/java/io/realworld/RealWorldApplication.java:25:                "server.tomcat.threads.max", String.valueOf(cores),
+./src/main/java/io/realworld/RealWorldApplication.java:26:                "server.tomcat.threads.min-spare", String.valueOf(cores),

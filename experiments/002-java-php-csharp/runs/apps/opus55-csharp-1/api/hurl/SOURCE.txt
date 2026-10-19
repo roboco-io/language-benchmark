@@ -1,0 +1,1 @@
+Vendored from https://github.com/realworld-apps/realworld (specs/api/hurl) at commit ebbcdeb8d55b42a3a613c787560498b8ef10003f

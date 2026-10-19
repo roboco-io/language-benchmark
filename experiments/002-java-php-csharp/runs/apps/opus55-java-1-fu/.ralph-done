@@ -1,0 +1,4 @@
+Verified on 2026-10-19:
+- PUT /api/articles/:slug/comments/:id implemented (200, 401, 403, 404 article/comment, 422).
+- start.sh server: api/hurl (13 files, 154 requests) + api/hurl-extra (1 file, 12 requests) all pass.
+- Root Dockerfile image: the same 14 files / 166 requests all pass.

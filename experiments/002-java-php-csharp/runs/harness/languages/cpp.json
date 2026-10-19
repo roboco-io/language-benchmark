@@ -1,0 +1,53 @@
+{
+  "key": "cpp",
+  "name": "C++",
+  "order": 5,
+  "prompt": {
+    "STACK": "C++20 + Drogon + Drogon ORM + SQLite, built with CMake",
+    "WORKERS": "Drogon app().setThreadNum() set to the core count"
+  },
+  "stack": {
+    "framework": "Drogon (C++20)",
+    "db": "Drogon ORM"
+  },
+  "toolchain": [
+    {
+      "name": "cmake",
+      "bin": "cmake",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "drogon",
+      "probe": "brew-or-pkgconfig",
+      "args": []
+    }
+  ],
+  "scanner": {
+    "format": "none"
+  },
+  "deps": {
+    "kind": "cmake"
+  },
+  "loc": {
+    "scc_names": [
+      "C++",
+      "C++ Header",
+      "C Header"
+    ],
+    "test_pattern": "_test\\.(cc|cpp)",
+    "exclude_dirs": [
+      "build"
+    ]
+  },
+  "hints": [
+    "CMAKE_BUILD_TYPE",
+    "setThreadNum",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "build"
+  ]
+}

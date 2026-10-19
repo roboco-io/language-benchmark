@@ -1,0 +1,1 @@
+Verified 2026-10-19: comment update endpoint implemented; all 14 Hurl files (167 requests: 154 official + 13 new) pass via start.sh and the Docker image.

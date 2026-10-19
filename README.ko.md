@@ -83,9 +83,13 @@ Fargate는 태스크가 놓일 CPU 세대를 보장하지 않는다. 시험으�
 | 실험 | 가설 | 판정 | 클라이언트 |
 |------|------|------|------|
 | [EXP-001](experiments/001-five-language-realworld/report.md) 5개 언어 RealWorld 백엔드 Ralph 루프 | L-01: 같은 RealWorld 백엔드 과제에서 바이브 코딩 적합성(만드는 과정 지표와 결과물 지표의 종합 점수)은 구현 언어(TypeScript, Python, Go, Rust, C++) 사이에 차이가 있으며, 그 순위는 Sonnet 5.5와 Opus 5.5에서 같다. | **부분 검증** | Claude Code 2.1.302 |
+| [EXP-002](experiments/002-java-php-csharp/report.md) Java·PHP·C# RealWorld 백엔드 Ralph 루프 | L-02: 같은 RealWorld 백엔드 과제에서 바이브 코딩 적합성(만드는 과정 지표와 결과물 지표의 종합 점수)은 Java, PHP, C# 사이에 차이가 있으며, 세 언어 안의 순위는 Sonnet 5.5와 Opus 5.5에서 같다. | **검증(탐색)** | Claude Code 2.1.302 |
 
 **EXP-001 — 5개 언어 RealWorld 백엔드 Ralph 루프** (부분 검증)  
 언어 간 종합 점수 차이는 관측됐지만(Go는 두 모델 모두 상위 2위, Python은 두 모델 모두 최하위) 1위가 모델마다 달라(Sonnet 5.5 Rust, Opus 5.5 Go) 순위가 같다는 부분은 지지되지 않았고, 30 run 모두 합격해 합격률로는 언어를 구별하지 못했다. → [보고서](experiments/001-five-language-realworld/report.md)
+
+**EXP-002 — Java·PHP·C# RealWorld 백엔드 Ralph 루프** (검증(탐색))  
+C#이 두 모델 모두에서 종합 점수 1위였고(Sonnet 0.846, Opus 0.983) 2위와의 반복별 범위가 겹치지 않았다. 다만 2·3위(Java·PHP)는 모델마다 순서가 바뀌었고 범위가 겹쳐 구별되지 않으며, 18 run 모두 합격해 합격률로는 언어를 구별하지 못했다. → [보고서](experiments/002-java-php-csharp/report.md)
 
 <!-- RESULTS:END -->
 
@@ -95,4 +99,6 @@ EXP-001(2026-10-18, 5 언어 × Sonnet 5.5·Opus 5.5 × 3회)에서 RealWorld �
 
 24개 지표 균등 가중 종합 점수에서 Go는 두 모델 모두 상위 2위 안(Sonnet 2위, Opus 1위)이었고 Python은 두 모델 모두 최하위였다. 1위는 모델마다 달랐다(Sonnet Rust, Opus Go). C++은 구현 시간과 비용이 가장 컸지만 메모리 사용이 가장 작았고, Python·TypeScript는 구현은 빠르고 싸지만 처리량·이미지 크기·취약점 수에서 뒤졌다. Opus 5.5는 Sonnet 5.5보다 추정 비용이 약 2배, 구현 시간이 약 1.8배였고 본 과제 합격률 이득은 없었다.
 
-한계: 과제 하나, 셀당 3회이며 종합 점수는 가중치 선택에 민감하다. 런타임 지표는 AWS Fargate Spot(Graviton4, 2 vCPU)에서 측정했다. 자세한 근거는 [EXP-001 보고](experiments/001-five-language-realworld/report.md)에 있다.
+EXP-002(2026-10-19, Java·PHP·C# × 두 모델 × 3회)에서도 18/18이 첫 iteration에 합격했다. 세 언어 안의 종합 점수에서 C#은 두 모델 모두 1위였고(Sonnet 0.846, Opus 0.983) 2위와 반복별 범위가 겹치지 않았다. C#은 구현 시간·비용이 가장 작았고 유휴 메모리(약 45 MiB)·이미지·의존성도 가장 작았으며 처리량은 Java와 비슷한 상위였다. Java는 처리량은 좋았지만 메모리·콜드 스타트(약 5초)·빌드 시간이 가장 나빴고, PHP는 처리량이 가장 낮았고 베이스 이미지 때문에 취약점 수가 가장 많았다. Java와 PHP의 2·3위는 모델마다 바뀌었다. EXP-001과 합친 8개 언어 비교에서도 C#이 두 모델 모두 1위였지만, 실행 시점이 하루 다른 탐색적 비교이고 Sonnet에서는 Rust·Go와 범위가 겹친다.
+
+한계: 과제 하나, 셀당 3회이며 종합 점수는 가중치 선택에 민감하다. 런타임 지표는 AWS Fargate Spot(Graviton4, 2 vCPU)에서 측정했다. 자세한 근거는 [EXP-001 보고](experiments/001-five-language-realworld/report.md)와 [EXP-002 보고](experiments/002-java-php-csharp/report.md)에 있다.

@@ -1,0 +1,5 @@
+Verified 2026-10-19:
+1. Hurl suite (api/hurl, 13 files / 154 requests): 13/13 files pass via start.sh build and via Docker image.
+2. start.sh: clean build + foreground server on $PORT (8102) - passed suite.
+3. Dockerfile: multi-stage release build; container on PORT=7070 with empty DB created schema and passed suite.
+4. Tomcat threads = available cores (10 host, 2 with --cpus 2); SQLite journal_mode=wal, busy_timeout=5000ms.

@@ -1,0 +1,22 @@
+./composer.lock:1383:            "name": "laravel/octane",
+./composer.lock:1387:                "url": "https://github.com/laravel/octane.git",
+./composer.lock:1392:                "url": "https://api.github.com/repos/laravel/octane/zipball/c49ff458e94bf14b382f6414c6b9ddb39ac82b28",
+./composer.lock:1461:                "octane",
+./composer.lock:1466:                "issues": "https://github.com/laravel/octane/issues",
+./composer.lock:1467:                "source": "https://github.com/laravel/octane"
+./composer.lock:5809:            "description": "Provides an object-oriented API to strings and deals with bytes, UTF-8 code points and grapheme clusters in a unified way",
+./docker/entrypoint.sh:25:exec php artisan octane:start \
+./docker/entrypoint.sh:29:  --workers="$WORKERS" \
+./config/database.php:41:            'busy_timeout' => env('DB_BUSY_TIMEOUT', 5000),
+./config/database.php:42:            'journal_mode' => env('DB_JOURNAL_MODE', 'wal'),
+./config/database.php:151:            'cluster' => env('REDIS_CLUSTER', 'redis'),
+./config/cache.php:30:    |                    "redis", "dynamodb", "storage", "octane",
+./config/cache.php:96:        'octane' => [
+./config/cache.php:97:            'driver' => 'octane',
+./config/octane.php:235:    'state_file' => env('OCTANE_STATE_FILE', storage_path('logs/octane-server-state.json')),
+./.ralph-done:1:Verified 2026-10-19: Hurl 154/154 via start.sh (fresh clone) and Docker; 1 worker per core; SQLite WAL + busy_timeout=5000.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Laravel Octane on FrankenPHP with one worker per core. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:26:`config/database.php` opens every connection with `journal_mode=WAL`, `busy_timeout=5000` ms, and `synchronous=NORMAL`. You can override them with `DB_JOURNAL_MODE`, `DB_BUSY_TIMEOUT`, and `DB_SYNCHRONOUS`.
+./start.sh:35:exec php artisan octane:start \
+./start.sh:39:  --workers="$WORKERS" \
+./composer.json:11:        "laravel/octane": "^2.22",

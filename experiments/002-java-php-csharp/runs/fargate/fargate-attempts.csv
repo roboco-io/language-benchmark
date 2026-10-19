@@ -1,0 +1,30 @@
+run,attempt,start,end,app_stop,load_stop,load_exit,files,outcome
+sonnet55-php-1,1,11:33:56,11:48:05,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-csharp-1,1,11:33:20,11:48:52,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-java-1,1,11:36:17,11:51:16,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-csharp-1,1,14:09:02,14:22:20,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-csharp-2,1,14:25:13,14:27:43,,"TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head ""https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools"": dial tcp 54.144.72.226:443: i/o timeout",,0,failed
+opus55-csharp-2,2,14:27:43,14:30:03,,"TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head ""https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools"": dial tcp 52.200.22.40:443: i/o timeout",,0,failed
+sonnet55-csharp-1,1,14:23:59,14:37:21,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-php-1,1,14:24:48,14:38:09,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-java-1,1,14:23:34,14:38:39,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-php-3,1,14:29:26,14:42:42,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-php-2,1,14:29:29,14:42:58,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-java-2,1,14:28:33,14:43:01,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-csharp-3,1,14:30:19,14:43:31,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-php-2,1,14:29:01,14:44:06,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-csharp-2,1,14:34:10,14:45:18,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-java-2,1,14:28:09,14:45:30,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-java-3,1,14:32:31,14:46:33,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-java-2,2,14:45:30,14:46:40,,EssentialContainerExited: Essential container in task exited,43,0,cpu-unavailable
+opus55-csharp-2,3,14:40:30,14:47:14,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-java-3,1,14:35:25,14:48:36,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-php-3,1,14:34:42,14:51:08,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-php-3,2,14:51:08,14:52:25,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-php-3,3,14:52:25,14:53:43,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-csharp-3,1,14:40:42,14:53:52,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-csharp-2,2,14:45:18,14:58:37,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-java-2,3,14:46:40,14:59:56,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-csharp-2,1,15:00:54,15:18:06,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-php-3,1,15:01:41,15:19:22,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-php-3,2,15:19:22,15:32:43,,EssentialContainerExited: Essential container in task exited,0,12,ok

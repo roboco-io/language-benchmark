@@ -1,0 +1,10 @@
+.git
+.env
+vendor
+node_modules
+database/*.sqlite*
+storage/logs/*
+public/frankenphp-worker.php
+frankenphp
+hurl
+PROMPT.md

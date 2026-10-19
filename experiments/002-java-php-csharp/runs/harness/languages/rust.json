@@ -1,0 +1,67 @@
+{
+  "key": "rust",
+  "name": "Rust",
+  "order": 4,
+  "prompt": {
+    "STACK": "Rust + Axum + SQLx + SQLite on tokio",
+    "WORKERS": "tokio multi-thread runtime with one worker thread per core"
+  },
+  "stack": {
+    "framework": "Axum (tokio)",
+    "db": "SQLx"
+  },
+  "toolchain": [
+    {
+      "name": "cargo",
+      "bin": "cargo",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "rustc",
+      "bin": "rustc",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "cargo-audit",
+      "bin_env": "CARGO_AUDIT_BIN",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "cargo",
+    "name": "cargo-audit",
+    "report": "cargo.json",
+    "required_key": "vulnerabilities",
+    "argv": [
+      "cargo",
+      "audit",
+      "--json"
+    ]
+  },
+  "deps": {
+    "kind": "cargo-toml"
+  },
+  "loc": {
+    "scc_names": [
+      "Rust"
+    ],
+    "test_pattern": "",
+    "exclude_dirs": [
+      "target"
+    ]
+  },
+  "hints": [
+    "--release",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "target"
+  ]
+}

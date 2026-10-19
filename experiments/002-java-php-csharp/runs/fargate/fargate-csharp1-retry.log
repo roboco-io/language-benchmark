@@ -1,0 +1,5 @@
+2026-10-19 14:08:25 opus55-csharp-1 로컬 준비 시작
+2026-10-19 14:09:01 opus55-csharp-1 로컬 준비 끝 rc=0 
+2026-10-19 14:09:25 opus55-csharp-1 a1 앱 6b5cb2281bb24022ad0a0acc75179219 (172.31.9.63:48499) / 부하 db4acd1697044da38fdf4639baa4b56d 시작
+2026-10-19 14:22:20 opus55-csharp-1 a1 종료 exit=0 files=12 outcome=ok relaunch=0
+2026-10-19 14:22:20 ALL DONE opus55-csharp-1=ok

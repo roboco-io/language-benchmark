@@ -83,9 +83,13 @@ Fargate does not guarantee the CPU generation a task lands on. When we launched 
 | Experiment | Hypothesis | Verdict | Client |
 |------|------|------|------|
 | [EXP-001](experiments/001-five-language-realworld/report.md) Five-language RealWorld backend Ralph loop | L-01: On the same RealWorld backend task, vibe-coding suitability (a composite of process and output metrics) differs across implementation languages (TypeScript, Python, Go, Rust, C++), and the ranking is the same for Sonnet 5.5 and Opus 5.5. | **Partially supported** | Claude Code 2.1.302 |
+| [EXP-002](experiments/002-java-php-csharp/report.md) Java·PHP·C# RealWorld backend Ralph loop | L-02: On the same RealWorld backend task, vibe-coding suitability (a composite of process and output metrics) differs among Java, PHP, and C#, and the ranking within these three is the same for Sonnet 5.5 and Opus 5.5. | **Supported (exploratory)** | Claude Code 2.1.302 |
 
 **EXP-001 — Five-language RealWorld backend Ralph loop** (Partially supported)  
 Composite scores differed by language (Go placed top two and Python last under both models), but the top language differed by model (Sonnet 5.5: Rust, Opus 5.5: Go), so the same-ranking part was not supported; all 30 runs passed, so pass rate did not separate languages. → [report](experiments/001-five-language-realworld/report.md)
+
+**EXP-002 — Java·PHP·C# RealWorld backend Ralph loop** (Supported (exploratory))  
+C# ranked first under both models (Sonnet 0.846, Opus 0.983) with no overlap with the runner-up's per-repetition range; Java and PHP swapped 2nd/3rd between models with overlapping ranges, and all 18 runs passed, so pass rate did not separate languages. → [report](experiments/002-java-php-csharp/report.md)
 
 <!-- RESULTS:END -->
 
@@ -95,4 +99,6 @@ In EXP-001 (2026-10-18, 5 languages × Sonnet 5.5 and Opus 5.5 × 3 reps), every
 
 On the composite score (24 metrics, equal weights), Go placed in the top two under both models (Sonnet 2nd, Opus 1st) and Python placed last under both. The top language differed by model (Sonnet: Rust, Opus: Go). C++ took the most time and cost to build but used the least memory; Python and TypeScript were fast and cheap to build but trailed on throughput, image size, and vulnerability count. Opus 5.5 cost about 2× and took about 1.8× as long as Sonnet 5.5, with no pass-rate gain on this task.
 
-Limits: one task, 3 runs per cell, and the composite score is sensitive to weights. Runtime metrics were measured on AWS Fargate Spot (Graviton4, 2 vCPU). See the [EXP-001 report](experiments/001-five-language-realworld/report.md) for the evidence.
+In EXP-002 (2026-10-19, Java, PHP, C# × both models × 3 reps), all 18 runs again passed on the first iteration. Within these three languages, C# ranked first on the composite score under both models (Sonnet 0.846, Opus 0.983) with no overlap with the runner-up's per-repetition range. C# was the fastest and cheapest to build and had the smallest idle memory (about 45 MiB), image, and dependency count, with throughput in the top tier alongside Java. Java had good throughput but the worst memory, cold start (about 5 s), and build time; PHP had the lowest throughput and, because of its base image, the most vulnerabilities. Java and PHP swapped 2nd and 3rd between models. In the 8-language view combined with EXP-001, C# also ranked first under both models, but that is an exploratory comparison across runs one day apart, and under Sonnet its range overlaps with Rust and Go.
+
+Limits: one task, 3 runs per cell, and the composite score is sensitive to weights. Runtime metrics were measured on AWS Fargate Spot (Graviton4, 2 vCPU). See the [EXP-001 report](experiments/001-five-language-realworld/report.md) and the [EXP-002 report](experiments/002-java-php-csharp/report.md) for the evidence.

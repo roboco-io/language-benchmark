@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "parameters": "--vulnerable --include-transitive",
+  "sources": [
+    "https://api.nuget.org/v3/index.json"
+  ],
+  "projects": [
+    {
+      "path": "/private/var/folders/12/4bv943n16mg_3gzhbclnnzj80000gn/T/lb-rt.Hcf5AR/src/src/Conduit/Conduit.csproj"
+    }
+  ]
+}

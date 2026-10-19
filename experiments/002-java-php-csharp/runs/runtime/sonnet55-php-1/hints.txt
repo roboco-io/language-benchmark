@@ -1,0 +1,22 @@
+./composer.lock:1457:            "name": "laravel/octane",
+./composer.lock:1461:                "url": "https://github.com/laravel/octane.git",
+./composer.lock:1466:                "url": "https://api.github.com/repos/laravel/octane/zipball/c49ff458e94bf14b382f6414c6b9ddb39ac82b28",
+./composer.lock:1535:                "octane",
+./composer.lock:1540:                "issues": "https://github.com/laravel/octane/issues",
+./composer.lock:1541:                "source": "https://github.com/laravel/octane"
+./composer.lock:5883:            "description": "Provides an object-oriented API to strings and deals with bytes, UTF-8 code points and grapheme clusters in a unified way",
+./docker/entrypoint.sh:18:exec php artisan octane:start --server=frankenphp \
+./docker/entrypoint.sh:20:  --workers="${WORKERS:-$(nproc)}" --max-requests="${MAX_REQUESTS:-0}" --no-interaction
+./config/database.php:41:            'busy_timeout' => env('DB_BUSY_TIMEOUT', 5000),
+./config/database.php:42:            'journal_mode' => env('DB_JOURNAL_MODE', 'WAL'),
+./config/database.php:151:            'cluster' => env('REDIS_CLUSTER', 'redis'),
+./config/cache.php:30:    |                    "redis", "dynamodb", "storage", "octane",
+./config/cache.php:96:        'octane' => [
+./config/cache.php:97:            'driver' => 'octane',
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Laravel Octane on FrankenPHP with one worker per core. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:4:backend API. It uses Eloquent with SQLite (WAL mode, `busy_timeout` 5000 ms) and JWT authentication
+./README.md:14:`octane:start --server=frankenphp` in the foreground with one worker per CPU core (override with `WORKERS`).
+./start.sh:27:  php artisan octane:install --server=frankenphp --no-interaction
+./start.sh:33:exec php artisan octane:start --server=frankenphp \
+./start.sh:36:  --workers="$WORKERS" --max-requests="${MAX_REQUESTS:-0}" \
+./composer.json:12:        "laravel/octane": "^2.22",

@@ -1,0 +1,9 @@
+./.ralph-done:1:Verified 2026-10-19: hurl 154/154 via start.sh and via Docker image (PORT=9090, empty DB); SQLite journal_mode=wal.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Kestrel with the default .NET thread pool (scales with the core count). SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:34:Kestrel processes requests on the default .NET thread pool, so the number of worker threads
+./README.md:36:journaling. Every new connection sets `busy_timeout` to 5000 ms and enables foreign keys, so
+./src/Conduit/Data.cs:101:/// Applies per-connection SQLite pragmas. busy_timeout is a per-connection setting,
+./src/Conduit/Data.cs:106:    private const string Pragmas = "PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;";
+./src/Conduit/Program.cs:7:// Kestrel listens on $PORT (default 8000) on all interfaces. Request processing runs on the
+./src/Conduit/Program.cs:10:builder.WebHost.ConfigureKestrel(o => o.ListenAnyIP(port));
+./src/Conduit/Program.cs:38:    db.Database.ExecuteSqlRaw("PRAGMA journal_mode = WAL;");

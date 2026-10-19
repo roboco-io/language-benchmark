@@ -1,0 +1,12 @@
+docker /usr/local/bin/docker Docker version 29.8.0, build 88096ef
+k6 /opt/homebrew/bin/k6 k6 v1.1.0 (go1.24.4, darwin/arm64)
+scc /opt/homebrew/bin/scc scc version 4.1.0
+trivy /opt/homebrew/bin/trivy Version: 0.76.0
+python3 /opt/homebrew/bin/python3 Python 3.14.4
+hurl /opt/homebrew/bin/hurl hurl 8.0.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+java /opt/homebrew/opt/openjdk@25/bin/java openjdk version "25.0.4.1" 2026-08-18
+mvn /opt/homebrew/bin/mvn WARNING: A restricted method in java.lang.System has been called
+osv-scanner /opt/homebrew/bin/osv-scanner osv-scanner version: 2.7.0
+php /opt/homebrew/bin/php PHP 8.5.11 (cli) (built: Sep 22 2026 13:32:06) (NTS)
+composer /opt/homebrew/bin/composer Composer version 2.10.3 2026-08-27 13:34:23
+dotnet /opt/homebrew/bin/dotnet 10.0.108

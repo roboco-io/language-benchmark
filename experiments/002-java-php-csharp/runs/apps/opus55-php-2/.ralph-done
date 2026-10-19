@@ -1,0 +1,1 @@
+Verified 2026-10-19: Hurl 154/154 via start.sh (fresh clone, 10 workers) and Docker (PORT=7070, empty DB, 6 workers); SQLite WAL + busy_timeout=5000.

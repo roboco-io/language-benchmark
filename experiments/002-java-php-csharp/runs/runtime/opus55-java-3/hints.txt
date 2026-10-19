@@ -1,0 +1,22 @@
+./.ralph-done:5:- Tomcat threads = CPU cores (10 on host, 6 in container); SQLite journal_mode=wal, busy_timeout=5000ms.
+./pom.xml:44:            <groupId>org.hibernate.orm</groupId>
+./pom.xml:45:            <artifactId>hibernate-community-dialects</artifactId>
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:11:| Database    | SQLite (`sqlite-jdbc`), WAL mode, `busy_timeout=5000` ms   |
+./README.md:32:Hibernate creates the schema (`spring.jpa.hibernate.ddl-auto=update`).
+./README.md:47:for the Tomcat request thread pool (`server.tomcat.threads.max` and `min-spare`) and for the Hikari connection
+./README.md:52:cpu cores=10, tomcat threads=10, sqlite journal_mode=wal, busy_timeout=5000ms
+./README.md:57:and the 5000 ms `busy_timeout` does not help there. To prevent these errors, `SqliteTransactionManager`
+./README.md:60:a writer is active. The `busy_timeout` still covers contention with other processes and with WAL checkpoints.
+./src/main/resources/application.properties:7:spring.datasource.url=jdbc:sqlite:${DATABASE_PATH:realworld.db}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true
+./src/main/resources/application.properties:9:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:11:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:12:spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+./src/main/resources/application.properties:16:spring.jpa.properties.hibernate.default_batch_fetch_size=64
+./src/main/java/io/realworld/RealWorldApplication.java:18:                "server.tomcat.threads.max", String.valueOf(cores),
+./src/main/java/io/realworld/RealWorldApplication.java:19:                "server.tomcat.threads.min-spare", String.valueOf(cores),
+./src/main/java/io/realworld/common/SqliteTransactionManager.java:15: * the lock and run concurrently thanks to WAL mode. busy_timeout still covers
+./src/main/java/io/realworld/common/StartupReport.java:22:    public StartupReport(DataSource dataSource, @Value("${server.tomcat.threads.max}") int tomcatThreads) {
+./src/main/java/io/realworld/common/StartupReport.java:29:        String journalMode = jdbc.queryForObject("PRAGMA journal_mode", String.class);
+./src/main/java/io/realworld/common/StartupReport.java:30:        Integer busyTimeout = jdbc.queryForObject("PRAGMA busy_timeout", Integer.class);
+./src/main/java/io/realworld/common/StartupReport.java:31:        log.info("cpu cores={}, tomcat threads={}, sqlite journal_mode={}, busy_timeout={}ms",

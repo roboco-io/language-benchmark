@@ -60,6 +60,26 @@
         "verdict": "部分验证",
         "summary": "观察到语言间综合得分差异（Go 在两个模型中均进入前两名，Python 在两个模型中均为最后），但第一名因模型而异（Sonnet 5.5 为 Rust，Opus 5.5 为 Go），因此“排名相同”部分未获支持；30 个 run 全部通过，合格率无法区分语言。"
       }
+    },
+    "EXP-002": {
+      "en": {
+        "name": "Java·PHP·C# RealWorld backend Ralph loop",
+        "hypothesis": "On the same RealWorld backend task, vibe-coding suitability (a composite of process and output metrics) differs among Java, PHP, and C#, and the ranking within these three is the same for Sonnet 5.5 and Opus 5.5.",
+        "verdict": "Supported (exploratory)",
+        "summary": "C# ranked first under both models (Sonnet 0.846, Opus 0.983) with no overlap with the runner-up's per-repetition range; Java and PHP swapped 2nd/3rd between models with overlapping ranges, and all 18 runs passed, so pass rate did not separate languages."
+      },
+      "ja": {
+        "name": "Java·PHP·C# RealWorld バックエンド Ralph ループ",
+        "hypothesis": "同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は Java、PHP、C# の間で異なり、3言語内の順位は Sonnet 5.5 と Opus 5.5 で同じである。",
+        "verdict": "検証（探索）",
+        "summary": "C# は両モデルで総合スコア1位（Sonnet 0.846、Opus 0.983）で、2位との反復別範囲が重ならなかった。Java と PHP の2・3位はモデルごとに入れ替わり範囲も重なった。18 run すべて合格したため合格率では言語を区別できなかった。"
+      },
+      "zh-CN": {
+        "name": "Java·PHP·C# RealWorld 后端 Ralph 循环",
+        "hypothesis": "在同一 RealWorld 后端任务上，氛围编程适配度（开发过程指标与产出指标的综合分）在 Java、PHP、C# 之间存在差异，且三种语言内的排名在 Sonnet 5.5 与 Opus 5.5 下相同。",
+        "verdict": "支持（探索性）",
+        "summary": "C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠；Java 与 PHP 的第二、三名在两个模型间互换且范围重叠；18 个 run 全部通过，通过率无法区分语言。"
+      }
     }
   }
 }

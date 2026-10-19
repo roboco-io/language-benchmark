@@ -1,0 +1,10 @@
+./pom.xml:33:      <groupId>org.hibernate.orm</groupId>
+./pom.xml:34:      <artifactId>hibernate-community-dialects</artifactId>
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:29:SQLite runs in WAL mode with `busy_timeout=5000` and `IMMEDIATE` transactions.
+./src/main/resources/application.properties:5:spring.datasource.url=jdbc:sqlite:${DB_PATH:./data/realworld.db}?journal_mode=WAL&busy_timeout=5000&synchronous=NORMAL&foreign_keys=true&transaction_mode=IMMEDIATE&date_class=TEXT
+./src/main/resources/application.properties:8:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:9:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:11:spring.jpa.properties.hibernate.default_batch_fetch_size=50
+./src/main/java/com/realworld/Application.java:20:                "server.tomcat.threads.max", String.valueOf(cores),
+./src/main/java/com/realworld/Application.java:21:                "server.tomcat.threads.min-spare", String.valueOf(cores),

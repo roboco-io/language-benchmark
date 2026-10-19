@@ -1,0 +1,10 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Kestrel with the default .NET thread pool (scales with the core count). SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:30:Kestrel processes requests on the default .NET thread pool, so the server uses all available CPU cores. SQLite runs in WAL mode, which lets readers continue while a writer commits. Every connection sets `busy_timeout = 5000` ms and `foreign_keys = ON` through an EF Core connection interceptor, so concurrent writers wait for the lock instead of failing immediately, and deleting an article cascades to its tags, favorites, and comments. The startup log prints the effective `journal_mode` and `busy_timeout` values.
+./src/Conduit/Data.cs:117:    private const string Pragmas = "PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON; PRAGMA synchronous = NORMAL;";
+./src/Conduit/Program.cs:44:    db.Database.ExecuteSqlRaw("PRAGMA journal_mode = WAL;");
+./src/Conduit/Program.cs:45:    var journalMode = db.Database.SqlQueryRaw<string>("SELECT journal_mode AS Value FROM pragma_journal_mode").AsEnumerable().First();
+./src/Conduit/Program.cs:46:    var busyTimeout = db.Database.SqlQueryRaw<int>("SELECT timeout AS Value FROM pragma_busy_timeout").AsEnumerable().First();
+./src/Conduit/Program.cs:47:    Console.WriteLine($"SQLite journal_mode={journalMode} busy_timeout={busyTimeout}ms");
+./src/Conduit/Program.cs:50:// Kestrel serves requests on the default .NET thread pool, which scales with the CPU core count.
+./src/Conduit/Program.cs:51:ThreadPool.GetMinThreads(out var minWorkers, out var minIo);
+./src/Conduit/Program.cs:52:ThreadPool.SetMinThreads(Math.Max(minWorkers, Environment.ProcessorCount), Math.Max(minIo, Environment.ProcessorCount));

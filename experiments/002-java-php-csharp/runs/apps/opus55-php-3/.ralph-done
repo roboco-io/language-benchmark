@@ -1,0 +1,1 @@
+Verified 2026-10-19: Hurl 13 files / 154 requests pass via start.sh (fresh clone, 10 workers) and Docker (PORT=9001, 6 workers, empty DB schema auto-created). SQLite WAL + busy_timeout=5000 confirmed.

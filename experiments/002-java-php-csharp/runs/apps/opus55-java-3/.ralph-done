@@ -1,0 +1,5 @@
+Verified on 2026-10-19:
+- Hurl suite (api/hurl, 13 files, 154 requests): 0 failures via start.sh and via Docker (empty DB).
+- start.sh builds from a clean tree and serves on $PORT in the foreground.
+- Dockerfile builds a release image; container honors $PORT and creates its schema on an empty DB.
+- Tomcat threads = CPU cores (10 on host, 6 in container); SQLite journal_mode=wal, busy_timeout=5000ms.

@@ -1,0 +1,1 @@
+Verified 2026-10-19: Hurl 154/154 via start.sh (fresh clone) and Docker; 1 worker per core; SQLite WAL + busy_timeout=5000.

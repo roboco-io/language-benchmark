@@ -1,0 +1,6 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Kestrel with the default .NET thread pool (scales with the core count). SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:24:- Kestrel uses the default .NET thread pool, which scales with the number of CPU cores.
+./README.md:25:- Every SQLite connection sets `journal_mode=WAL` and `busy_timeout=5000`.
+./src/RealWorld/Program.cs:47:    /// <summary>Applies WAL mode and busy_timeout on every new SQLite connection.</summary>
+./src/RealWorld/Program.cs:53:            cmd.CommandText = "PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; PRAGMA synchronous=NORMAL; PRAGMA foreign_keys=ON;";
+./src/RealWorld/Program.cs:60:            cmd.CommandText = "PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; PRAGMA synchronous=NORMAL; PRAGMA foreign_keys=ON;";

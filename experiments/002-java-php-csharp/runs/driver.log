@@ -1,0 +1,80 @@
+=== RUN opus55-java-1 (claude-native claude-opus-5-5, PROMPT-java.md, PORT=41585, budget 2400s of 2400s) start: 2026-10-19 07:21:55 ===
+=== RUN opus55-java-1 finished: 2026-10-19 07:36:58 | 1,2026-10-19 07:36:58,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-java-1 (claude-native claude-sonnet-5-5, PROMPT-java.md, PORT=42214, budget 2400s of 2400s) start: 2026-10-19 07:36:58 ===
+=== RUN sonnet55-java-1 finished: 2026-10-19 07:42:52 | 1,2026-10-19 07:42:52,0,13,154,13,154,1,pass ===
+=== RUN opus55-csharp-1 (claude-native claude-opus-5-5, PROMPT-csharp.md, PORT=44665, budget 2400s of 2400s) start: 2026-10-19 07:42:52 ===
+=== RUN opus55-csharp-1 finished: 2026-10-19 07:49:17 | 1,2026-10-19 07:49:17,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-csharp-1 (claude-native claude-sonnet-5-5, PROMPT-csharp.md, PORT=41735, budget 2400s of 2400s) start: 2026-10-19 07:49:18 ===
+=== RUN sonnet55-csharp-1 finished: 2026-10-19 07:52:41 | 1,2026-10-19 07:52:41,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-php-1 (claude-native claude-sonnet-5-5, PROMPT-php.md, PORT=41026, budget 2400s of 2400s) start: 2026-10-19 07:52:41 ===
+=== RUN sonnet55-php-1 finished: 2026-10-19 08:32:54 | 30,2026-10-19 08:32:54,125,0,13,,,0,na ===
+=== RUN opus55-php-1 (claude-native claude-opus-5-5, PROMPT-php.md, PORT=44532, budget 2400s of 2400s) start: 2026-10-19 08:32:54 ===
+=== RUN sonnet55-php-1 (claude-native claude-sonnet-5-5, PROMPT-php.md, PORT=44505, budget -13s of 2400s) start: 2026-10-19 08:54:38 ===
+=== RUN sonnet55-php-1 finished: 2026-10-19 08:54:38 | timeout,2026-10-19 08:54:38 ===
+=== RUN opus55-php-1 (claude-native claude-opus-5-5, PROMPT-php.md, PORT=42945, budget 2400s of 2400s) start: 2026-10-19 08:54:38 ===
+=== RUN sonnet55-php-1 held: 2026-10-19 08:55:03 | invalidated: harness port-detection bug (fix 75d0a42), restart from iteration 1 ===
+=== RUN opus55-php-1 held: 2026-10-19 08:55:03 | invalidated: harness port-detection bug (fix 75d0a42), restart from iteration 1 ===
+=== RUN sonnet55-php-1 (claude-native claude-sonnet-5-5, PROMPT-php.md, PORT=46716, budget 2400s of 2400s) start: 2026-10-19 08:55:10 ===
+=== RUN sonnet55-php-1 finished: 2026-10-19 09:01:33 | 1,2026-10-19 09:01:33,0,13,154,13,154,1,pass ===
+=== RUN opus55-php-1 (claude-native claude-opus-5-5, PROMPT-php.md, PORT=42269, budget 2400s of 2400s) start: 2026-10-19 09:01:33 ===
+=== RUN opus55-php-1 finished: 2026-10-19 09:09:51 | 1,2026-10-19 09:09:51,0,13,154,13,154,1,pass ===
+=== RUN opus55-csharp-2 (claude-native claude-opus-5-5, PROMPT-csharp.md, PORT=40805, budget 2400s of 2400s) start: 2026-10-19 09:09:52 ===
+=== RUN opus55-csharp-2 finished: 2026-10-19 09:16:25 | 1,2026-10-19 09:16:25,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-java-2 (claude-native claude-sonnet-5-5, PROMPT-java.md, PORT=40712, budget 2400s of 2400s) start: 2026-10-19 09:16:25 ===
+=== RUN sonnet55-java-2 finished: 2026-10-19 09:25:42 | 1,2026-10-19 09:25:42,0,13,154,13,154,1,pass ===
+=== RUN opus55-php-2 (claude-native claude-opus-5-5, PROMPT-php.md, PORT=42258, budget 2400s of 2400s) start: 2026-10-19 09:25:42 ===
+=== RUN opus55-php-2 finished: 2026-10-19 09:38:18 | 1,2026-10-19 09:38:18,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-csharp-2 (claude-native claude-sonnet-5-5, PROMPT-csharp.md, PORT=44746, budget 2400s of 2400s) start: 2026-10-19 09:38:18 ===
+=== RUN sonnet55-csharp-2 finished: 2026-10-19 09:41:59 | 1,2026-10-19 09:41:59,0,13,154,13,154,1,pass ===
+=== RUN opus55-java-2 (claude-native claude-opus-5-5, PROMPT-java.md, PORT=46428, budget 2400s of 2400s) start: 2026-10-19 09:41:59 ===
+=== RUN opus55-java-2 finished: 2026-10-19 09:50:55 | 1,2026-10-19 09:50:55,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-php-2 (claude-native claude-sonnet-5-5, PROMPT-php.md, PORT=42040, budget 2400s of 2400s) start: 2026-10-19 09:50:55 ===
+=== RUN sonnet55-php-2 finished: 2026-10-19 09:59:09 | 1,2026-10-19 09:59:09,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-php-3 (claude-native claude-sonnet-5-5, PROMPT-php.md, PORT=47083, budget 2400s of 2400s) start: 2026-10-19 09:59:10 ===
+=== RUN sonnet55-php-3 finished: 2026-10-19 10:08:25 | 1,2026-10-19 10:08:25,0,13,154,13,154,1,pass ===
+=== RUN opus55-csharp-3 (claude-native claude-opus-5-5, PROMPT-csharp.md, PORT=42409, budget 2400s of 2400s) start: 2026-10-19 10:08:25 ===
+=== RUN opus55-csharp-3 finished: 2026-10-19 10:14:36 | 1,2026-10-19 10:14:36,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-csharp-3 (claude-native claude-sonnet-5-5, PROMPT-csharp.md, PORT=46438, budget 2400s of 2400s) start: 2026-10-19 10:14:36 ===
+=== RUN sonnet55-csharp-3 finished: 2026-10-19 10:18:12 | 1,2026-10-19 10:18:12,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-java-3 (claude-native claude-sonnet-5-5, PROMPT-java.md, PORT=48368, budget 2400s of 2400s) start: 2026-10-19 10:18:12 ===
+=== RUN sonnet55-java-3 finished: 2026-10-19 10:22:30 | 1,2026-10-19 10:22:30,0,13,154,13,154,1,pass ===
+=== RUN opus55-java-3 (claude-native claude-opus-5-5, PROMPT-java.md, PORT=42468, budget 2400s of 2400s) start: 2026-10-19 10:22:30 ===
+=== RUN opus55-java-3 finished: 2026-10-19 10:33:34 | 1,2026-10-19 10:33:34,0,13,154,13,154,1,pass ===
+=== RUN opus55-php-3 (claude-native claude-opus-5-5, PROMPT-php.md, PORT=41983, budget 2400s of 2400s) start: 2026-10-19 10:33:34 ===
+=== RUN opus55-php-3 finished: 2026-10-19 10:43:21 | 1,2026-10-19 10:43:21,0,13,154,13,154,1,pass ===
+=== RUN opus55-java-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=40732, budget 1200s of 1200s) start: 2026-10-19 10:43:50 ===
+=== RUN opus55-java-1-fu finished: 2026-10-19 10:46:21 | 1,2026-10-19 10:46:21,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-java-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=45621, budget 1200s of 1200s) start: 2026-10-19 10:46:21 ===
+=== RUN sonnet55-java-1-fu finished: 2026-10-19 10:47:33 | 1,2026-10-19 10:47:33,0,14,167,14,167,1,pass ===
+=== RUN opus55-csharp-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=41174, budget 1200s of 1200s) start: 2026-10-19 10:47:33 ===
+=== RUN opus55-csharp-1-fu finished: 2026-10-19 10:49:40 | 1,2026-10-19 10:49:40,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-csharp-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=48748, budget 1200s of 1200s) start: 2026-10-19 10:49:40 ===
+=== RUN sonnet55-csharp-1-fu finished: 2026-10-19 10:51:07 | 1,2026-10-19 10:51:07,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-php-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=45977, budget 1200s of 1200s) start: 2026-10-19 10:51:11 ===
+=== RUN sonnet55-php-1-fu finished: 2026-10-19 10:52:25 | 1,2026-10-19 10:52:25,0,14,167,14,167,1,pass ===
+=== RUN opus55-php-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=46297, budget 1200s of 1200s) start: 2026-10-19 10:52:28 ===
+=== RUN opus55-php-1-fu finished: 2026-10-19 10:54:50 | 1,2026-10-19 10:54:50,0,14,167,14,167,1,pass ===
+=== RUN opus55-csharp-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=43867, budget 1200s of 1200s) start: 2026-10-19 10:54:50 ===
+=== RUN opus55-csharp-2-fu finished: 2026-10-19 10:56:37 | 1,2026-10-19 10:56:37,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-java-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=49415, budget 1200s of 1200s) start: 2026-10-19 10:56:37 ===
+=== RUN sonnet55-java-2-fu finished: 2026-10-19 10:58:05 | 1,2026-10-19 10:58:05,0,14,167,14,167,1,pass ===
+=== RUN opus55-php-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42335, budget 1200s of 1200s) start: 2026-10-19 10:58:08 ===
+=== RUN opus55-php-2-fu finished: 2026-10-19 11:00:03 | 1,2026-10-19 11:00:03,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-csharp-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=41214, budget 1200s of 1200s) start: 2026-10-19 11:00:04 ===
+=== RUN sonnet55-csharp-2-fu finished: 2026-10-19 11:01:13 | 1,2026-10-19 11:01:13,0,14,167,14,167,1,pass ===
+=== RUN opus55-java-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42384, budget 1200s of 1200s) start: 2026-10-19 11:01:13 ===
+=== RUN opus55-java-2-fu finished: 2026-10-19 11:03:45 | 1,2026-10-19 11:03:45,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-php-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=40470, budget 1200s of 1200s) start: 2026-10-19 11:03:49 ===
+=== RUN sonnet55-php-2-fu finished: 2026-10-19 11:05:02 | 1,2026-10-19 11:05:02,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-php-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=45622, budget 1200s of 1200s) start: 2026-10-19 11:05:05 ===
+=== RUN sonnet55-php-3-fu finished: 2026-10-19 11:06:35 | 1,2026-10-19 11:06:35,0,14,167,14,167,1,pass ===
+=== RUN opus55-csharp-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=45879, budget 1200s of 1200s) start: 2026-10-19 11:06:36 ===
+=== RUN opus55-csharp-3-fu finished: 2026-10-19 11:08:31 | 1,2026-10-19 11:08:31,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-csharp-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=46453, budget 1200s of 1200s) start: 2026-10-19 11:08:32 ===
+=== RUN sonnet55-csharp-3-fu finished: 2026-10-19 11:10:00 | 1,2026-10-19 11:10:00,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-java-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=48666, budget 1200s of 1200s) start: 2026-10-19 11:10:00 ===
+=== RUN sonnet55-java-3-fu finished: 2026-10-19 11:11:21 | 1,2026-10-19 11:11:21,0,14,167,14,167,1,pass ===
+=== RUN opus55-java-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=41267, budget 1200s of 1200s) start: 2026-10-19 11:11:21 ===
+=== RUN opus55-java-3-fu finished: 2026-10-19 11:14:14 | 1,2026-10-19 11:14:14,0,14,167,14,167,1,pass ===
+=== RUN opus55-php-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42463, budget 1200s of 1200s) start: 2026-10-19 11:14:17 ===
+=== RUN opus55-php-3-fu finished: 2026-10-19 11:16:18 | 1,2026-10-19 11:16:18,0,14,167,14,167,1,pass ===

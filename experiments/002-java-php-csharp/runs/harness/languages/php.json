@@ -1,0 +1,66 @@
+{
+  "key": "php",
+  "name": "PHP",
+  "order": 7,
+  "prompt": {
+    "STACK": "PHP 8.5 + Laravel + Eloquent + SQLite, served by Laravel Octane on FrankenPHP",
+    "WORKERS": "Laravel Octane on FrankenPHP with one worker per core"
+  },
+  "stack": {
+    "framework": "Laravel (Octane, FrankenPHP)",
+    "db": "Eloquent (SQLite)"
+  },
+  "toolchain": [
+    {
+      "name": "php",
+      "bin": "php",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "composer",
+      "bin": "composer",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "composer",
+    "name": "composer",
+    "report": "composer-audit.json",
+    "required_key": "advisories",
+    "ok_rc": "0 1",
+    "argv": [
+      "composer",
+      "audit",
+      "--format=json",
+      "--locked",
+      "--abandoned=report"
+    ]
+  },
+  "deps": {
+    "kind": "composer-json"
+  },
+  "loc": {
+    "scc_names": [
+      "PHP"
+    ],
+    "test_pattern": "Test\\.php",
+    "exclude_dirs": [
+      "vendor",
+      "storage",
+      "bootstrap/cache"
+    ]
+  },
+  "hints": [
+    "octane",
+    "--workers",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "vendor"
+  ]
+}

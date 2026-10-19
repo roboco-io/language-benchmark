@@ -1,0 +1,4 @@
+Verified 2026-10-19:
+- PUT /api/articles/:slug/comments/:id implemented (200/401/403/422/404 article/404 comment).
+- start.sh server: all 14 Hurl files, 168 requests passed (154 official + 14 in comments_update.hurl).
+- Docker image built and the same 168 requests passed against the container.

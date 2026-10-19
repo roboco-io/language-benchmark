@@ -1,0 +1,108 @@
+## opus55-java-1
+hits: 0
+rc=0
+## sonnet55-java-1
+hits: 0
+rc=0
+## opus55-csharp-1
+hits: 0
+rc=0
+## sonnet55-csharp-1
+hits: 0
+rc=0
+## sonnet55-php-1
+hits: 0
+rc=0
+## opus55-php-1
+hits: 0
+rc=0
+## opus55-csharp-2
+hits: 0
+rc=0
+## sonnet55-java-2
+hits: 0
+rc=0
+## opus55-php-2
+hits: 0
+rc=0
+## sonnet55-csharp-2
+hits: 0
+rc=0
+## opus55-java-2
+hits: 0
+rc=0
+## sonnet55-php-2
+hits: 0
+rc=0
+## sonnet55-php-3
+hits: 0
+rc=0
+## opus55-csharp-3
+hits: 0
+rc=0
+## sonnet55-csharp-3
+hits: 0
+rc=0
+## sonnet55-java-3
+hits: 0
+rc=0
+## opus55-java-3
+hits: 0
+rc=0
+## opus55-php-3
+hits: 0
+rc=0
+## opus55-java-1-fu
+hits: 0
+rc=0
+## sonnet55-java-1-fu
+hits: 0
+rc=0
+## opus55-csharp-1-fu
+hits: 0
+rc=0
+## sonnet55-csharp-1-fu
+hits: 0
+rc=0
+## sonnet55-php-1-fu
+hits: 0
+rc=0
+## opus55-php-1-fu
+hits: 0
+rc=0
+## opus55-csharp-2-fu
+hits: 0
+rc=0
+## sonnet55-java-2-fu
+hits: 0
+rc=0
+## opus55-php-2-fu
+hits: 0
+rc=0
+## sonnet55-csharp-2-fu
+hits: 0
+rc=0
+## opus55-java-2-fu
+hits: 0
+rc=0
+## sonnet55-php-2-fu
+hits: 0
+rc=0
+## sonnet55-php-3-fu
+hits: 0
+rc=0
+## opus55-csharp-3-fu
+hits: 0
+rc=0
+## sonnet55-csharp-3-fu
+hits: 0
+rc=0
+## sonnet55-java-3-fu
+hits: 0
+rc=0
+## opus55-java-3-fu
+hits: 0
+rc=0
+## opus55-php-3-fu
+hits: 0
+rc=0
