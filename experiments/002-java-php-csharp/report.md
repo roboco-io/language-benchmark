@@ -90,7 +90,7 @@ Sonnet에서 C#·Rust·Go의 반복별 범위(0.774-0.891, 0.763-0.841, 0.786-0.
 | Claude Code | 2.1.302 | 2.1.302 | 같음 |
 | 모델 ID | `claude-sonnet-5-5`, `claude-opus-5-5` | 같음 | 서비스 측 모델 갱신 여부는 관측 불가 |
 | 프롬프트 템플릿·채점 정본·k6 | 기준 | 커밋 변경 없음 | 자산 해시 목록 `checksums.md5` md5 9350e00830befa80ffa2c0e33ede32f7(EXP-002 세 PROMPT 줄 추가) |
-| 하네스 스크립트 | 레지스트리 전환 전 | 레지스트리 전환 후(84ec1e0) + 실행 중 수정 2건(75d0a42 채점 포트, 554fcdf C# 스캐너) | 기존 언어 측정 동작은 회귀 테스트로 동일 확인 |
+| 하네스 스크립트 | 레지스트리 전환 전 | 레지스트리 전환 후(84ec1e0) + 실행 중 수정 2건(ee7f76b 채점 포트, b912806 C# 스캐너) | 기존 언어 측정 동작은 회귀 테스트로 동일 확인 |
 | 런타임 측정 | Fargate Spot Graviton4, 앱 2 vCPU·1 GiB | 같음 | Spot 용량은 다름(Graviton4 확보 실패 2건 재측정) |
 | 언어 툴체인 | 해당 없음(다른 언어) | OpenJDK 25.0.4.1, Maven 3.9.9, PHP 8.5.11, Composer 2.10.3, FrankenPHP 1.13.1, .NET SDK 10.0.108 | `runs/toolchain.txt` |
 | 스캐너 | pip-audit·govulncheck·cargo-audit·npm audit | Java osv-scanner 2.7.0(Maven CycloneDX SBOM), PHP `composer audit`, C# `dotnet list package --vulnerable` | 언어 간 취약점 수 직접 비교에 한계 |

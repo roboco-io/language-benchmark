@@ -12,7 +12,7 @@
 
 사용자 결정(08:3x)에 따라 배치를 멈추고 다음을 했다.
 
-- `find_port`가 주입한 `PORT`에서 리포 소속 프로세스가 LISTEN하면 그 포트로 채점하도록 고쳤다. `PORT`를 무시하는 앱은 `PORT_GRACE`(15초) 뒤 기존처럼 첫 포트로 채점한다(커밋 `75d0a42`, 테스트 2개 추가).
+- `find_port`가 주입한 `PORT`에서 리포 소속 프로세스가 LISTEN하면 그 포트로 채점하도록 고쳤다. `PORT`를 무시하는 앱은 `PORT_GRACE`(15초) 뒤 기존처럼 첫 포트로 채점한다(커밋 `ee7f76b`, 테스트 2개 추가).
 - 결함의 영향을 받은 `sonnet55-php-1`(40분 상한 소진)과 `opus55-php-1`(약 17분 진행)을 무효로 하고, 산출물·세션을 실험 디렉터리의 `invalid-portbug/`로 옮겼다(리포에는 metrics·로그·세션을 `runs/invalid/portbug/`에 보관). 무효 run의 사용량(API 정가 환산 약 $8.7)은 비용 누적에 남겼다.
 - 검증으로, 무효 처리한 `sonnet55-php-1` 앱을 고친 `measure.sh`로 채점하면 `13,154`였다.
 - 첫 재시작에서 `sonnet55-php-1`이 이전 구간 경과 시간을 이어받아 즉시 timeout으로 끝났다(R19 재개 규칙). 그 산출물도 `invalid-portbug/restart-0854/`(리포 `runs/invalid/portbug/restart-0854/`)로 옮기고, `driver.log`에 두 run의 `held:` 표시를 남겨 경과 시간을 0으로 되돌린 뒤 08:55에 다시 시작했다.
@@ -23,7 +23,7 @@
 
 언어별 첫 run의 Fargate 측정에서 `opus55-csharp-1`의 `dotnet.json`이 생기지 않았다. 레지스트리의 C# 스캐너는 내보낸 작업 트리의 루트에서 `dotnet list package --vulnerable`을 실행했는데, C# 앱 6개는 모두 `.csproj`를 `src/<이름>/` 아래에 두어 프로젝트 파일을 찾지 못했다. 그대로 측정하면 C# 6 run의 `vulns`가 모두 빈 칸이 된다. 에이전트 run과 채점에는 영향이 없다.
 
-사용자 결정에 따라 스캐너를 고쳤다(커밋 `554fcdf`). `.sln`·`.slnx`를 먼저 찾고, 없으면 테스트 프로젝트와 `bin`·`obj` 아래를 뺀 첫 `.csproj`를 쓴다(deps 계수와 같은 규칙). 그 뒤 `dotnet restore`를 하고 `dotnet list <경로> package --vulnerable --include-transitive --format json`을 실행한다. 알려진 취약 버전(Newtonsoft.Json 12.0.1)을 하위 디렉터리 프로젝트에 넣어 GHSA-5crp-9r3c-p9vr(High) 탐지를 확인했다. 실패한 첫 측정은 `runs/invalid/scanner/`에 두고, `opus55-csharp-1`을 다시 측정한 결과를 쓴다.
+사용자 결정에 따라 스캐너를 고쳤다(커밋 `b912806`). `.sln`·`.slnx`를 먼저 찾고, 없으면 테스트 프로젝트와 `bin`·`obj` 아래를 뺀 첫 `.csproj`를 쓴다(deps 계수와 같은 규칙). 그 뒤 `dotnet restore`를 하고 `dotnet list <경로> package --vulnerable --include-transitive --format json`을 실행한다. 알려진 취약 버전(Newtonsoft.Json 12.0.1)을 하위 디렉터리 프로젝트에 넣어 GHSA-5crp-9r3c-p9vr(High) 탐지를 확인했다. 실패한 첫 측정은 `runs/invalid/scanner/`에 두고, `opus55-csharp-1`을 다시 측정한 결과를 쓴다.
 
 ## Fargate 측정 인프라 실패와 재측정 (2026-10-19 14:25-15:00)
 
