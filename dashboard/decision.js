@@ -30,11 +30,9 @@
       followup:`${base}/tree/main/${path}/runs/apps/${encodeURIComponent(run.run)}-fu`,
       csv:`${base}/blob/main/analysis/metrics/runs.csv` };
   }
-  // 언어들이 속한 실험 중 날짜가 가장 이른 실험(기준선)을 반환한다. 날짜가 같으면 실험 ID 순이다.
-  function baselineExp(languages, experiments) {
-    const ids = [...new Set(languages.map(l => l.exp))].filter(id => experiments?.[id]?.date);
-    ids.sort((a, b) => experiments[a].date.localeCompare(experiments[b].date) || a.localeCompare(b));
-    return ids[0] ?? null;
+  // 언어들이 둘 이상의 실험에 걸쳐 있으면 모든 언어에 "<exp> · <date>" 배지를 붙인다. 실험이 하나면 배지가 필요 없다.
+  function expBadges(languages) {
+    return new Set(languages.map(l => l.exp)).size > 1;
   }
   // 현재 목적의 지표에서 다른 언어에 대한 상대적인 강점과 부담을 반환한다.
   // 강점은 최고값, 부담은 최저값인 지표다. 비교 언어의 절반 넘게 같은 값을 가지면 구별 정보가 없으므로 제외하고,
@@ -92,7 +90,7 @@
   function duelBar(ratio) {
     return ratio === null || ratio === undefined ? 0 : Math.min(1, Math.log2(ratio) / 2);
   }
-  const api = { summarize, scope, evidenceLinks, baselineExp, tradeoffs, bars, duel, duelKind, duelBar };
+  const api = { summarize, scope, evidenceLinks, expBadges, tradeoffs, bars, duel, duelKind, duelBar };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Decision = api;
 })(typeof window !== 'undefined' ? window : globalThis);

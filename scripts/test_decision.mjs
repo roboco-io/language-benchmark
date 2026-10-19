@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFileSync, existsSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-const { summarize, evidenceLinks, scope, tradeoffs, bars, baselineExp, duel, duelKind, duelBar } =createRequire(import.meta.url)('../dashboard/decision.js');
+const { summarize, evidenceLinks, scope, tradeoffs, bars, expBadges, duel, duelKind, duelBar } =createRequire(import.meta.url)('../dashboard/decision.js');
 const rows = [
   { exp: 'EXP-001', run: 'sonnet55-go-1', language: 'go', model: 'sonnet55', pass: '1', rps: '0', cost_usd: '2' },
   { exp: 'EXP-001', run: 'sonnet55-go-2', language: 'go', model: 'sonnet55', pass: '1', rps: '10', cost_usd: '3' },
@@ -27,8 +27,9 @@ assert.ok(links.report.endsWith('/report.md'));
 assert.ok(links.deviations.endsWith('/runs/deviations.md'));
 assert.ok(evidenceLinks({...rows[0], exp:'EXP-002'}, exps).source.includes('002-add-zig'));
 assert.equal(evidenceLinks({...rows[0],exp:'EXP-999'}, exps), null);
-assert.equal(baselineExp([{exp:'EXP-002'},{exp:'EXP-001'}], exps), 'EXP-001');
-assert.equal(baselineExp([], exps), null);
+assert.equal(expBadges([{exp:'EXP-002'},{exp:'EXP-001'}]), true);
+assert.equal(expBadges([{exp:'EXP-001'},{exp:'EXP-001'}]), false);
+assert.equal(expBadges([]), false);
 const ms=[{key:'rps',better:'higher'},{key:'wall_min',better:'lower'}];
 assert.deepEqual(tradeoffs({go:{rps:10,wall_min:20},rust:{rps:5,wall_min:10}}, 'go', ms, {rps:1,wall_min:1}),
   {strength:'rps',burden:'wall_min'});

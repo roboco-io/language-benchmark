@@ -580,10 +580,9 @@ function renderDetail() {
   if (models.length === 1) document.getElementById("detailLegend").innerHTML += ` <span>${t().detailHint}</span>`;
 }
 
-// 기준선 실험과 다른 시점에 실행한 언어에 "<exp> · <date>" 배지를 붙인다(decision-ui.js의 배지와 같은 마크업).
+// 언어가 여러 실험에 걸쳐 있으면 모든 언어에 실행 실험 "<exp> · <date>" 배지를 붙인다(decision-ui.js의 배지와 같은 마크업).
 function expBadge(l) {
-  const base = Decision.baselineExp(B.languages, B.experiments);
-  if (!base || l.exp === base) return "";
+  if (!Decision.expBadges(B.languages)) return "";
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   return ` <span class="exp-badge">${esc(l.exp)} · ${esc(B.experiments[l.exp]?.date)}</span>`;
 }

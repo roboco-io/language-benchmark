@@ -85,11 +85,10 @@ const DecisionUI = (() => {
   const activeKeys = () => env.state.preset === 'custom' ? Object.entries(env.weights()).filter(([,w]) => w>0).sort((a,b) => b[1]-a[1]).slice(0,6).map(([key]) => key) : keys[env.state.preset] || keys.balanced;
   const metric = key => env.B.metrics.find(m => m.key === key);
   const name = key => env.B.languages.find(l => l.key === key)?.name || key;
-  // 기준선 실험과 다른 시점에 실행한 언어에는 "<exp> · <date>" 배지를 붙인다.
-  const baseline = () => Decision.baselineExp(env.B.languages, env.B.experiments);
+  // 언어가 여러 실험에 걸쳐 있으면 모든 언어에 실행 실험 "<exp> · <date>" 배지를 붙인다.
   const badge = key => {
-    const l = env.B.languages.find(x => x.key === key), base = baseline();
-    return l && base && l.exp !== base ? ` <span class="exp-badge">${esc(l.exp)} · ${esc(env.B.experiments[l.exp]?.date ?? '')}</span>` : '';
+    const l = env.B.languages.find(x => x.key === key);
+    return l && Decision.expBadges(env.B.languages) ? ` <span class="exp-badge">${esc(l.exp)} · ${esc(env.B.experiments[l.exp]?.date ?? '')}</span>` : '';
   };
   const text = () => (copy[env.state.ui] || copy.en);
   const link = (href,label) => `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a>`;
