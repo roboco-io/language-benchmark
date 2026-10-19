@@ -95,7 +95,7 @@ EXP-001은 TypeScript, Python, Go, Rust, C++ 다섯 언어를 같은 RealWorld �
 
 5. **툴체인, 하네스, Phase 0**: 다음 순서로 진행한다.
 
-   (가) **툴체인 설치**: 실험자가 새 언어의 툴체인을 설치한다. 설치 명령은 제안할 수 있지만 run 안에서 실행하지 않는다.
+   (가) **툴체인 설치**: 실험자가 새 언어의 툴체인을 설치한다. 설치 명령은 제안할 수 있지만 run 안에서 실행하지 않는다. 프레임워크가 실행 중에 바이너리를 내려받는 경우도 확인한다. 예: Laravel Octane은 FrankenPHP 1.13.0 이상을 요구하고, PATH의 바이너리가 그보다 낮으면 기존 파일을 `.backup`으로 바꾼 뒤 최신 바이너리를 앱 디렉터리에 내려받는다. EXP-002는 공식 릴리스 단일 바이너리 1.13.1을 `$HOME/.local/share/langbench-tools/bin`에 두고 `bench.env`의 PATH에 넣었다. hello-world로 실제 기동해 다운로드가 일어나지 않는지 확인한다.
 
    (나) **`bench.env` 작성**: `scripts/bench.env.example`을 리포 밖으로 복사해 채운다. 예를 들어 `cp .claude/skills/langbench/scripts/bench.env.example "$HOME/experiments/langbench-exp<NNN>.env"`로 만든다. `EXP`는 새 번호(3자리), `LANGS`는 새 언어 키만(예: `"java php csharp"`), `N=3`, `CONDITIONS`는 EXP-001과 같은 두 모델이다. `MODEL_SPECS`는 모델 사양 JSON이며, 비용 상한 `RUN_BUDGET_USD`·`EXP_BUDGET_USD`도 필수다.
 
@@ -119,7 +119,7 @@ EXP-001은 TypeScript, Python, Go, Rust, C++ 다섯 언어를 같은 RealWorld �
 
    (마) **직접 실행하는 스크립트의 셸 준비**: 하네스 밖에서 직접 돌리는 `runtime.sh`와 `orchestrate.py`(그 안의 `local_prep.sh` 포함)는 `bench.env`를 읽지 않는다. 그런데 java의 정적 분석은 이 단계에서 `mvn`을 실행한다. 그러므로 이 스크립트를 실행할 셸에서는 먼저 `source "$BASE/bench.env"`를 하고 `command -v java`와 `java -version`으로 의도한 버전인지 확인한다.
 
-   (바) **Phase 0**: `bash "$BASE/smoke.sh"`가 전부 PASS여야 한다. 언어별 hello-world 빌드 시간을 확인해 `runs/phase0.md`에 기록한다. 공통 `MAX_SEC`는 EXP-001과 같은 값을 쓴다. 빌드가 느린 언어는 같은 상한 안에서 iteration 여유가 줄고 이는 측정 대상이다.
+   (바) **Phase 0**: 하네스의 `smoke.sh`는 `preflight-approved`가 없으면 실행을 거부한다. 그러므로 6단계 승인을 이 시점에 먼저 받는다. 승인 보고에는 Phase 0(스모크, hello-world, Fargate 파일럿)과 본 실행을 함께 넣고, "Phase 0에서 문제가 나오면 본 run 전에 멈추고 보고한다"는 조건을 명시한다(EXP-002에서 이 순서로 진행). 그다음 `bash "$BASE/smoke.sh"`가 전부 PASS여야 한다. 언어별 hello-world 빌드 시간을 확인해 `runs/phase0.md`에 기록한다. 공통 `MAX_SEC`는 EXP-001과 같은 값을 쓴다. 빌드가 느린 언어는 같은 상한 안에서 iteration 여유가 줄고 이는 측정 대상이다.
 
    (사) **Fargate 파일럿(Phase 0 필수)**: Fargate 측정의 로컬 단계(`local_prep.sh`: 작업 트리 내보내기, Docker 빌드, ECR push, 레지스트리 기반 정적 분석)는 레지스트리 전환 뒤 처음부터 끝까지 실제로 돌려 본 적이 없다. 그러므로 본 실행 승인 전에 run 하나로 파일럿을 한다. 파일럿에는 Hurl 정본을 통과하는 RealWorld 앱이 필요한데 이 시점에는 새 언어의 앱이 없으므로, EXP-001에서 측정한 앱 하나를 git 저장소로 복사해 쓴다. 먼저 8단계의 첫 두 하위 단계(`tools` 이미지 빌드·push, `$BASE/fargate.env` 작성)를 마친다. 파일럿은 AWS 비용이 들므로 실행 전에 사용자에게 알린다.
 
@@ -162,8 +162,10 @@ EXP-001은 TypeScript, Python, Go, Rust, C++ 다섯 언어를 같은 RealWorld �
    cp .claude/skills/langbench/fargate/Dockerfile.tools .claude/skills/langbench/fargate/probe.py .claude/skills/langbench/fargate/runner.sh .claude/skills/langbench/scripts/seed.py .claude/skills/langbench/assets/k6/load.js "$CTX/"
    source "$BASE/fargate.env"
    AWS_PROFILE=roboco aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "${ECR_REPO%%/*}"
-   docker buildx build --platform linux/arm64 -f "$CTX/Dockerfile.tools" -t "$ECR_REPO:tools" --push "$CTX"
+   docker buildx build --platform linux/arm64 -f "$CTX/Dockerfile.tools" -t "${ECR_REPO}:tools" --push "$CTX"
    ```
+
+   태그는 반드시 `"${ECR_REPO}:tools"`처럼 중괄호로 쓴다. zsh는 `$ECR_REPO:tools`의 `:t`를 변수 수정자로 해석해 태그를 `langbenchools`로 깨뜨린다(2026-10-19 EXP-002에서 관측).
 
    여기까지가 5단계 (사) 파일럿의 선행 작업이다. 셋째, 측정을 실행한다. 셸에서 먼저 `source "$BASE/bench.env"`를 해 둔다(5단계 (마)). 언어마다 첫 run 하나를 `--runs`로 먼저 측정해 `$BASE/runtime-fg-<run>/`에 언어 스캐너 보고서(java `osv.json`, php `composer-audit.json`, csharp `dotnet.json`)가 생겼는지 확인한다. 보고서가 없으면 `error.txt`의 스캐너 실패 사유를 보고 나머지를 측정하기 전에 사용자에게 알린다. 그다음 나머지를 측정한다.
 
