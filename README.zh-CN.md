@@ -89,7 +89,7 @@ Fargate 不保证任务所在的 CPU 代次。试启动 15 个任务时,Graviton
 观察到语言间综合得分差异（Go 在两个模型中均进入前两名，Python 在两个模型中均为最后），但第一名因模型而异（Sonnet 5.5 为 Rust，Opus 5.5 为 Go），因此“排名相同”部分未获支持；30 个 run 全部通过，合格率无法区分语言。 → [报告](experiments/001-five-language-realworld/report.md)
 
 **EXP-002 — Java·PHP·C# RealWorld 后端 Ralph 循环** (支持（探索性）)  
-C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠；Java 与 PHP 的第二、三名在两个模型间互换且范围重叠；18 个 run 全部通过，通过率无法区分语言。 → [报告](experiments/002-java-php-csharp/report.md)
+C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠；Java 与 PHP 的第二、三名在两个模型间互换且范围重叠；18 个 run 全部通过，通过率无法区分语言。这是单一任务、每格 3 次的探索性结果，仅应作为简单参考。 → [报告](experiments/002-java-php-csharp/report.md)
 
 <!-- RESULTS:END -->
 
@@ -99,6 +99,6 @@ C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且�
 
 在 24 项指标等权的综合得分中，Go 在两个模型下都进入前两名（Sonnet 第 2，Opus 第 1），Python 在两个模型下都是最后一名。第一名因模型而异（Sonnet 为 Rust，Opus 为 Go）。C++ 实现时间和成本最高，但内存占用最小；Python、TypeScript 实现快且便宜，但在吞吐量、镜像大小和漏洞数上落后。Opus 5.5 的估算成本约为 Sonnet 5.5 的 2 倍，实现时间约 1.8 倍，在本任务上没有合格率收益。
 
-在 EXP-002（2026-10-19，Java、PHP、C# × 两个模型 × 3 次）中，18 个 run 同样全部在第一次 iteration 通过。在三种语言内的综合得分中，C# 在两个模型下均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠。C# 的实现时间和成本最低，空闲内存（约 45 MiB）、镜像和依赖数也最小，吞吐量与 Java 同处上游。Java 吞吐量好，但内存、冷启动（约 5 秒）和构建时间最差；PHP 吞吐量最低，且因基础镜像而漏洞数最多。Java 与 PHP 的第二、三名在两个模型间互换。与 EXP-001 合并的 8 种语言比较中 C# 在两个模型下也排第一，但这是执行日期相差一天的探索性比较，且在 Sonnet 下其范围与 Rust、Go 重叠。
+在 EXP-002（2026-10-19，Java、PHP、C# × 两个模型 × 3 次）中，18 个 run 同样全部在第一次 iteration 通过。在三种语言内的综合得分中，C# 在两个模型下均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠。C# 的实现时间和成本最低，空闲内存（约 45 MiB）、镜像和依赖数也最小，吞吐量与 Java 同处上游。Java 吞吐量好，但内存、冷启动（约 5 秒）和构建时间最差；PHP 吞吐量最低，且因基础镜像而漏洞数最多。Java 与 PHP 的第二、三名在两个模型间互换。与 EXP-001 合并的 8 种语言比较中 C# 在两个模型下也排第一，但这是执行日期相差一天的探索性比较，且在 Sonnet 下其范围与 Rust、Go 重叠。两个实验都是单一任务、每格 3 次的探索性结果，这些排名只是选择语言的简单参考，并不能证明某种语言普遍更好。
 
 局限：只有一个任务，每格 3 次，综合得分对权重选择敏感。运行时指标在 AWS Fargate Spot（Graviton4，2 vCPU）上测得。依据见 [EXP-001 报告](experiments/001-five-language-realworld/report.md) 和 [EXP-002 报告](experiments/002-java-php-csharp/report.md)。
