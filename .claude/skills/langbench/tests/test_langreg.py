@@ -127,6 +127,28 @@ class LangregTest(unittest.TestCase):
         self.assertIn("govulncheck\t-\t-\tGOVULNCHECK_BIN\t2\t-version", lines)
         self.assertTrue(any(l.startswith("drogon\tbrew-or-pkgconfig") for l in lines))
 
+    def test_csharp_scanner_finds_nested_project(self):
+        # EXP-002의 C# 앱은 모두 .csproj를 src/<이름>/ 아래에 둔다. 루트에서 찾으면 스캐너가 실패한다.
+        # 테스트·bin·obj 아래 프로젝트는 건너뛰고, restore 뒤 list에 같은 경로를 넘기는지 가짜 dotnet으로 확인한다.
+        with tempfile.TemporaryDirectory() as d:
+            src, fake = os.path.join(d, "src"), os.path.join(d, "fakebin")
+            for rel in ("src/Api/Api.csproj", "src/Api.Tests/Api.Tests.csproj", "src/Api/bin/X/X.csproj"):
+                os.makedirs(os.path.dirname(os.path.join(d, rel)), exist_ok=True)
+                open(os.path.join(d, rel), "w").close()
+            os.makedirs(fake)
+            with open(os.path.join(fake, "dotnet"), "w") as f:
+                f.write('#!/bin/bash\n[ "$1" = restore ] && { echo "restore $2" >&2; exit 0; }\necho "{\\"projects\\": [\\"$2\\"]}"\n')
+            os.chmod(os.path.join(fake, "dotnet"), 0o755)
+            argv = langreg.get("csharp")["scanner"]["argv"]
+            env = dict(os.environ, PATH=fake + os.pathsep + os.environ["PATH"])
+            r = subprocess.run(argv, cwd=d, env=env, capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertEqual(json.loads(r.stdout), {"projects": ["./src/Api/Api.csproj"]})
+            self.assertIn("restore ./src/Api/Api.csproj", r.stderr)
+            open(os.path.join(src, "App.sln"), "w").close()
+            r = subprocess.run(argv, cwd=d, env=env, capture_output=True, text=True)
+            self.assertEqual(json.loads(r.stdout), {"projects": ["./src/App.sln"]})
+
     def test_cleanup_dirs(self):
         self.assertEqual(set(self.run_cli("cleanup-dirs").split()), {"target", ".venv", "build", "vendor", "bin", "obj"})
 
