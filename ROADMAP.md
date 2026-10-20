@@ -11,5 +11,6 @@
 - [x] Phase 0: 툴체인 버전 기록, Hurl 바이너리 확정, 언어별 빌드 시간으로 run 상한 확정, TS 기준선 재현 확인
 - [x] EXP-001: 5 언어 × 2 모델(Sonnet 5.5, Opus 5.5) × 3회 = 30 run + 후속 과제 (L-01) — 2026-10-18 완료, [보고](experiments/001-five-language-realworld/report.md): 부분 검증
 - [x] EXP-002: Java·PHP·C# × 2 모델(Sonnet 5.5, Opus 5.5) × 3회 = 18 run + 후속 과제 (L-02) — 2026-10-19 완료, [보고](experiments/002-java-php-csharp/report.md): 검증(탐색)
+- [ ] EXP-003: Kotlin·Scala × 2 모델(Sonnet 5.5, Opus 5.5) × 3회 = 12 run + 후속 과제 (L-03)
 - [ ] 후속 실험 후보: 합격률 천장을 없앨 더 어려운 과제, 반복 수 확대, 가중치 민감도 분석
 - [ ] 하네스 수정: 후속 과제 앱 복사에서 빌드 산출물 제외, Fargate 런타임 측정을 스킬 절차로 정식화
