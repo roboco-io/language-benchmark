@@ -1,5 +1,5 @@
-name: "언어·스택 추가 요청 / Language or stack request"
-description: "새 언어나 다른 스택을 같은 과제로 측정해 달라는 요청 / Ask us to benchmark another language or stack on the same task"
+name: "벤치마크 요청 / Benchmark request"
+description: "새 언어나 다른 프레임워크를 같은 과제로 측정해 달라는 요청 / Ask us to benchmark another language or framework on the same task"
 title: "[요청] "
 labels: ["benchmark-request"]
 body:
@@ -9,22 +9,33 @@ body:
         모든 측정은 같은 과제(RealWorld 백엔드), 같은 채점기(Hurl 13파일·154요청), 같은 런타임 측정 조건으로 모델(Sonnet 5.5, Opus 5.5)마다 run 3회를 돌립니다. 요청을 받아도 실행 여부와 시점은 보장하지 않습니다.
         Every benchmark uses the same task, grader and runtime measurement setup, with 3 runs per model (Sonnet 5.5, Opus 5.5). We cannot guarantee that or when a request will run.
 
+        **이미 결과가 있는 언어+프레임워크 조합은 자동으로 닫힙니다.** 측정한 조합은 [대시보드](https://roboco.io/language-benchmark/)에서 확인하세요. 같은 언어라도 프레임워크가 다르면 요청할 수 있습니다.
+        **Requests for a language + framework pair that already has results are closed automatically.** Check the [dashboard](https://roboco.io/language-benchmark/) for measured pairs. A different framework in the same language is welcome.
+
         **API 키·토큰 등 비밀값은 붙이지 마세요. / Do not paste API keys or other secrets.**
   - type: input
     id: language
     attributes:
       label: "언어 / Language"
-      description: "Java·PHP·C#은 다음 실험(EXP-002)으로 준비 중입니다 / Java, PHP and C# are already planned for EXP-002"
-      placeholder: "Kotlin, Elixir, Ruby, Swift ..."
+      description: "언어 이름 하나만 적어 주세요 / One language name only"
+      placeholder: "Elixir, Ruby, Swift ..."
+    validations:
+      required: true
+  - type: input
+    id: framework
+    attributes:
+      label: "웹 프레임워크 / Web framework"
+      description: "프레임워크 이름 하나만 적어 주세요 / One framework name only"
+      placeholder: "Phoenix, Rails, Vapor ..."
     validations:
       required: true
   - type: textarea
-    id: stack
+    id: db
     attributes:
-      label: "웹 프레임워크·DB 접근 라이브러리 / Web framework and DB library"
-      description: "SQLite를 쓸 수 있어야 합니다. 그 언어에서 가장 널리 쓰이는 조합이면 좋습니다 / Must support SQLite; the most common combination in that language is preferred"
+      label: "DB 접근 라이브러리 / DB library"
+      description: "SQLite를 쓸 수 있어야 합니다. 비워 두면 그 프레임워크에서 가장 널리 쓰는 것을 고릅니다 / Must support SQLite; if left empty we pick the most common one for that framework"
     validations:
-      required: true
+      required: false
   - type: textarea
     id: why
     attributes:

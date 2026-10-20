@@ -1,0 +1,29 @@
+# 벤치마크 요청 이슈가 이미 결과가 있는 언어+프레임워크면 안내 댓글(한국어·영어)을 달고 닫는다.
+# 판정은 scripts/benchmark_request.py가 한다. 이슈 본문은 신뢰할 수 없는 입력이므로 셸에 끼워 넣지 않고 이벤트 파일로만 읽는다.
+name: Benchmark request check
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: github.event.issue.state == 'open' && contains(github.event.issue.labels.*.name, 'benchmark-request')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for existing results
+        run: python3 scripts/benchmark_request.py "$GITHUB_EVENT_PATH" "$RUNNER_TEMP/comment.md"
+      - name: Comment and close duplicate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          [ -f "$RUNNER_TEMP/comment.md" ] || exit 0
+          gh issue comment "$NUMBER" -R "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/comment.md"
+          gh issue edit "$NUMBER" -R "$GITHUB_REPOSITORY" --add-label duplicate
+          gh issue close "$NUMBER" -R "$GITHUB_REPOSITORY" --reason "not planned"
