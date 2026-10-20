@@ -1,0 +1,99 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {}
+    },
+    "metrics": {
+        "status_5xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "http_req_connecting": {
+            "p(50)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        },
+        "http_req_waiting": {
+            "p(99)": 22.1464431,
+            "p(50)": 7.189692,
+            "p(95)": 16.2171387
+        },
+        "data_received": {
+            "count": 6745653644,
+            "rate": 11242445.01093784
+        },
+        "http_req_sending": {
+            "p(50)": 0.003624,
+            "p(95)": 0.008023,
+            "p(99)": 0.010793
+        },
+        "status_2xx": {
+            "count": 2422807,
+            "rate": 4037.8999437426905
+        },
+        "iteration_duration": {
+            "p(50)": 7.120369,
+            "p(95)": 21.866091199999996,
+            "p(99)": 32.115679259999986
+        },
+        "vus": {
+            "value": 32,
+            "min": 32,
+            "max": 32
+        },
+        "http_reqs": {
+            "count": 2422807,
+            "rate": 4037.8999437426905
+        },
+        "iterations": {
+            "count": 2202730,
+            "rate": 3671.1150921556427
+        },
+        "vus_max": {
+            "value": 32,
+            "min": 32,
+            "max": 32
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(50)": 7.212392,
+            "p(95)": 16.2400116,
+            "p(99)": 22.17092522
+        },
+        "http_req_blocked": {
+            "p(50)": 0.001194,
+            "p(95)": 0.002183,
+            "p(99)": 0.00316
+        },
+        "http_req_tls_handshaking": {
+            "p(50)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        },
+        "data_sent": {
+            "count": 374187576,
+            "rate": 623628.70508448
+        },
+        "http_req_duration": {
+            "p(99)": 22.17092522,
+            "p(50)": 7.212392,
+            "p(95)": 16.2400116
+        },
+        "status_4xx": {
+            "count": 0,
+            "rate": 0
+        },
+        "http_req_receiving": {
+            "p(50)": 0.017393,
+            "p(95)": 0.025134,
+            "p(99)": 0.032927
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 2422807,
+            "value": 0
+        }
+    }
+}

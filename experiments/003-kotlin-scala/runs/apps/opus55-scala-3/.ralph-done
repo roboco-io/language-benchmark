@@ -1,0 +1,1 @@
+Verified 2026-10-20: hurl 154/154 (start.sh fresh clone + Docker), PORT env, schema auto-create, dispatchers=cores, WAL + busy_timeout=5000.

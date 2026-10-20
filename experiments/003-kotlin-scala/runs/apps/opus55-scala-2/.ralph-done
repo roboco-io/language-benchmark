@@ -1,0 +1,5 @@
+Verified 2026-10-20:
+1. Hurl suite (13 files, 154 requests) passes against start.sh build and Docker container.
+2. start.sh builds the staged release and serves in the foreground on $PORT.
+3. Docker image (staged release, JRE base) honors $PORT and creates schema on an empty /data volume.
+4. Pekko default/internal dispatchers, Slick threads and Hikari pool equal core count; SQLite WAL + busy_timeout=5000.

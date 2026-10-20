@@ -1,0 +1,9 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:5:- Kotlin on JVM 25, Spring Boot (embedded Tomcat), Spring Data JPA (Hibernate), SQLite (WAL, `busy_timeout=5000`)
+./build.gradle.kts:23:    implementation("org.hibernate.orm:hibernate-community-dialects")
+./src/main/resources/application.properties:2:spring.datasource.url=jdbc:sqlite:${DB_PATH:realworld.db}?journal_mode=WAL&busy_timeout=5000&synchronous=NORMAL&foreign_keys=ON
+./src/main/resources/application.properties:4:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:5:spring.jpa.hibernate.ddl-auto=update
+./src/main/kotlin/realworld/Application.kt:15:                "server.tomcat.threads.max" to cores,
+./src/main/kotlin/realworld/Application.kt:16:                "server.tomcat.threads.min-spare" to cores,
+./src/main/kotlin/realworld/Service.kt:37:    // read-to-write lock upgrades; busy_timeout still covers contention from other processes.

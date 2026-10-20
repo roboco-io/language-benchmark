@@ -1,0 +1,7 @@
+.git
+.gradle
+.kotlin
+build
+*.db
+*.db-*
+api

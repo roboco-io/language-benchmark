@@ -1,0 +1,24 @@
+./app/realworld/http/JsonInput.scala:3:import org.apache.pekko.util.ByteString
+./app/realworld/http/ApiController.scala:3:import org.apache.pekko.util.ByteString
+./app/realworld/db/Db.scala:5:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/db/Db.scala:6:import slick.util.AsyncExecutor
+./app/realworld/db/Db.scala:16:  * the CPU core count. Every connection runs in WAL mode with `busy_timeout = 5000` ms.
+./app/realworld/db/Db.scala:32:    cfg.addDataSourceProperty("journal_mode", "WAL")
+./app/realworld/db/Db.scala:33:    cfg.addDataSourceProperty("busy_timeout", "5000")
+./app/realworld/db/Db.scala:56:      mode <- sql"PRAGMA journal_mode".as[String].head
+./app/realworld/db/Db.scala:57:      timeout <- sql"PRAGMA busy_timeout".as[Int].head
+./app/realworld/db/Db.scala:62:      s"SQLite ready at $file (writer: journal_mode=$wMode busy_timeout=$wTimeout; " +
+./app/realworld/db/Db.scala:63:        s"reader x$readerThreads: journal_mode=$rMode busy_timeout=$rTimeout)"
+./app/realworld/db/Tables.scala:3:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/AppLoader.scala:38:      pekko.actor.default-dispatcher $pool
+./app/realworld/AppLoader.scala:39:      pekko.actor.internal-dispatcher $pool
+./app/realworld/services/UserService.scala:7:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/services/CommentService.scala:6:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/services/ProfileService.scala:6:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/services/ArticleService.scala:6:import slick.jdbc.SQLiteProfile.api.*
+./.ralph-done:1:All completion criteria verified on 2026-10-20: Hurl 154/154 via start.sh and Docker, PORT honored, schema auto-created, dispatcher sized to cores, SQLite WAL + busy_timeout=5000.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:42:SQLite permits only one writer at a time. For this reason, all writes go through a single dedicated connection, and each write runs in its own transaction. Reads use a separate pool with one connection and one thread per core. Every connection runs with `journal_mode=WAL`, `busy_timeout=5000`, `foreign_keys=ON` and `synchronous=NORMAL`. The server logs the effective pragma values at startup.
+./conf/logback.xml:10:  <logger name="slick" level="WARN"/>
+./build.sbt:9:  "com.typesafe.slick" %% "slick" % "3.6.0",
+./build.sbt:10:  "com.typesafe.slick" %% "slick-hikaricp" % "3.6.0",

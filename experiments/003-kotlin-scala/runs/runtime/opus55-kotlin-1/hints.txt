@@ -1,0 +1,11 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:34:`busy_timeout` of 5000 ms. The embedded Tomcat worker pool is sized to the number of available CPU cores.
+./build.gradle.kts:28:    implementation("org.hibernate.orm:hibernate-community-dialects")
+./src/main/resources/application.properties:5:spring.datasource.url=jdbc:sqlite:${DATABASE_PATH:realworld.db}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true
+./src/main/resources/application.properties:7:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:8:spring.jpa.hibernate.ddl-auto=none
+./src/main/resources/application.properties:10:spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+./src/main/kotlin/io/realworld/Application.kt:32:    /** Logs the effective SQLite settings so the WAL / busy_timeout configuration is visible at startup. */
+./src/main/kotlin/io/realworld/Application.kt:35:        val journalMode = jdbc.queryForObject("PRAGMA journal_mode", String::class.java)
+./src/main/kotlin/io/realworld/Application.kt:36:        val busyTimeout = jdbc.queryForObject("PRAGMA busy_timeout", Int::class.java)
+./src/main/kotlin/io/realworld/Application.kt:37:        log.info("SQLite journal_mode={} busy_timeout={}ms", journalMode, busyTimeout)

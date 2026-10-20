@@ -1,0 +1,15 @@
+./internal/db/db.go:76:	q.Add("_pragma", "journal_mode(WAL)")
+./internal/db/db.go:77:	q.Add("_pragma", "busy_timeout(5000)")
+./internal/db/db.go:108:	if err := gdb.Raw("PRAGMA journal_mode").Scan(&journal).Error; err != nil {
+./internal/db/db.go:111:	if err := gdb.Raw("PRAGMA busy_timeout").Scan(&busy).Error; err != nil {
+./internal/db/db.go:114:	log.Printf("sqlite: journal_mode=%s busy_timeout=%dms max_conns=%d", journal, busy, conns)
+./.ralph-done:5:4. GOMAXPROCS=runtime.NumCPU() (10 on host, 6 in container = nproc); SQLite journal_mode=wal, busy_timeout=5000ms.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: GOMAXPROCS equal to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:37:At startup, the server sets `GOMAXPROCS` to the number of available CPU cores
+./README.md:38:(`runtime.NumCPU()`). Every SQLite connection opens with `journal_mode=WAL`,
+./README.md:39:`busy_timeout=5000`, `foreign_keys=ON`, and `synchronous=NORMAL`. Transactions use
+./README.md:44:sqlite: journal_mode=wal busy_timeout=5000ms max_conns=20
+./README.md:45:listening on :8080 (GOMAXPROCS=10, db=realworld.db)
+./README.md:61:- `main.go`: reads the environment, sets `GOMAXPROCS`, and starts the server.
+./main.go:25:	runtime.GOMAXPROCS(procs)
+./main.go:39:	log.Printf("listening on :%s (GOMAXPROCS=%d, db=%s)", port, runtime.GOMAXPROCS(0), dbPath)

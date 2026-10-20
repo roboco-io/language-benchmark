@@ -1,0 +1,22 @@
+./app/realworld/db/DatabaseProvider.scala:5:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/db/DatabaseProvider.scala:33:          "journal_mode"     -> "WAL",
+./app/realworld/db/DatabaseProvider.scala:34:          "busy_timeout"     -> "5000",
+./app/realworld/db/DatabaseProvider.scala:38:          // transactions wait on busy_timeout instead of failing with SQLITE_BUSY.
+./app/realworld/db/DatabaseProvider.scala:49:      mode    <- sql"PRAGMA journal_mode".as[String].head
+./app/realworld/db/DatabaseProvider.scala:50:      timeout <- sql"PRAGMA busy_timeout".as[Int].head
+./app/realworld/db/DatabaseProvider.scala:53:    logger.info(s"SQLite database at $file (journal_mode=$mode, busy_timeout=${timeout}ms, pool=$cores)")
+./app/realworld/db/Tables.scala:3:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/AppLoader.scala:38:      org.apache.pekko.dispatch.ThreadPoolConfig.scaledPoolSize(
+./app/realworld/AppLoader.scala:45:        s"pekko default-dispatcher parallelism: ${size("pekko.actor.default-dispatcher")}, " +
+./app/realworld/AppLoader.scala:46:        s"internal-dispatcher parallelism: ${size("pekko.actor.internal-dispatcher")}"
+./app/realworld/services/UserService.scala:6:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/services/ArticleService.scala:6:import slick.jdbc.SQLiteProfile.api.*
+./.ralph-done:5:4. Pekko default/internal dispatchers, Slick threads and Hikari pool equal core count; SQLite WAL + busy_timeout=5000.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:48:Every SQLite connection is opened with `journal_mode=WAL`, `busy_timeout=5000` (milliseconds), `synchronous=NORMAL`
+./README.md:49:and `foreign_keys=ON`. Transactions start with `BEGIN IMMEDIATE`. This makes a writer wait on `busy_timeout` for
+./conf/logback.xml:10:  <logger name="slick" level="WARN"/>
+./conf/application.conf:36:pekko.actor.default-dispatcher {
+./conf/application.conf:44:pekko.actor.internal-dispatcher {
+./build.sbt:10:      "com.typesafe.slick" %% "slick"          % "3.6.0",
+./build.sbt:11:      "com.typesafe.slick" %% "slick-hikaricp" % "3.6.0",

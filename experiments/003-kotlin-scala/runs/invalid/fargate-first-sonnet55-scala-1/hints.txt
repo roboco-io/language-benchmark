@@ -1,0 +1,30 @@
+./app/models/Tables.scala:3:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/CommentController.scala:5:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/CommentController.scala:9:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/ProfileController.scala:4:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/ProfileController.scala:8:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/TagController.scala:4:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/TagController.scala:8:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/ArticleController.scala:5:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/ArticleController.scala:9:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/ApiSupport.scala:5:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/ApiSupport.scala:9:import slick.jdbc.JdbcProfile
+./app/controllers/ApiSupport.scala:10:import slick.jdbc.SQLiteProfile.api.*
+./app/controllers/UserController.scala:5:import play.api.db.slick.DatabaseConfigProvider
+./app/controllers/UserController.scala:9:import slick.jdbc.SQLiteProfile.api.*
+./app/services/DbInit.scala:4:import play.api.db.slick.DatabaseConfigProvider
+./app/services/DbInit.scala:6:import slick.jdbc.JdbcProfile
+./app/services/DbInit.scala:7:import slick.jdbc.SQLiteProfile.api.*
+./Dockerfile:22:    DATABASE_URL="jdbc:sqlite:/data/realworld.db?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&synchronous=NORMAL"
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:35:- SQLite runs in WAL mode with `busy_timeout=5000` (set via the JDBC URL).
+./conf/application.conf:20:pekko.actor.default-dispatcher {
+./conf/application.conf:29:play.akka.actor.default-dispatcher = ${pekko.actor.default-dispatcher}
+./conf/application.conf:32:pekko.http.server {
+./conf/application.conf:38:# Slick + SQLite (WAL mode, busy_timeout 5000 ms)
+./conf/application.conf:39:slick.dbs.default {
+./conf/application.conf:40:  profile = "slick.jdbc.SQLiteProfile$"
+./conf/application.conf:43:    url = "jdbc:sqlite:realworld.db?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&synchronous=NORMAL"
+./start.sh:12:export DATABASE_URL="${DATABASE_URL:-jdbc:sqlite:$PWD/data/realworld.db?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&synchronous=NORMAL}"
+./build.sbt:9:  "org.playframework" %% "play-slick" % "6.2.0",
+./build.sbt:10:  "com.typesafe.slick" %% "slick-hikaricp" % "3.6.0",

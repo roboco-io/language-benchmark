@@ -1,0 +1,29 @@
+# Users and authentication
+POST    /api/users/login                          realworld.UserController.login
+POST    /api/users                                realworld.UserController.register
+GET     /api/user                                 realworld.UserController.current
+PUT     /api/user                                 realworld.UserController.update
+
+# Profiles
+GET     /api/profiles/:username                   realworld.ProfileController.get(username: String)
+POST    /api/profiles/:username/follow            realworld.ProfileController.follow(username: String)
+DELETE  /api/profiles/:username/follow            realworld.ProfileController.unfollow(username: String)
+
+# Articles
+GET     /api/articles/feed                        realworld.ArticleController.feed
+GET     /api/articles                             realworld.ArticleController.list
+POST    /api/articles                             realworld.ArticleController.create
+GET     /api/articles/:slug                       realworld.ArticleController.get(slug: String)
+PUT     /api/articles/:slug                       realworld.ArticleController.update(slug: String)
+DELETE  /api/articles/:slug                       realworld.ArticleController.delete(slug: String)
+POST    /api/articles/:slug/favorite              realworld.ArticleController.favorite(slug: String)
+DELETE  /api/articles/:slug/favorite              realworld.ArticleController.unfavorite(slug: String)
+
+# Comments
+GET     /api/articles/:slug/comments              realworld.CommentController.list(slug: String)
+POST    /api/articles/:slug/comments              realworld.CommentController.create(slug: String)
+PUT     /api/articles/:slug/comments/:id          realworld.CommentController.update(slug: String, id: Long)
+DELETE  /api/articles/:slug/comments/:id          realworld.CommentController.delete(slug: String, id: Long)
+
+# Tags
+GET     /api/tags                                 realworld.TagController.list

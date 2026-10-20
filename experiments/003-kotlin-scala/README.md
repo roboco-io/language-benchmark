@@ -70,8 +70,8 @@ Kotlin 사용자 선택지는 Ktor + Exposed, Spring Boot + JPA(Gradle), Spring 
 
 ## Phase 0 기록
 
-- [ ] setup(툴체인·레지스트리·정본 해시) — `runs/toolchain.txt`, `runs/preflight-report.md`
-- [ ] 제공자 스모크(두 모델 PASS, 구독 인증) — `runs/phase0.log`
-- [ ] hello-world 빌드 시간(호스트 콜드 / docker no-cache) — `runs/phase0.md`
-- [ ] Fargate 파일럿(`local_prep.sh`·Fargate 측정 경로 확인) — `runs/phase0.md`
-- [ ] 실행 승인 — `runs/preflight-approved`
+- [x] setup(툴체인·레지스트리·정본 해시) — `runs/toolchain.txt`, `runs/preflight-report.md`
+- [x] 제공자 스모크(두 모델 PASS, 구독 인증) — `runs/phase0.log`
+- [x] hello-world 빌드 시간(호스트 콜드 / docker no-cache) — `runs/phase0.md`
+- [x] Fargate 파일럿(`local_prep.sh`·Fargate 측정 경로 확인) — `runs/phase0.md`
+- [x] 실행 승인 — `runs/preflight-approved`

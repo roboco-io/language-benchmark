@@ -1,0 +1,25 @@
+POST    /api/users/login                       controllers.ApiController.login()
+POST    /api/users                             controllers.ApiController.register()
+GET     /api/user                              controllers.ApiController.currentUser()
+PUT     /api/user                              controllers.ApiController.updateUser()
+
+GET     /api/profiles/:username                controllers.ApiController.getProfile(username: String)
+POST    /api/profiles/:username/follow         controllers.ApiController.follow(username: String)
+DELETE  /api/profiles/:username/follow         controllers.ApiController.unfollow(username: String)
+
+GET     /api/articles/feed                     controllers.ApiController.feed()
+GET     /api/articles                          controllers.ApiController.listArticles()
+POST    /api/articles                          controllers.ApiController.createArticle()
+GET     /api/articles/:slug                    controllers.ApiController.getArticle(slug: String)
+PUT     /api/articles/:slug                    controllers.ApiController.updateArticle(slug: String)
+DELETE  /api/articles/:slug                    controllers.ApiController.deleteArticle(slug: String)
+
+POST    /api/articles/:slug/favorite           controllers.ApiController.favorite(slug: String)
+DELETE  /api/articles/:slug/favorite           controllers.ApiController.unfavorite(slug: String)
+
+GET     /api/articles/:slug/comments           controllers.ApiController.listComments(slug: String)
+POST    /api/articles/:slug/comments           controllers.ApiController.addComment(slug: String)
+PUT     /api/articles/:slug/comments/:id       controllers.ApiController.updateComment(slug: String, id: Long)
+DELETE  /api/articles/:slug/comments/:id       controllers.ApiController.deleteComment(slug: String, id: Long)
+
+GET     /api/tags                              controllers.ApiController.tags()

@@ -1,0 +1,14 @@
+./app/services/Db.scala:8:import slick.jdbc.SQLiteProfile.api.*
+./app/services/Db.scala:20:  // busy_timeout instead of failing with SQLITE_BUSY on a read-to-write upgrade.
+./app/services/Db.scala:21:  val db: slick.jdbc.SQLiteProfile.backend.Database =
+./app/services/Db.scala:31:        journal_mode = WAL
+./app/services/Db.scala:32:        busy_timeout = 5000
+./app/services/Repo.scala:8:import slick.jdbc.{GetResult, SQLActionBuilder}
+./app/services/Repo.scala:9:import slick.jdbc.SQLiteProfile.api.*
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:38:- **SQLite:** every pooled connection is opened with `journal_mode=WAL`, `busy_timeout=5000`, `foreign_keys=ON` and
+./conf/logback.xml:6:  <logger name="org.apache.pekko" level="WARN"/>
+./conf/application.conf:16:pekko.actor.default-dispatcher.fork-join-executor {
+./conf/application.conf:21:play.server.pekko.http.server.pipelining-limit = 16
+./build.sbt:11:  "com.typesafe.slick" %% "slick" % "3.6.1",
+./build.sbt:12:  "com.typesafe.slick" %% "slick-hikaricp" % "3.6.1",

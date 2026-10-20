@@ -84,12 +84,16 @@ Fargate はタスクが配置される CPU 世代を保証しない。試しに�
 |------|------|------|------|
 | [EXP-001](experiments/001-five-language-realworld/report.md) 5言語 RealWorld バックエンド Ralph ループ | L-01: 同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は実装言語（TypeScript、Python、Go、Rust、C++）の間で差があり、その順位は Sonnet 5.5 と Opus 5.5 で同じである。 | **部分検証** | Claude Code 2.1.302 |
 | [EXP-002](experiments/002-java-php-csharp/report.md) Java·PHP·C# RealWorld バックエンド Ralph ループ | L-02: 同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は Java、PHP、C# の間で異なり、3言語内の順位は Sonnet 5.5 と Opus 5.5 で同じである。 | **検証（探索）** | Claude Code 2.1.302 |
+| [EXP-003](experiments/003-kotlin-scala/report.md) Kotlin·Scala RealWorld バックエンド Ralph ループ | L-03: 同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は Kotlin と Scala の間で異なり、2言語の順位は Sonnet 5.5 と Opus 5.5 で同じである。 | **部分検証（探索）** | Claude Code 2.1.303 |
 
 **EXP-001 — 5言語 RealWorld バックエンド Ralph ループ** (部分検証)  
 言語間の総合スコア差は観測された（Go は両モデルで上位2位以内、Python は両モデルで最下位）が、1位がモデルごとに異なり（Sonnet 5.5 は Rust、Opus 5.5 は Go）順位が同じという部分は支持されず、30 run すべて合格したため合格率では言語を区別できなかった。 → [レポート](experiments/001-five-language-realworld/report.md)
 
 **EXP-002 — Java·PHP·C# RealWorld バックエンド Ralph ループ** (検証（探索）)  
 C# は両モデルで総合スコア1位（Sonnet 0.846、Opus 0.983）で、2位との反復別範囲が重ならなかった。Java と PHP の2・3位はモデルごとに入れ替わり範囲も重なった。18 run すべて合格したため合格率では言語を区別できなかった。課題1つ・セルあたり3回の探索結果であり、簡単な参考資料としてのみ読むこと。 → [レポート](experiments/002-java-php-csharp/report.md)
+
+**EXP-003 — Kotlin·Scala RealWorld バックエンド Ralph ループ** (部分検証（探索）)  
+Scala（Play）は両モデルで総合スコア1位（Sonnet 0.556、Opus 0.550）だったが、Opus では Kotlin と反復別範囲が重なった。Kotlin（Spring Boot）は実装が速く安く、Scala はメモリ・コールドスタート・メモリ増加が小さかった。12 run すべて合格。課題1つ・セルあたり3回の探索結果であり、簡単な参考資料としてのみ読むこと。 → [レポート](experiments/003-kotlin-scala/report.md)
 
 <!-- RESULTS:END -->
 
@@ -101,4 +105,6 @@ EXP-001（2026-10-18、5言語 × Sonnet 5.5・Opus 5.5 × 3回）では、RealW
 
 EXP-002（2026-10-19、Java・PHP・C# × 両モデル × 3回）でも 18/18 が最初の iteration で合格した。3言語内の総合スコアで C# は両モデルとも1位（Sonnet 0.846、Opus 0.983）で、2位との反復別範囲が重ならなかった。C# は実装時間・コストが最も小さく、アイドルメモリ（約 45 MiB）・イメージ・依存数も最小で、スループットは Java と並ぶ上位だった。Java はスループットは良いがメモリ・コールドスタート（約5秒）・ビルド時間が最も悪く、PHP はスループットが最も低く、ベースイメージのため脆弱性数が最も多かった。Java と PHP の2・3位はモデルごとに入れ替わった。EXP-001 と合わせた8言語比較でも C# は両モデルで1位だったが、実行日が1日異なる探索的比較であり、Sonnet では Rust・Go と範囲が重なる。両実験とも課題1つ・セルあたり3回の探索結果であり、この順位は言語選択の簡単な参考資料にすぎず、ある言語が一般的に優れているという根拠ではない。
 
-限界：課題は1つ、セルあたり3回で、総合スコアは重みの選び方に敏感である。ランタイム指標は AWS Fargate Spot（Graviton4、2 vCPU）で測定した。根拠は [EXP-001 レポート](experiments/001-five-language-realworld/report.md) と [EXP-002 レポート](experiments/002-java-php-csharp/report.md) を参照。
+EXP-003（2026-10-20、Kotlin・Scala × 両モデル × 3回）では 12 run すべてが合格した（11 run は最初の iteration）。2言語内の総合スコアで Scala（Play）は両モデルとも1位（Sonnet 0.556、Opus 0.550）だったが、Opus では Kotlin と反復別範囲が重なったため判定は部分検証（探索）である。Kotlin（Spring Boot）は実装時間・コスト・コード量が小さく、Scala はアイドルメモリ（約 170 MiB）・コールドスタート（約 2.4 秒）・soak 中のメモリ増加（約 5 MiB）が小さかった。10言語の探索的比較では Scala が6・7位、Kotlin が9・10位でどちらも中位以下だった。これも課題1つ・セルあたり3回の探索結果であり、簡単な参考資料としてのみ読むこと。
+
+限界：課題は1つ、セルあたり3回で、総合スコアは重みの選び方に敏感である。ランタイム指標は AWS Fargate Spot（Graviton4、2 vCPU）で測定した。根拠は [EXP-001 レポート](experiments/001-five-language-realworld/report.md)、[EXP-002 レポート](experiments/002-java-php-csharp/report.md)、[EXP-003 レポート](experiments/003-kotlin-scala/report.md) を参照。

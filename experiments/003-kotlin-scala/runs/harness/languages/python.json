@@ -1,0 +1,73 @@
+{
+  "key": "python",
+  "name": "Python",
+  "order": 2,
+  "prompt": {
+    "STACK": "Python + FastAPI + SQLAlchemy + SQLite, served by uvicorn",
+    "WORKERS": "uvicorn --workers set to the core count"
+  },
+  "stack": {
+    "framework": "FastAPI (uvicorn)",
+    "db": "SQLAlchemy"
+  },
+  "toolchain": [
+    {
+      "name": "python3",
+      "bin": "python3",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "pip-audit",
+      "bin_env": "PIP_AUDIT_BIN",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "pip",
+    "name": "pip",
+    "report": "pip.json",
+    "required_key": "dependencies",
+    "argv": [
+      "${PIP_AUDIT_BIN}",
+      "-f",
+      "json",
+      "."
+    ],
+    "alt": [
+      {
+        "if_file": "requirements.txt",
+        "argv": [
+          "${PIP_AUDIT_BIN}",
+          "-f",
+          "json",
+          "-r",
+          "requirements.txt"
+        ]
+      }
+    ]
+  },
+  "deps": {
+    "kind": "pyproject-or-requirements"
+  },
+  "loc": {
+    "scc_names": [
+      "Python"
+    ],
+    "test_pattern": "test_.*\\.py|.*_test\\.py",
+    "exclude_dirs": [
+      ".venv"
+    ]
+  },
+  "hints": [
+    "--workers",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    ".venv"
+  ]
+}

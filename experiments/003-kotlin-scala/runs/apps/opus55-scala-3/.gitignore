@@ -1,0 +1,14 @@
+target/
+project/target/
+project/project/
+.bsp/
+.idea/
+.metals/
+.bloop/
+.vscode/
+*.db
+*.db-shm
+*.db-wal
+data/
+logs/
+RUNNING_PID

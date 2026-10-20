@@ -1,0 +1,13 @@
+./app/services/Database.scala:11:import slick.jdbc.SQLiteProfile.api.*
+./app/services/Database.scala:12:import slick.util.AsyncExecutor
+./app/services/Database.scala:27:    // WAL journaling lets readers run beside a writer; busy_timeout makes writers wait up to
+./app/services/Database.scala:30:    hc.setJdbcUrl(s"jdbc:sqlite:$path?journal_mode=WAL&busy_timeout=5000&foreign_keys=true&synchronous=NORMAL&transaction_mode=IMMEDIATE")
+./app/services/Database.scala:38:    Database.forDataSource(dataSource, Some(cores), AsyncExecutor("slick", cores, cores, 10000, cores))
+./app/services/Schema.scala:3:import slick.jdbc.SQLiteProfile.api.*
+./app/services/Repo.scala:9:import slick.jdbc.SQLiteProfile.api.*
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:35:- SQLite runs in WAL mode with `busy_timeout=5000` ms, foreign keys on, and `IMMEDIATE` write transactions.
+./scripts/run-server.sh:16:JAVA_OPTS="${JAVA_OPTS:-} -Dpekko.io.tcp.nr-of-selectors=$CORES -XX:+UseParallelGC"
+./conf/application.conf:25:pekko.actor.default-dispatcher.fork-join-executor {
+./build.sbt:11:  "com.typesafe.slick" %% "slick"          % "3.6.1",
+./build.sbt:12:  "com.typesafe.slick" %% "slick-hikaricp" % "3.6.1",

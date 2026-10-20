@@ -1,0 +1,73 @@
+== sonnet55-scala-1
+hits: 0
+rc=0
+== sonnet55-kotlin-1
+hits: 0
+rc=0
+== opus55-kotlin-1
+hits: 0
+rc=0
+== opus55-scala-1
+hits: 0
+rc=0
+== opus55-kotlin-2
+hits: 0
+rc=0
+== opus55-scala-2
+hits: 0
+rc=0
+== sonnet55-kotlin-2
+hits: 0
+rc=0
+== sonnet55-scala-2
+hits: 0
+rc=0
+== opus55-kotlin-3
+hits: 0
+rc=0
+== sonnet55-kotlin-3
+hits: 0
+rc=0
+== sonnet55-scala-3
+hits: 0
+rc=0
+== opus55-scala-3
+/Users/dohyunjung/experiments/langbench-exp003/sessions-opus55-scala-3/cbb37c65-9dac-4a51-b6d7-f74efb40b509.jsonl:149: Bash: /Users/dohyunjung/experiments/langbench-exp003/
+hits: 1
+rc=1
+== sonnet55-scala-1-fu
+hits: 0
+rc=0
+== sonnet55-kotlin-1-fu
+hits: 0
+rc=0
+== opus55-kotlin-1-fu
+hits: 0
+rc=0
+== opus55-scala-1-fu
+hits: 0
+rc=0
+== opus55-kotlin-2-fu
+hits: 0
+rc=0
+== opus55-scala-2-fu
+hits: 0
+rc=0
+== sonnet55-kotlin-2-fu
+hits: 0
+rc=0
+== sonnet55-scala-2-fu
+hits: 0
+rc=0
+== opus55-kotlin-3-fu
+hits: 0
+rc=0
+== sonnet55-kotlin-3-fu
+hits: 0
+rc=0
+== sonnet55-scala-3-fu
+hits: 0
+rc=0
+== opus55-scala-3-fu
+hits: 0
+rc=0

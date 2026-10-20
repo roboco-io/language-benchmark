@@ -1,0 +1,6 @@
+build/
+.gradle/
+.kotlin/
+.git/
+api/
+*.db*

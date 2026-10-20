@@ -1,0 +1,20 @@
+server:
+  port: ${PORT:8080}
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:sqlite:${DB_PATH:realworld.db}?journal_mode=WAL&busy_timeout=5000&synchronous=NORMAL&foreign_keys=on
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+logging:
+  level:
+    root: warn
+app:
+  jwt-secret: ${JWT_SECRET:realworld-dev-secret-change-me-realworld-dev-secret}

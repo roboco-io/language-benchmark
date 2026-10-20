@@ -1,0 +1,17 @@
+./app/realworld/Db.scala:4:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/Db.scala:5:import slick.util.AsyncExecutor
+./app/realworld/Db.scala:28:    cfg.addDataSourceProperty("journal_mode", "WAL")
+./app/realworld/Db.scala:29:    cfg.addDataSourceProperty("busy_timeout", "5000")
+./app/realworld/Repo.scala:3:import slick.jdbc.GetResult
+./app/realworld/Repo.scala:4:import slick.jdbc.SQLiteProfile.api.*
+./app/realworld/Repo.scala:153:  private def page(where: slick.jdbc.SQLActionBuilder, limit: Int, offset: Int, viewer: Option[Long]) =
+./app/realworld/AppLoader.scala:27:  log.info(s"SQLite ${cfg.getString("realworld.db.path")}: journal_mode=${db.pragma("journal_mode")}, busy_timeout=${db.pragma("busy_timeout")}, cores=$cores")
+./.ralph-done:1:Verified 2026-10-20: hurl 154/154 (start.sh fresh clone + Docker), PORT env, schema auto-create, dispatchers=cores, WAL + busy_timeout=5000.
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Play's Pekko HTTP server and default dispatcher with their thread pools sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:45:SQLite runs in WAL mode with `busy_timeout=5000` on every connection. SQLite allows only one writer
+./conf/logback.xml:13:  <logger name="slick" level="WARN"/>
+./conf/application.conf:27:pekko.actor.default-dispatcher {
+./conf/application.conf:35:pekko.actor.internal-dispatcher {
+./conf/application.conf:44:play.server.pekko.max-header-size = 16k
+./build.sbt:11:  "com.typesafe.slick" %% "slick"          % "3.6.1",
+./build.sbt:12:  "com.typesafe.slick" %% "slick-hikaricp" % "3.6.1",

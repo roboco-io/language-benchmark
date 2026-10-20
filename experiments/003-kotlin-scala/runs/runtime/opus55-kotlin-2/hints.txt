@@ -1,0 +1,15 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:38:cores (`Runtime.availableProcessors()`). Every SQLite connection uses `journal_mode=WAL` and
+./README.md:39:`busy_timeout=5000`. The effective values are logged at startup.
+./build.gradle.kts:29:    implementation("org.hibernate.orm:hibernate-community-dialects")
+./src/main/resources/application.properties:7:spring.datasource.url=jdbc:sqlite:${realworld.db-path}?journal_mode=WAL&busy_timeout=5000&foreign_keys=true
+./src/main/resources/application.properties:9:spring.datasource.hikari.connection-init-sql=PRAGMA busy_timeout=5000
+./src/main/resources/application.properties:11:spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:13:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:15:spring.jpa.properties.hibernate.default_batch_fetch_size=100
+./src/main/resources/application.properties:16:spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+./src/main/kotlin/io/realworld/Application.kt:18:        val journalMode = jdbc.queryForObject("PRAGMA journal_mode", String::class.java)
+./src/main/kotlin/io/realworld/Application.kt:19:        val busyTimeout = jdbc.queryForObject("PRAGMA busy_timeout", Int::class.java)
+./src/main/kotlin/io/realworld/Application.kt:21:            "Workers: {} Tomcat threads (CPU cores); SQLite journal_mode={}, busy_timeout={} ms",
+./src/main/kotlin/io/realworld/Application.kt:41:                "server.tomcat.threads.max" to cores,
+./src/main/kotlin/io/realworld/Application.kt:42:                "server.tomcat.threads.min-spare" to cores,

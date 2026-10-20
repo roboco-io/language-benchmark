@@ -1,0 +1,30 @@
+# Users and authentication
+POST    /api/users/login                       realworld.controllers.UserController.login
+POST    /api/users                             realworld.controllers.UserController.register
+GET     /api/user                              realworld.controllers.UserController.current
+PUT     /api/user                              realworld.controllers.UserController.update
+
+# Profiles
+GET     /api/profiles/:username                realworld.controllers.ProfileController.get(username: String)
+POST    /api/profiles/:username/follow         realworld.controllers.ProfileController.follow(username: String)
+DELETE  /api/profiles/:username/follow         realworld.controllers.ProfileController.unfollow(username: String)
+
+# Articles
+GET     /api/articles/feed                     realworld.controllers.ArticleController.feed
+GET     /api/articles                          realworld.controllers.ArticleController.list
+POST    /api/articles                          realworld.controllers.ArticleController.create
+GET     /api/articles/:slug                    realworld.controllers.ArticleController.get(slug: String)
+PUT     /api/articles/:slug                    realworld.controllers.ArticleController.update(slug: String)
+DELETE  /api/articles/:slug                    realworld.controllers.ArticleController.delete(slug: String)
+
+# Favorites
+POST    /api/articles/:slug/favorite           realworld.controllers.ArticleController.favorite(slug: String)
+DELETE  /api/articles/:slug/favorite           realworld.controllers.ArticleController.unfavorite(slug: String)
+
+# Comments
+GET     /api/articles/:slug/comments           realworld.controllers.CommentController.list(slug: String)
+POST    /api/articles/:slug/comments           realworld.controllers.CommentController.create(slug: String)
+DELETE  /api/articles/:slug/comments/:id       realworld.controllers.CommentController.delete(slug: String, id: Long)
+
+# Tags
+GET     /api/tags                              realworld.controllers.TagController.list

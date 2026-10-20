@@ -1,0 +1,53 @@
+=== run order written: /Users/dohyunjung/experiments/langbench-exp003/run-order.txt (seed 20261020) : 2026-10-20 13:42:55 ===
+=== starting sequential runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / kotlin scala / n=3, order /Users/dohyunjung/experiments/langbench-exp003/run-order.txt) : 2026-10-20 13:42:55 ===
+=== start sonnet55-scala-1 : 2026-10-20 13:42:55 ===
+=== end sonnet55-scala-1 (exit 0) | 1,2026-10-20 13:50:19,0,13,154,13,154,1,pass : 2026-10-20 13:50:19 ===
+=== start sonnet55-kotlin-1 : 2026-10-20 13:50:19 ===
+=== end sonnet55-kotlin-1 (exit 0) | 2,2026-10-20 14:01:27,0,13,154,13,154,1,pass : 2026-10-20 14:01:27 ===
+=== start opus55-kotlin-1 : 2026-10-20 14:01:27 ===
+=== end opus55-kotlin-1 (exit 0) | 1,2026-10-20 14:10:42,0,13,154,13,154,1,pass : 2026-10-20 14:10:42 ===
+=== start opus55-scala-1 : 2026-10-20 14:10:42 ===
+=== end opus55-scala-1 (exit 0) | 1,2026-10-20 14:22:56,0,13,154,13,154,1,pass : 2026-10-20 14:22:56 ===
+=== start opus55-kotlin-2 : 2026-10-20 14:22:56 ===
+=== end opus55-kotlin-2 (exit 0) | 1,2026-10-20 14:30:18,0,13,154,13,154,1,pass : 2026-10-20 14:30:18 ===
+=== start opus55-scala-2 : 2026-10-20 14:30:18 ===
+=== end opus55-scala-2 (exit 0) | 1,2026-10-20 14:41:59,0,13,154,13,154,1,pass : 2026-10-20 14:41:59 ===
+=== start sonnet55-kotlin-2 : 2026-10-20 14:41:59 ===
+=== end sonnet55-kotlin-2 (exit 0) | 1,2026-10-20 14:47:42,0,13,154,13,154,1,pass : 2026-10-20 14:47:42 ===
+=== start sonnet55-scala-2 : 2026-10-20 14:47:42 ===
+=== end sonnet55-scala-2 (exit 0) | 1,2026-10-20 14:54:57,0,13,154,13,154,1,pass : 2026-10-20 14:54:57 ===
+=== start opus55-kotlin-3 : 2026-10-20 14:54:57 ===
+=== end opus55-kotlin-3 (exit 0) | 1,2026-10-20 15:02:46,0,13,154,13,154,1,pass : 2026-10-20 15:02:46 ===
+=== start sonnet55-kotlin-3 : 2026-10-20 15:02:46 ===
+=== end sonnet55-kotlin-3 (exit 0) | 1,2026-10-20 15:08:25,0,13,154,13,154,1,pass : 2026-10-20 15:08:25 ===
+=== start sonnet55-scala-3 : 2026-10-20 15:08:25 ===
+=== end sonnet55-scala-3 (exit 0) | 1,2026-10-20 15:18:52,0,13,154,13,154,1,pass : 2026-10-20 15:18:52 ===
+=== start opus55-scala-3 : 2026-10-20 15:18:52 ===
+=== end opus55-scala-3 (exit 0) | 1,2026-10-20 15:26:34,0,13,154,13,154,1,pass : 2026-10-20 15:26:34 ===
+=== ALL RUNS FINISHED : 2026-10-20 15:26:34 ===
+=== starting follow-up runs (claude-native: sonnet55:claude-sonnet-5-5 opus55:claude-opus-5-5 / kotlin scala / n=3) : 2026-10-20 15:26:57 ===
+=== start sonnet55-scala-1-fu : 2026-10-20 15:26:57 ===
+=== end sonnet55-scala-1-fu (exit 0) | 1,2026-10-20 15:29:13,0,14,167,14,167,1,pass : 2026-10-20 15:29:13 ===
+=== start sonnet55-kotlin-1-fu : 2026-10-20 15:29:13 ===
+=== end sonnet55-kotlin-1-fu (exit 0) | 1,2026-10-20 15:31:47,0,14,167,14,167,1,pass : 2026-10-20 15:31:47 ===
+=== start opus55-kotlin-1-fu : 2026-10-20 15:31:47 ===
+=== end opus55-kotlin-1-fu (exit 0) | 1,2026-10-20 15:34:20,0,14,167,14,167,1,pass : 2026-10-20 15:34:20 ===
+=== start opus55-scala-1-fu : 2026-10-20 15:34:20 ===
+=== end opus55-scala-1-fu (exit 0) | 1,2026-10-20 15:36:55,0,14,167,14,167,1,pass : 2026-10-20 15:36:55 ===
+=== start opus55-kotlin-2-fu : 2026-10-20 15:36:55 ===
+=== end opus55-kotlin-2-fu (exit 0) | 1,2026-10-20 15:39:41,0,14,167,14,167,1,pass : 2026-10-20 15:39:41 ===
+=== start opus55-scala-2-fu : 2026-10-20 15:39:41 ===
+=== end opus55-scala-2-fu (exit 0) | 1,2026-10-20 15:42:06,0,14,167,14,167,1,pass : 2026-10-20 15:42:06 ===
+=== start sonnet55-kotlin-2-fu : 2026-10-20 15:42:06 ===
+=== end sonnet55-kotlin-2-fu (exit 0) | 1,2026-10-20 15:44:37,0,14,167,14,167,1,pass : 2026-10-20 15:44:37 ===
+=== start sonnet55-scala-2-fu : 2026-10-20 15:44:37 ===
+=== end sonnet55-scala-2-fu (exit 0) | 1,2026-10-20 15:46:23,0,14,167,14,167,1,pass : 2026-10-20 15:46:23 ===
+=== start opus55-kotlin-3-fu : 2026-10-20 15:46:23 ===
+=== end opus55-kotlin-3-fu (exit 0) | 1,2026-10-20 15:48:56,0,14,167,14,167,1,pass : 2026-10-20 15:48:56 ===
+=== start sonnet55-kotlin-3-fu : 2026-10-20 15:48:56 ===
+=== end sonnet55-kotlin-3-fu (exit 0) | 1,2026-10-20 15:51:45,0,14,167,14,167,1,pass : 2026-10-20 15:51:45 ===
+=== start sonnet55-scala-3-fu : 2026-10-20 15:51:45 ===
+=== end sonnet55-scala-3-fu (exit 0) | 1,2026-10-20 15:57:44,0,14,167,14,167,1,pass : 2026-10-20 15:57:44 ===
+=== start opus55-scala-3-fu : 2026-10-20 15:57:44 ===
+=== end opus55-scala-3-fu (exit 0) | 1,2026-10-20 16:00:28,0,14,167,14,167,1,pass : 2026-10-20 16:00:28 ===
+=== ALL FOLLOW-UPS FINISHED : 2026-10-20 16:00:28 ===

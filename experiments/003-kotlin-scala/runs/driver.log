@@ -1,0 +1,48 @@
+=== RUN sonnet55-scala-1 (claude-native claude-sonnet-5-5, PROMPT-scala.md, PORT=45907, budget 2400s of 2400s) start: 2026-10-20 13:42:55 ===
+=== RUN sonnet55-scala-1 finished: 2026-10-20 13:50:19 | 1,2026-10-20 13:50:19,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-kotlin-1 (claude-native claude-sonnet-5-5, PROMPT-kotlin.md, PORT=42695, budget 2400s of 2400s) start: 2026-10-20 13:50:19 ===
+=== RUN sonnet55-kotlin-1 finished: 2026-10-20 14:01:27 | 2,2026-10-20 14:01:27,0,13,154,13,154,1,pass ===
+=== RUN opus55-kotlin-1 (claude-native claude-opus-5-5, PROMPT-kotlin.md, PORT=41046, budget 2400s of 2400s) start: 2026-10-20 14:01:27 ===
+=== RUN opus55-kotlin-1 finished: 2026-10-20 14:10:42 | 1,2026-10-20 14:10:42,0,13,154,13,154,1,pass ===
+=== RUN opus55-scala-1 (claude-native claude-opus-5-5, PROMPT-scala.md, PORT=49486, budget 2400s of 2400s) start: 2026-10-20 14:10:43 ===
+=== RUN opus55-scala-1 finished: 2026-10-20 14:22:56 | 1,2026-10-20 14:22:56,0,13,154,13,154,1,pass ===
+=== RUN opus55-kotlin-2 (claude-native claude-opus-5-5, PROMPT-kotlin.md, PORT=47385, budget 2400s of 2400s) start: 2026-10-20 14:22:56 ===
+=== RUN opus55-kotlin-2 finished: 2026-10-20 14:30:18 | 1,2026-10-20 14:30:18,0,13,154,13,154,1,pass ===
+=== RUN opus55-scala-2 (claude-native claude-opus-5-5, PROMPT-scala.md, PORT=44207, budget 2400s of 2400s) start: 2026-10-20 14:30:19 ===
+=== RUN opus55-scala-2 finished: 2026-10-20 14:41:59 | 1,2026-10-20 14:41:59,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-kotlin-2 (claude-native claude-sonnet-5-5, PROMPT-kotlin.md, PORT=45856, budget 2400s of 2400s) start: 2026-10-20 14:41:59 ===
+=== RUN sonnet55-kotlin-2 finished: 2026-10-20 14:47:42 | 1,2026-10-20 14:47:42,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-scala-2 (claude-native claude-sonnet-5-5, PROMPT-scala.md, PORT=41463, budget 2400s of 2400s) start: 2026-10-20 14:47:42 ===
+=== RUN sonnet55-scala-2 finished: 2026-10-20 14:54:57 | 1,2026-10-20 14:54:57,0,13,154,13,154,1,pass ===
+=== RUN opus55-kotlin-3 (claude-native claude-opus-5-5, PROMPT-kotlin.md, PORT=40293, budget 2400s of 2400s) start: 2026-10-20 14:54:57 ===
+=== RUN opus55-kotlin-3 finished: 2026-10-20 15:02:46 | 1,2026-10-20 15:02:46,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-kotlin-3 (claude-native claude-sonnet-5-5, PROMPT-kotlin.md, PORT=43138, budget 2400s of 2400s) start: 2026-10-20 15:02:47 ===
+=== RUN sonnet55-kotlin-3 finished: 2026-10-20 15:08:25 | 1,2026-10-20 15:08:25,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-scala-3 (claude-native claude-sonnet-5-5, PROMPT-scala.md, PORT=42145, budget 2400s of 2400s) start: 2026-10-20 15:08:25 ===
+=== RUN sonnet55-scala-3 finished: 2026-10-20 15:18:52 | 1,2026-10-20 15:18:52,0,13,154,13,154,1,pass ===
+=== RUN opus55-scala-3 (claude-native claude-opus-5-5, PROMPT-scala.md, PORT=40788, budget 2400s of 2400s) start: 2026-10-20 15:18:53 ===
+=== RUN opus55-scala-3 finished: 2026-10-20 15:26:34 | 1,2026-10-20 15:26:34,0,13,154,13,154,1,pass ===
+=== RUN sonnet55-scala-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=48017, budget 1200s of 1200s) start: 2026-10-20 15:26:58 ===
+=== RUN sonnet55-scala-1-fu finished: 2026-10-20 15:29:13 | 1,2026-10-20 15:29:13,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-kotlin-1-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=47178, budget 1200s of 1200s) start: 2026-10-20 15:29:13 ===
+=== RUN sonnet55-kotlin-1-fu finished: 2026-10-20 15:31:47 | 1,2026-10-20 15:31:47,0,14,167,14,167,1,pass ===
+=== RUN opus55-kotlin-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=41186, budget 1200s of 1200s) start: 2026-10-20 15:31:47 ===
+=== RUN opus55-kotlin-1-fu finished: 2026-10-20 15:34:20 | 1,2026-10-20 15:34:20,0,14,167,14,167,1,pass ===
+=== RUN opus55-scala-1-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=43596, budget 1200s of 1200s) start: 2026-10-20 15:34:21 ===
+=== RUN opus55-scala-1-fu finished: 2026-10-20 15:36:55 | 1,2026-10-20 15:36:55,0,14,167,14,167,1,pass ===
+=== RUN opus55-kotlin-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=48713, budget 1200s of 1200s) start: 2026-10-20 15:36:56 ===
+=== RUN opus55-kotlin-2-fu finished: 2026-10-20 15:39:41 | 1,2026-10-20 15:39:41,0,14,167,14,167,1,pass ===
+=== RUN opus55-scala-2-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=46376, budget 1200s of 1200s) start: 2026-10-20 15:39:42 ===
+=== RUN opus55-scala-2-fu finished: 2026-10-20 15:42:06 | 1,2026-10-20 15:42:06,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-kotlin-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=43842, budget 1200s of 1200s) start: 2026-10-20 15:42:07 ===
+=== RUN sonnet55-kotlin-2-fu finished: 2026-10-20 15:44:37 | 1,2026-10-20 15:44:37,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-scala-2-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=43501, budget 1200s of 1200s) start: 2026-10-20 15:44:38 ===
+=== RUN sonnet55-scala-2-fu finished: 2026-10-20 15:46:23 | 1,2026-10-20 15:46:23,0,14,167,14,167,1,pass ===
+=== RUN opus55-kotlin-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=40743, budget 1200s of 1200s) start: 2026-10-20 15:46:23 ===
+=== RUN opus55-kotlin-3-fu finished: 2026-10-20 15:48:56 | 1,2026-10-20 15:48:56,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-kotlin-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=42722, budget 1200s of 1200s) start: 2026-10-20 15:48:56 ===
+=== RUN sonnet55-kotlin-3-fu finished: 2026-10-20 15:51:45 | 1,2026-10-20 15:51:45,0,14,167,14,167,1,pass ===
+=== RUN sonnet55-scala-3-fu (claude-native claude-sonnet-5-5, PROMPT-followup.md, PORT=42411, budget 1200s of 1200s) start: 2026-10-20 15:51:46 ===
+=== RUN sonnet55-scala-3-fu finished: 2026-10-20 15:57:44 | 1,2026-10-20 15:57:44,0,14,167,14,167,1,pass ===
+=== RUN opus55-scala-3-fu (claude-native claude-opus-5-5, PROMPT-followup.md, PORT=42151, budget 1200s of 1200s) start: 2026-10-20 15:57:45 ===
+=== RUN opus55-scala-3-fu finished: 2026-10-20 16:00:28 | 1,2026-10-20 16:00:28,0,14,167,14,167,1,pass ===

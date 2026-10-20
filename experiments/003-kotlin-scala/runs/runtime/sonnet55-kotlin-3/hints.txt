@@ -1,0 +1,7 @@
+./PROMPT.md:10:  4. The server uses as many workers or threads as there are available CPU cores: Spring Boot's embedded Tomcat with its thread pool sized to the core count. SQLite uses WAL mode and a `busy_timeout` of 5000 ms.
+./README.md:8:- SQLite runs in WAL mode with `busy_timeout=5000`. The schema is created on startup (`ddl-auto=update`).
+./build.gradle.kts:23:    implementation("org.hibernate.orm:hibernate-community-dialects")
+./src/main/resources/application.properties:4:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:5:spring.jpa.properties.hibernate.dialect=org.hibernate.community.dialect.SQLiteDialect
+./src/main/resources/application.properties:6:spring.jpa.properties.hibernate.connection.provider_disables_autocommit=false
+./src/main/kotlin/realworld/Application.kt:34:            jdbcUrl = "jdbc:sqlite:$file?journal_mode=WAL&busy_timeout=5000&foreign_keys=true" +

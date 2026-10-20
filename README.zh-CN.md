@@ -84,12 +84,16 @@ Fargate 不保证任务所在的 CPU 代次。试启动 15 个任务时,Graviton
 |------|------|------|------|
 | [EXP-001](experiments/001-five-language-realworld/report.md) 五种语言 RealWorld 后端 Ralph 循环 | L-01: 在同一个 RealWorld 后端任务中，氛围编程适用性（构建过程指标与产出物指标的综合得分）在实现语言（TypeScript、Python、Go、Rust、C++）之间存在差异，且该排名在 Sonnet 5.5 与 Opus 5.5 中相同。 | **部分验证** | Claude Code 2.1.302 |
 | [EXP-002](experiments/002-java-php-csharp/report.md) Java·PHP·C# RealWorld 后端 Ralph 循环 | L-02: 在同一 RealWorld 后端任务上，氛围编程适配度（开发过程指标与产出指标的综合分）在 Java、PHP、C# 之间存在差异，且三种语言内的排名在 Sonnet 5.5 与 Opus 5.5 下相同。 | **支持（探索性）** | Claude Code 2.1.302 |
+| [EXP-003](experiments/003-kotlin-scala/report.md) Kotlin·Scala RealWorld 后端 Ralph 循环 | L-03: 在同一 RealWorld 后端任务上，氛围编程适配度（开发过程指标与产出指标的综合分）在 Kotlin 与 Scala 之间存在差异，且两种语言的排名在 Sonnet 5.5 与 Opus 5.5 下相同。 | **部分支持（探索性）** | Claude Code 2.1.303 |
 
 **EXP-001 — 五种语言 RealWorld 后端 Ralph 循环** (部分验证)  
 观察到语言间综合得分差异（Go 在两个模型中均进入前两名，Python 在两个模型中均为最后），但第一名因模型而异（Sonnet 5.5 为 Rust，Opus 5.5 为 Go），因此“排名相同”部分未获支持；30 个 run 全部通过，合格率无法区分语言。 → [报告](experiments/001-five-language-realworld/report.md)
 
 **EXP-002 — Java·PHP·C# RealWorld 后端 Ralph 循环** (支持（探索性）)  
 C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠；Java 与 PHP 的第二、三名在两个模型间互换且范围重叠；18 个 run 全部通过，通过率无法区分语言。这是单一任务、每格 3 次的探索性结果，仅应作为简单参考。 → [报告](experiments/002-java-php-csharp/report.md)
+
+**EXP-003 — Kotlin·Scala RealWorld 后端 Ralph 循环** (部分支持（探索性）)  
+Scala（Play）在两个模型下综合分均排第一（Sonnet 0.556，Opus 0.550），但在 Opus 下与 Kotlin 的各轮重复范围重叠。Kotlin（Spring Boot）实现更快、更便宜，Scala 的内存、冷启动和内存增长更小；12 个 run 全部通过。这是单一任务、每格 3 次的探索性结果，仅应作为简单参考。 → [报告](experiments/003-kotlin-scala/report.md)
 
 <!-- RESULTS:END -->
 
@@ -101,4 +105,6 @@ C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且�
 
 在 EXP-002（2026-10-19，Java、PHP、C# × 两个模型 × 3 次）中，18 个 run 同样全部在第一次 iteration 通过。在三种语言内的综合得分中，C# 在两个模型下均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠。C# 的实现时间和成本最低，空闲内存（约 45 MiB）、镜像和依赖数也最小，吞吐量与 Java 同处上游。Java 吞吐量好，但内存、冷启动（约 5 秒）和构建时间最差；PHP 吞吐量最低，且因基础镜像而漏洞数最多。Java 与 PHP 的第二、三名在两个模型间互换。与 EXP-001 合并的 8 种语言比较中 C# 在两个模型下也排第一，但这是执行日期相差一天的探索性比较，且在 Sonnet 下其范围与 Rust、Go 重叠。两个实验都是单一任务、每格 3 次的探索性结果，这些排名只是选择语言的简单参考，并不能证明某种语言普遍更好。
 
-局限：只有一个任务，每格 3 次，综合得分对权重选择敏感。运行时指标在 AWS Fargate Spot（Graviton4，2 vCPU）上测得。依据见 [EXP-001 报告](experiments/001-five-language-realworld/report.md) 和 [EXP-002 报告](experiments/002-java-php-csharp/report.md)。
+在 EXP-003（2026-10-20，Kotlin、Scala × 两个模型 × 3 次）中，12 个 run 全部通过（其中 11 个在第一次 iteration 通过）。在两种语言内的综合得分中，Scala（Play）在两个模型下均排第一（Sonnet 0.556，Opus 0.550），但在 Opus 下与 Kotlin 的各轮重复范围重叠，因此判定为部分支持（探索性）。Kotlin（Spring Boot）的实现时间、成本和代码量更小，Scala 的空闲内存（约 170 MiB）、冷启动（约 2.4 秒）和 soak 期间内存增长（约 5 MiB）更小。在 10 种语言的探索性比较中，Scala 排第 6、7 名，Kotlin 排第 9、10 名，均处于中下游。这同样是单一任务、每格 3 次的探索性结果，仅应作为简单参考。
+
+局限：只有一个任务，每格 3 次，综合得分对权重选择敏感。运行时指标在 AWS Fargate Spot（Graviton4，2 vCPU）上测得。依据见 [EXP-001 报告](experiments/001-five-language-realworld/report.md)、[EXP-002 报告](experiments/002-java-php-csharp/report.md) 和 [EXP-003 报告](experiments/003-kotlin-scala/report.md)。

@@ -1,0 +1,24 @@
+POST    /api/users/login                      controllers.UserController.login
+POST    /api/users                            controllers.UserController.register
+GET     /api/user                             controllers.UserController.current
+PUT     /api/user                             controllers.UserController.update
+
+GET     /api/profiles/:username               controllers.ProfileController.get(username: String)
+POST    /api/profiles/:username/follow        controllers.ProfileController.follow(username: String)
+DELETE  /api/profiles/:username/follow        controllers.ProfileController.unfollow(username: String)
+
+GET     /api/articles/feed                    controllers.ArticleController.feed
+GET     /api/articles                         controllers.ArticleController.list
+POST    /api/articles                         controllers.ArticleController.create
+GET     /api/articles/:slug                   controllers.ArticleController.get(slug: String)
+PUT     /api/articles/:slug                   controllers.ArticleController.update(slug: String)
+DELETE  /api/articles/:slug                   controllers.ArticleController.delete(slug: String)
+
+POST    /api/articles/:slug/favorite          controllers.ArticleController.favorite(slug: String)
+DELETE  /api/articles/:slug/favorite          controllers.ArticleController.unfavorite(slug: String)
+
+GET     /api/articles/:slug/comments          controllers.CommentController.list(slug: String)
+POST    /api/articles/:slug/comments          controllers.CommentController.create(slug: String)
+DELETE  /api/articles/:slug/comments/:id      controllers.CommentController.delete(slug: String, id: Long)
+
+GET     /api/tags                             controllers.TagController.list

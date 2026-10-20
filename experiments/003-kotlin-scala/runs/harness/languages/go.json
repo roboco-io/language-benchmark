@@ -1,0 +1,60 @@
+{
+  "key": "go",
+  "name": "Go",
+  "order": 3,
+  "prompt": {
+    "STACK": "Go + Gin + GORM + SQLite (pure-Go modernc.org/sqlite driver)",
+    "WORKERS": "GOMAXPROCS equal to the core count"
+  },
+  "stack": {
+    "framework": "Gin",
+    "db": "GORM (modernc SQLite)"
+  },
+  "toolchain": [
+    {
+      "name": "go",
+      "bin": "go",
+      "args": [
+        "version"
+      ]
+    },
+    {
+      "name": "govulncheck",
+      "bin_env": "GOVULNCHECK_BIN",
+      "args": [
+        "-version"
+      ],
+      "ver_lines": 2
+    }
+  ],
+  "scanner": {
+    "format": "go",
+    "name": "go",
+    "report": "go.json",
+    "required_key": "stream:config",
+    "ok_rc": "0 3",
+    "argv": [
+      "${GOVULNCHECK_BIN}",
+      "-json",
+      "./..."
+    ]
+  },
+  "deps": {
+    "kind": "go-mod"
+  },
+  "loc": {
+    "scc_names": [
+      "Go"
+    ],
+    "test_pattern": "_test\\.go",
+    "exclude_dirs": [
+      "vendor"
+    ]
+  },
+  "hints": [
+    "GOMAXPROCS",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": []
+}

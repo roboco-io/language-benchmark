@@ -1,0 +1,44 @@
+run,attempt,start,end,app_stop,load_stop,load_exit,files,outcome
+pilot-go,1,13:38:39,13:42:39,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-kotlin-1,1,16:03:21,16:04:15,"TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head ""https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools"": dial tcp 52.44.174.17:443: i/o timeout",,,0,app-start-failed
+sonnet55-scala-1,1,16:17:32,16:21:18,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-scala-1,2,16:21:18,16:22:30,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-scala-1,3,16:22:30,16:23:43,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-1,2,16:09:37,16:34:11,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-scala-3,1,16:48:04,16:48:16,SpotInterruption: Your Spot Task was interrupted.,,,0,app-start-failed
+opus55-scala-1,1,16:38:13,16:49:03,SpotInterruption: Your Spot Task was interrupted.,EssentialContainerExited: Essential container in task exited,42,0,spot-interrupted
+opus55-kotlin-1,1,16:37:01,16:51:54,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-scala-1,1,16:35:47,16:52:59,,EssentialContainerExited: Essential container in task exited,43,0,cpu-unavailable
+opus55-scala-2,1,16:40:45,16:53:59,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-scala-1,2,16:50:18,16:57:03,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-scala-1,3,16:57:03,16:58:14,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-2,1,16:42:14,16:59:28,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-2,2,16:59:28,17:00:40,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-2,1,16:39:33,17:00:49,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-scala-2,1,16:47:07,17:01:19,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-kotlin-3,1,16:44:45,17:01:50,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-2,3,17:00:40,17:01:51,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,2,17:01:50,17:03:03,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-3,1,16:49:42,17:03:58,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,3,17:03:03,17:04:14,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-3,2,17:03:58,17:05:11,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-scala-1,2,16:52:59,17:06:21,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-kotlin-3,3,17:05:11,17:06:22,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-scala-3,1,16:54:06,17:09:48,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-scala-3,2,16:51:57,17:12:29,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-kotlin-2,1,17:15:36,17:16:30,"TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head ""https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools"": dial tcp 52.200.22.40:443: i/o timeout",,,0,app-start-failed
+opus55-scala-1,1,17:14:08,17:28:19,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-kotlin-2,2,17:21:10,17:29:26,,SpotInterruption: Your Spot Task was interrupted.,143,10,spot-interrupted
+opus55-kotlin-3,1,17:33:33,17:36:20,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,2,17:36:20,17:37:32,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-3,1,17:26:25,17:39:46,,EssentialContainerExited: Essential container in task exited,0,12,ok
+sonnet55-kotlin-2,3,17:29:26,17:40:48,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,3,17:37:32,17:51:01,SpotInterruption: Your Spot Task was interrupted.,EssentialContainerExited: Essential container in task exited,1,12,spot-interrupted
+sonnet55-kotlin-2,1,17:52:46,18:10:50,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+sonnet55-kotlin-2,2,18:10:50,18:12:07,,EssentialContainerExited: Essential container in task exited,42,10,cpu-unavailable
+opus55-kotlin-3,1,18:04:34,18:12:29,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,2,18:12:29,18:13:47,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,3,18:13:47,18:15:22,,EssentialContainerExited: Essential container in task exited,42,12,cpu-unavailable
+sonnet55-kotlin-2,1,20:36:45,20:50:12,,EssentialContainerExited: Essential container in task exited,0,12,ok
+opus55-kotlin-3,1,20:50:05,20:53:17,,EssentialContainerExited: Essential container in task exited,42,0,cpu-unavailable
+opus55-kotlin-3,2,20:53:17,21:07:02,,EssentialContainerExited: Essential container in task exited,0,12,ok

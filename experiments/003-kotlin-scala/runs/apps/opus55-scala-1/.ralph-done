@@ -1,0 +1,1 @@
+All completion criteria verified on 2026-10-20: Hurl 154/154 via start.sh and Docker, PORT honored, schema auto-created, dispatcher sized to cores, SQLite WAL + busy_timeout=5000.

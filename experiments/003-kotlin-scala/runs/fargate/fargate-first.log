@@ -1,0 +1,95 @@
+2026-10-20 16:00:49 sonnet55-scala-1 로컬 준비 시작
+2026-10-20 16:02:07 sonnet55-scala-1 로컬 준비 끝 rc=0 
+2026-10-20 16:02:07 sonnet55-kotlin-1 로컬 준비 시작
+2026-10-20 16:03:08 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 f4923c3dc5f541528215b566f4a91943 시작
+2026-10-20 16:03:20 sonnet55-kotlin-1 로컬 준비 끝 rc=0 
+2026-10-20 16:03:54 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-20 16:03:55 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 db8e8c9042d4431faf65f65ecc5b9720 시작
+2026-10-20 16:04:15 sonnet55-kotlin-1 a1 앱 태스크 기동 실패 — TaskFailedToStart: CannotPullContainerError: failed to resolve ref 779411790546.dkr.ecr.us-east-1.amazonaws.com/langbench:tools for schema1 conversion: failed to do request: Head "https://779411790546.dkr.ecr.us-east-1.amazonaws.com/v2/langbench/manifests/tools": dial tcp 52.44.174.17:443: i/o timeout
+2026-10-20 16:04:42 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-20 16:04:43 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 9e15cce042eb404182dc8fc15ca98bb8 시작
+2026-10-20 16:04:44 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 d75f5f7a0f5545be98712f3dd56d5651 시작
+2026-10-20 16:05:31 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-20 16:05:32 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (1)
+2026-10-20 16:05:32 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 d6f74935878441bda740beafc824a2cd 시작
+2026-10-20 16:05:33 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 6ed647eb8b564ec1826770d53c152deb 시작
+2026-10-20 16:06:20 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-20 16:06:21 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (2)
+2026-10-20 16:06:21 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 d68825dfec524985b9e7251f7d2d1cd6 시작
+2026-10-20 16:06:21 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 c3c828731c76400481b29959972f1668 시작
+2026-10-20 16:07:09 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-20 16:07:09 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (3)
+2026-10-20 16:07:10 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 fb5e4ebacd8b470c88bab45e8ec90389 시작
+2026-10-20 16:07:10 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 c4c0ddb1b9554a5b9f01dc470e8afefb 시작
+2026-10-20 16:07:59 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (4)
+2026-10-20 16:07:59 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (6)
+2026-10-20 16:08:00 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 12b15dd7f3204032a3e64ddfb0c34e3c 시작
+2026-10-20 16:08:00 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 74aed0f5ae18422587484d58cc81cf84 시작
+2026-10-20 16:08:48 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (7)
+2026-10-20 16:08:48 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (5)
+2026-10-20 16:08:48 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 47d8c6aee45441349fe5ca0ae297f75b 시작
+2026-10-20 16:08:48 sonnet55-kotlin-1 a2 앱 cc53c1b02ac8440ea3efe09745878cec (172.31.19.204:44849) / 부하 7ef20a46e6654c84b0500bc96b80a4cf 시작
+2026-10-20 16:09:36 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (8)
+2026-10-20 16:09:37 sonnet55-kotlin-1 a2 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (6)
+2026-10-20 16:09:37 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 f96ee323e91b43eb8f134bec677d3dfd 시작
+2026-10-20 16:10:00 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 272ce162ca19435c8f0fe4e2e63135ed 시작
+2026-10-20 16:10:25 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (9)
+2026-10-20 16:10:26 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 aec5131d78eb4e1db5df4ec8d3ac8eeb 시작
+2026-10-20 16:10:47 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (7)
+2026-10-20 16:10:48 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 46c73f254e5842dabb7d4daf94ee0c26 시작
+2026-10-20 16:11:14 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (10)
+2026-10-20 16:11:15 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 8163b4219cb645aab71088216b18cd88 시작
+2026-10-20 16:11:35 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (8)
+2026-10-20 16:11:36 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 c32f307780ee4142ae01bbdb67e8df01 시작
+2026-10-20 16:12:03 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (11)
+2026-10-20 16:12:04 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 e00fe5a9e53f4d1283c301e86f32b5f5 시작
+2026-10-20 16:12:22 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (9)
+2026-10-20 16:12:23 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 c96afa335a2c4d00a41e492eace3234d 시작
+2026-10-20 16:12:52 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (12)
+2026-10-20 16:13:10 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (10)
+2026-10-20 16:13:11 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 ab0ba595a5da40f0bd177412d3e13e72 시작
+2026-10-20 16:13:14 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 d1cab314cfb64e6db5c0c1e59d19fa81 시작
+2026-10-20 16:13:59 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (11)
+2026-10-20 16:14:00 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 d97f8cca16194a979b4fa6c41abee80b 시작
+2026-10-20 16:14:01 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (13)
+2026-10-20 16:14:02 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 2b6e23227062430d9df22998e3619182 시작
+2026-10-20 16:14:48 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (12)
+2026-10-20 16:14:49 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (14)
+2026-10-20 16:14:49 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 2f7134f8c40c4313839d68c2138f0410 시작
+2026-10-20 16:14:50 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 4fb9eff78936409aa9841ab3d6ee0620 시작
+2026-10-20 16:15:38 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (13)
+2026-10-20 16:15:38 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (15)
+2026-10-20 16:15:39 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 0baca1691c654eb7a6ad8cef48828bb4 시작
+2026-10-20 16:15:39 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 5056e347273b47a9b27a98355295e283 시작
+2026-10-20 16:16:27 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (16)
+2026-10-20 16:16:27 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (14)
+2026-10-20 16:16:28 sonnet55-scala-1 a1 앱 d5b7898b85d64c8b92dbbc5451d11d0c (172.31.90.75:41727) / 부하 d06147310041443f8d73c0ff29bb982a 시작
+2026-10-20 16:16:28 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 907dcd49a1a7416296d3880cf5b2f0b7 시작
+2026-10-20 16:17:16 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (15)
+2026-10-20 16:17:17 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 b01b1c437e58474eae0d8827b76841cc 시작
+2026-10-20 16:17:32 sonnet55-scala-1 a1 앱 태스크 CPU 세대 불일치 — 앱 태스크 교체 (17)
+2026-10-20 16:18:01 sonnet55-scala-1 a1 앱 a1fb814062c648518ddd9fac1df75e84 (172.31.24.58:41727) / 부하 39d1f44f374f43d7964f569662b95dce 시작
+2026-10-20 16:18:04 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (16)
+2026-10-20 16:18:05 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 6ba24fa2a85649cb946f52961c29912a 시작
+2026-10-20 16:18:49 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (18)
+2026-10-20 16:18:50 sonnet55-scala-1 a1 앱 a1fb814062c648518ddd9fac1df75e84 (172.31.24.58:41727) / 부하 df67f4061bdf415a8c25813671f4f6a4 시작
+2026-10-20 16:18:52 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (17)
+2026-10-20 16:18:53 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 df6f1f9c6a564f838584fd013b7060bb 시작
+2026-10-20 16:19:38 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (19)
+2026-10-20 16:19:39 sonnet55-scala-1 a1 앱 a1fb814062c648518ddd9fac1df75e84 (172.31.24.58:41727) / 부하 a2e6807fd9f84039a9c84fb04301378c 시작
+2026-10-20 16:19:40 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (18)
+2026-10-20 16:19:41 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 4778736e57a24b9880741d24e429f76b 시작
+2026-10-20 16:20:27 sonnet55-scala-1 a1 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (20)
+2026-10-20 16:20:28 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (19)
+2026-10-20 16:20:29 sonnet55-scala-1 a1 앱 a1fb814062c648518ddd9fac1df75e84 (172.31.24.58:41727) / 부하 a17bb0c95cbb49eb937a48ee646141ad 시작
+2026-10-20 16:20:29 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 9337060292bf476fa8c3bde44327882f 시작
+2026-10-20 16:21:17 sonnet55-kotlin-1 a2 부하 태스크 CPU 세대 불일치 — 부하 태스크 교체 (20)
+2026-10-20 16:21:18 sonnet55-scala-1 a1 종료 exit=42 files=0 outcome=cpu-unavailable relaunch=20
+2026-10-20 16:21:18 sonnet55-kotlin-1 a2 앱 a81397d1cbab41c5aa11ecf0a8962e3a (172.31.81.239:44849) / 부하 84b279559bf442b4aac72811ae419830 시작
+2026-10-20 16:21:41 sonnet55-scala-1 a2 앱 2147b80d45c2491da12c6c9a4581cd4d (172.31.18.193:41727) / 부하 749a01d0d4d44a4c887d913643396757 시작
+2026-10-20 16:22:30 sonnet55-scala-1 a2 종료 exit=42 files=0 outcome=cpu-unavailable relaunch=20
+2026-10-20 16:22:54 sonnet55-scala-1 a3 앱 55cddfd5af8340ee996ad3df231caf1f (172.31.86.211:41727) / 부하 d4f1032c60104de297412d861fdad2f3 시작
+2026-10-20 16:23:43 sonnet55-scala-1 a3 종료 exit=42 files=0 outcome=cpu-unavailable relaunch=20
+2026-10-20 16:23:43 sonnet55-scala-1 3회 시도 모두 무효 — Fargate 측정 없음
+2026-10-20 16:34:11 sonnet55-kotlin-1 a2 종료 exit=0 files=12 outcome=ok relaunch=20
+2026-10-20 16:34:11 ALL DONE sonnet55-kotlin-1=ok sonnet55-scala-1=no-result

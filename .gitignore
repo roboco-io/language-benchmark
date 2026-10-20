@@ -9,6 +9,10 @@ target/
 .venv/
 venv/
 build/
+.gradle/
+.bsp/
+.bloop/
+.metals/
 dist/
 *.db
 *.db-journal

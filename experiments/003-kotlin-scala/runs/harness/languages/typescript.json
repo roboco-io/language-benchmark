@@ -1,0 +1,60 @@
+{
+  "key": "typescript",
+  "name": "TypeScript",
+  "order": 1,
+  "prompt": {
+    "STACK": "TypeScript (Node.js) + Fastify + Prisma + SQLite",
+    "WORKERS": "Node cluster with one worker process per core"
+  },
+  "stack": {
+    "framework": "Fastify",
+    "db": "Prisma"
+  },
+  "toolchain": [
+    {
+      "name": "node",
+      "bin": "node",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "npm",
+      "bin": "npm",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "npm",
+    "name": "npm",
+    "report": "npm.json",
+    "required_key": "vulnerabilities",
+    "argv": [
+      "npm",
+      "audit",
+      "--json"
+    ]
+  },
+  "deps": {
+    "kind": "package-json"
+  },
+  "loc": {
+    "scc_names": [
+      "TypeScript",
+      "JavaScript"
+    ],
+    "test_pattern": "\\.(test|spec)\\.[jt]s",
+    "exclude_dirs": [
+      "node_modules"
+    ]
+  },
+  "hints": [
+    "cluster",
+    "worker_threads",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": []
+}

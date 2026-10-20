@@ -1,0 +1,10 @@
+target/
+project/target/
+project/project/
+*.db
+*.db-shm
+*.db-wal
+logs/
+.bsp/
+.idea/
+data/
