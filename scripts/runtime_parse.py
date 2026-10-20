@@ -157,6 +157,47 @@ def _deps_csproj(repo):
     return len(names)
 
 
+_GRADLE_DEP = re.compile(r"""^\s*(?:implementation|api|runtimeOnly)\s*[( ]\s*(?:kotlin\(\s*"([^"]+)"|["']([^"']+)["'])""", re.M)
+
+
+def _deps_gradle_kts(repo):
+    """저장소 안 모든 build.gradle.kts·build.gradle(build·.gradle 아래 제외)에서 implementation·api·runtimeOnly로
+    선언한 좌표의 group:artifact 고유 수. kotlin("x")는 org.jetbrains.kotlin:kotlin-x로 본다.
+    platform(...) BOM, compileOnly, developmentOnly, annotationProcessor, test* 구성은 세지 않는다. 빌드 파일이 없으면 None."""
+    files = [p for p in sorted(repo.rglob("build.gradle*"))
+             if p.name in ("build.gradle.kts", "build.gradle")
+             and not {"build", ".gradle"} & set(p.relative_to(repo).parts[:-1])]
+    if not files:
+        return None
+    names = set()
+    for p in files:
+        for kt, coord in _GRADLE_DEP.findall(p.read_text()):
+            names.add("org.jetbrains.kotlin:kotlin-" + kt if kt else ":".join(coord.split(":")[:2]))
+    return len(names)
+
+
+_SBT_DEP = re.compile(r'"([^"]+)"\s*%%?%?\s*"([^"]+)"\s*%\s*(?:"[^"]*"|[\w.]+)(\s*%\s*("?)(\w+)\4)?')
+# Play sbt 플러그인이 주는 모듈 단축 이름(libraryDependencies에 그대로 쓴다)
+_PLAY_SHORTHANDS = r"guice|jdbc|javaJdbc|ws|javaWs|ehcache|caffeine|filters|evolutions|cacheApi|openId|javaForms"
+_SBT_SHORTHAND = re.compile(r"(?:\+=|[(,])\s*(%s)\s*(?=[,)\n])" % _PLAY_SHORTHANDS)
+
+
+def _deps_sbt(repo):
+    """build.sbt와 project/*.scala의 "group" %(%) "artifact" % 버전 좌표 중 구성이 Test·IntegrationTest가 아닌 것의
+    group:artifact 고유 수 + build.sbt의 libraryDependencies에 쓴 Play 단축 모듈(guice, jdbc 등) 수.
+    project/plugins.sbt(sbt 플러그인)는 세지 않는다. build.sbt가 없으면 None."""
+    text = _read(repo / "build.sbt")
+    if text is None:
+        return None
+    names = set(_SBT_SHORTHAND.findall(text))
+    sources = [text] + [p.read_text() for p in sorted((repo / "project").glob("*.scala"))]
+    for src in sources:
+        for group, artifact, _, _, conf in _SBT_DEP.findall(src):
+            if conf.lower() not in ("test", "it", "integrationtest"):
+                names.add(group + ":" + artifact)
+    return len(names)
+
+
 # 레지스트리의 deps.kind -> 의존성 수 함수
 DEPS_BY_KIND = {
     "package-json": _deps_package_json,
@@ -167,6 +208,8 @@ DEPS_BY_KIND = {
     "maven-pom": _deps_maven_pom,
     "composer-json": _deps_composer_json,
     "csproj": _deps_csproj,
+    "gradle-kts": _deps_gradle_kts,
+    "sbt": _deps_sbt,
 }
 
 

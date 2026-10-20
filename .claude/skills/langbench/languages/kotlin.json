@@ -1,0 +1,71 @@
+{
+  "key": "kotlin",
+  "name": "Kotlin",
+  "order": 9,
+  "prompt": {
+    "STACK": "Kotlin (JVM, Java 25) + Spring Boot + Spring Data JPA (Hibernate) + SQLite, built with Gradle (Kotlin DSL) using the installed `gradle` command",
+    "WORKERS": "Spring Boot's embedded Tomcat with its thread pool sized to the core count"
+  },
+  "stack": {
+    "framework": "Spring Boot",
+    "db": "Spring Data JPA (Hibernate, SQLite)"
+  },
+  "toolchain": [
+    {
+      "name": "java",
+      "bin": "java",
+      "args": [
+        "-version"
+      ]
+    },
+    {
+      "name": "gradle",
+      "bin": "gradle",
+      "args": [
+        "--version"
+      ]
+    },
+    {
+      "name": "osv-scanner",
+      "bin": "osv-scanner",
+      "args": [
+        "--version"
+      ]
+    }
+  ],
+  "scanner": {
+    "format": "osv",
+    "name": "osv",
+    "report": "osv.json",
+    "required_key": "results",
+    "ok_rc": "0 1",
+    "argv": [
+      "bash",
+      "-c",
+      "d=$(mktemp -d) && printf 'allprojects { dependencyLocking { lockAllConfigurations() } }\\n' > \"$d/lock.gradle\" && gradle -q --no-daemon --init-script \"$d/lock.gradle\" dependencies --write-locks 1>&2 && find . -name gradle.lockfile -not -path '*/build/*' -exec cat {} + > \"$d/all\" && c=runtimeClasspath && { grep -q productionRuntimeClasspath \"$d/all\" && c=productionRuntimeClasspath; true; } && grep -E \"=(.*,)?$c(,|\\$)\" \"$d/all\" | sed -E 's/=.*/=runtimeClasspath/' | sort -u > \"$d/gradle.lockfile\" && [ -s \"$d/gradle.lockfile\" ] && osv-scanner scan source --format json -L \"$d/gradle.lockfile\""
+    ]
+  },
+  "deps": {
+    "kind": "gradle-kts"
+  },
+  "loc": {
+    "scc_names": [
+      "Kotlin"
+    ],
+    "test_pattern": "Tests?\\.kt",
+    "exclude_dirs": [
+      "build",
+      ".gradle"
+    ]
+  },
+  "hints": [
+    "server.tomcat",
+    "hibernate",
+    "journal_mode",
+    "busy_timeout"
+  ],
+  "cleanup": [
+    "build",
+    ".gradle"
+  ]
+}

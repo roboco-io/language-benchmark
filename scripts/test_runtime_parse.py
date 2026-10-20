@@ -53,6 +53,7 @@ class RuntimeParse(unittest.TestCase):
         d = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, d)
         for name, text in files.items():
+            os.makedirs(os.path.dirname(os.path.join(d, name)), exist_ok=True)
             with open(os.path.join(d, name), "w") as f:
                 f.write(text)
         return pathlib.Path(d)
@@ -116,6 +117,49 @@ class RuntimeParse(unittest.TestCase):
         (d / "tests" / "Api.Tests" / "Api.Tests.csproj").write_text(proj(ref("xunit"), ref("Moq")))
         self.assertEqual(runtime_parse.deps(d, "csharp"), 3)
         self.assertEqual(runtime_parse.deps(self.mkrepo({}), "csharp"), None)
+
+    def test_deps_gradle_kts(self):
+        kts = ('plugins { kotlin("jvm") version "2.2.20" }\n'
+               'dependencies {\n'
+               '    implementation("org.springframework.boot:spring-boot-starter-web")\n'
+               '    implementation("org.springframework.boot:spring-boot-starter-web")\n'
+               '    implementation(kotlin("reflect"))\n'
+               '    implementation(platform("org.example:bom:1"))\n'
+               '    api("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")\n'
+               '    runtimeOnly("org.xerial:sqlite-jdbc:3.50.3.0")\n'
+               '    compileOnly("org.example:provided:1")\n'
+               '    developmentOnly("org.springframework.boot:spring-boot-devtools")\n'
+               '    annotationProcessor("org.example:ap:1")\n'
+               '    testImplementation("org.springframework.boot:spring-boot-starter-test")\n'
+               '    testRuntimeOnly("org.junit.platform:junit-platform-launcher")\n'
+               '}\n')
+        repo = self.mkrepo({"build.gradle.kts": kts, "build/tmp/build.gradle.kts": 'implementation("x:ignored:1")'})
+        self.assertEqual(runtime_parse.deps(repo, "kotlin"), 4)
+        sub = self.mkrepo({"settings.gradle.kts": "", "app/build.gradle.kts": kts,
+                           "core/build.gradle": "dependencies {\n  implementation 'org.xerial:sqlite-jdbc:3'\n"
+                                                "  implementation 'org.other:lib:1'\n}\n"})
+        self.assertEqual(runtime_parse.deps(sub, "kotlin"), 5)
+        self.assertEqual(runtime_parse.deps(self.mkrepo({"build.gradle.kts": "plugins {}"}), "kotlin"), 0)
+        self.assertIsNone(runtime_parse.deps(self.mkrepo({}), "kotlin"))
+
+    def test_deps_sbt(self):
+        sbt = ('lazy val root = (project in file(".")).enablePlugins(PlayScala)\n'
+               'libraryDependencies ++= Seq(\n'
+               '  guice,\n'
+               '  jdbc,\n'
+               '  "org.playframework" %% "play-slick" % "6.2.0",\n'
+               '  "org.xerial" % "sqlite-jdbc" % sqliteVersion,\n'
+               '  "com.github.jwt-scala" %% "jwt-play-json" % "10.0.1" % Compile,\n'
+               '  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test,\n'
+               '  "org.mockito" % "mockito-core" % "5.0" % "test"\n'
+               ')\n'
+               'libraryDependencies += "org.playframework" %% "play-slick" % "6.2.0"\n')
+        repo = self.mkrepo({"build.sbt": sbt,
+                            "project/plugins.sbt": 'addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.9")',
+                            "project/Deps.scala": 'val bcrypt = "org.mindrot" % "jbcrypt" % "0.4"'})
+        self.assertEqual(runtime_parse.deps(repo, "scala"), 6)
+        self.assertEqual(runtime_parse.deps(self.mkrepo({"build.sbt": 'name := "x"'}), "scala"), 0)
+        self.assertIsNone(runtime_parse.deps(self.mkrepo({}), "scala"))
 
     def test_vulns_osv_composer_dotnet(self):
         osv = {"results": [{"packages": [{"package": {"name": "g:a"}, "vulnerabilities": [

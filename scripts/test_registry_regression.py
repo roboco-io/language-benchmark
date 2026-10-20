@@ -29,15 +29,17 @@ class RegistryRegression(unittest.TestCase):
     def test_scanners_unchanged(self):
         self.assertEqual(runs_row.SCANNERS,
                          {"typescript": "npm", "python": "pip", "go": "go", "rust": "cargo", "cpp": None,
-                          "java": "osv", "php": "composer", "csharp": "dotnet"})
+                          "java": "osv", "php": "composer", "csharp": "dotnet",
+                          "kotlin": "osv", "scala": "osv"})
         self.assertEqual({k: runs_row.SCAN_REPORTS[k] for k in ("java", "php", "csharp")},
                          {"java": "osv.json", "php": "composer-audit.json", "csharp": "dotnet.json"})
 
     def test_languages_unchanged(self):
-        self.assertEqual(metrics.LANGUAGES, ["typescript", "python", "go", "rust", "cpp", "java", "php", "csharp"])
+        self.assertEqual(metrics.LANGUAGES, ["typescript", "python", "go", "rust", "cpp", "java", "php", "csharp", "kotlin", "scala"])
         self.assertEqual(metrics.LANGUAGE_NAMES,
                          {"typescript": "TypeScript", "python": "Python", "go": "Go", "rust": "Rust", "cpp": "C++",
-                          "java": "Java", "php": "PHP", "csharp": "C#"})
+                          "java": "Java", "php": "PHP", "csharp": "C#",
+                          "kotlin": "Kotlin", "scala": "Scala"})
 
     def test_unknown_language_raises(self):
         with self.assertRaises(ValueError):
