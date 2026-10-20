@@ -80,6 +80,26 @@
         "verdict": "支持（探索性）",
         "summary": "C# 在两个模型下综合分均排第一（Sonnet 0.846，Opus 0.983），且与第二名的各轮重复范围不重叠；Java 与 PHP 的第二、三名在两个模型间互换且范围重叠；18 个 run 全部通过，通过率无法区分语言。这是单一任务、每格 3 次的探索性结果，仅应作为简单参考。"
       }
+    },
+    "EXP-003": {
+      "en": {
+        "name": "Kotlin·Scala RealWorld backend Ralph loop",
+        "hypothesis": "On the same RealWorld backend task, vibe-coding suitability (a composite of process and output metrics) differs between Kotlin and Scala, and the ranking of the two is the same for Sonnet 5.5 and Opus 5.5.",
+        "verdict": "Partially supported (exploratory)",
+        "summary": "Scala (Play) ranked first under both models (Sonnet 0.556, Opus 0.550), but its per-repetition range overlapped Kotlin's under Opus. Kotlin (Spring Boot) was faster and cheaper to build, while Scala had lower memory, faster cold start and almost no memory growth; all 12 runs passed. This is an exploratory result from one task with 3 runs per cell and should be read only as a simple reference."
+      },
+      "ja": {
+        "name": "Kotlin·Scala RealWorld バックエンド Ralph ループ",
+        "hypothesis": "同じ RealWorld バックエンド課題で、バイブコーディング適性（作る過程の指標と成果物指標の総合スコア）は Kotlin と Scala の間で異なり、2言語の順位は Sonnet 5.5 と Opus 5.5 で同じである。",
+        "verdict": "部分検証（探索）",
+        "summary": "Scala（Play）は両モデルで総合スコア1位（Sonnet 0.556、Opus 0.550）だったが、Opus では Kotlin と反復別範囲が重なった。Kotlin（Spring Boot）は実装が速く安く、Scala はメモリ・コールドスタート・メモリ増加が小さかった。12 run すべて合格。課題1つ・セルあたり3回の探索結果であり、簡単な参考資料としてのみ読むこと。"
+      },
+      "zh-CN": {
+        "name": "Kotlin·Scala RealWorld 后端 Ralph 循环",
+        "hypothesis": "在同一 RealWorld 后端任务上，氛围编程适配度（开发过程指标与产出指标的综合分）在 Kotlin 与 Scala 之间存在差异，且两种语言的排名在 Sonnet 5.5 与 Opus 5.5 下相同。",
+        "verdict": "部分支持（探索性）",
+        "summary": "Scala（Play）在两个模型下综合分均排第一（Sonnet 0.556，Opus 0.550），但在 Opus 下与 Kotlin 的各轮重复范围重叠。Kotlin（Spring Boot）实现更快、更便宜，Scala 的内存、冷启动和内存增长更小；12 个 run 全部通过。这是单一任务、每格 3 次的探索性结果，仅应作为简单参考。"
+      }
     }
   }
 }
